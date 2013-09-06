@@ -48,10 +48,11 @@ class nexus::service(
   }
 
   service{ 'nexus':
-    ensure  => running,
-    enable  => true,
-    require => [File['/etc/init.d/nexus'],
-                File_line['nexus_NEXUS_HOME'],
-                File_line['nexus_RUN_AS_USER'],]
+    ensure     => running,
+    enable     => true,
+    hasrestart => true,
+    require    => [File['/etc/init.d/nexus'],
+                   File_line['nexus_NEXUS_HOME'],
+                   File_line['nexus_RUN_AS_USER'],]
   }
 }
