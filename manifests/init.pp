@@ -75,6 +75,6 @@ class nexus (
   }
 
   anchor{ 'nexus::end':
-    require => Service['nexus::service']
+    require => Class['nexus::service']
   }
 }
