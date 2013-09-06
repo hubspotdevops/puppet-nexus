@@ -59,7 +59,6 @@ class nexus::package (
     source      => $download_url,
     destination => $dl_file,
     before      => Exec['nexus-untar'],
-    require     => File[$nexus_root]
   }
 
   exec{ 'nexus-untar':
@@ -67,7 +66,6 @@ class nexus::package (
     cwd     => $nexus_root,
     creates => $nexus_home_real,
     path    => ['/bin','/usr/bin'],
-    require => File[$nexus_root]
   }
 
   file{ $nexus_home_real:
