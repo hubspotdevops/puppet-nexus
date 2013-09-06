@@ -35,7 +35,9 @@ class nexus (
   $nexus_root     = $nexus::params::nexus_root,
   $nexus_home_dir = $nexus::params::nexus_home_dir,
   $nexus_user     = $nexus::params::nexus_user,
-  $nexus_group    = $nexus::params::nexus_group
+  $nexus_group    = $nexus::params::nexus_group,
+  $nexus_host     = $nexus::params::nexus_host,
+  $nexus_port     = $nexus::params::nexus_port,
 ) inherits nexus::params {
   include stdlib
 
@@ -44,9 +46,11 @@ class nexus (
     fail('Cannot set version nexus version to "latest" or leave undefined.')
   }
 
-  anchor{'nexus::begin':}
 
-  class{'nexus::package':
+
+  anchor{ 'nexus::begin':}
+
+  class{ 'nexus::package':
     version        => $version,
     revision       => $revision,
     nexus_root     => $nexus_root,
@@ -56,13 +60,21 @@ class nexus (
     require        => Anchor['nexus::begin']
   }
 
-  class{'nexus::service':
-    nexus_home => "${nexus_root}/${nexus_home_dir}",
-    nexus_user => $nexus_user,
-    require    => Class['nexus::package']
+  class{ 'nexus::config':
+    nexus_root     => $nexus_root,
+    nexus_home_dir => $nexus_home_dir,
+    nexus_host     => $nexus_host,
+    nexus_port     => $nexus_port,
+    require        => Class['nexus::package']
   }
 
-  anchor{'nexus::end':
+  class{ 'nexus::service':
+    nexus_home => "${nexus_root}/${nexus_home_dir}",
+    nexus_user => $nexus_user,
+    require    => Class['nexus::config']
+  }
+
+  anchor{ 'nexus::end':
     require => Service['nexus::service']
   }
 }

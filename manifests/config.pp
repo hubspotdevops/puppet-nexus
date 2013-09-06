@@ -1,0 +1,41 @@
+# === Class: nexus::config
+#
+# Configure nexus.
+#
+# === Parameters
+#
+# NONE
+#
+# === Examples
+#
+# class{ 'nexus::config': }
+#
+# === Authors
+#
+# Tom McLaughlin <tmclaughlin@hubspot.com>
+#
+# === Copyright
+#
+# Copyright 2013 Hubspot
+#
+class nexus::config(
+  $nexus_root,
+  $nexus_home_dir,
+  $nexus_host,
+  $nexus_port,
+) inherits nexus::params {
+
+  $nexus_properties_file = "${nexus_root}/${nexus_home_dir}/conf/nexus.properties"
+
+  file_line{ 'nexus-appliction-host':
+    file  => $nexus_properties_file,
+    match => '^application-host',
+    line  => "application-host=${nexus_host}"
+  }
+
+  file_line{ 'nexus-appliction-port':
+    file  => $nexus_properties_file,
+    match => '^application-port',
+    line  => "application-port=${nexus_port}"
+  }
+}

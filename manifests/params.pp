@@ -29,4 +29,6 @@ class nexus::params {
   $nexus_work_dir = 'sonatype-work'
   $nexus_user     = 'nexus'
   $nexus_group    = 'nexus'
+  $nexus_host     = '0.0.0.0'
+  $nexus_port     = '8081'
 }
