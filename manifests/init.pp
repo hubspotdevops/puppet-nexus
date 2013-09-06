@@ -30,9 +30,10 @@
 # Copyright 2013 Hubspot
 #
 class nexus (
-  $version    = $nexus::params::version,
-  $revision   = $nexus::params::revision,
-  $nexus_root = $nexus::params::nexus_root
+  $version        = $nexus::params::version,
+  $revision       = $nexus::params::revision,
+  $nexus_root     = $nexus::params::nexus_root,
+  $nexus_home_dir = $nexus::params::nexus_home_dir
 ) inherits nexus::params {
   include stdlib
 
@@ -44,10 +45,11 @@ class nexus (
   anchor{'nexus::begin':}
 
   class{'nexus::package':
-    version    => $version,
-    revision   => $revision,
-    nexus_root => $nexus_root,
-    require    => Anchor['nexus::begin']
+    version         => $version,
+    revision        => $revision,
+    nexus_root      => $nexus_root,
+    $nexus_home_dir => $nexus_home_dir,
+    require         => Anchor['nexus::begin']
   }
 
   class{'nexus::service':}
