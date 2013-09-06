@@ -38,7 +38,7 @@ class nexus::package (
 
   $download_site   = $nexus::params::download_site
   $nexus_home      = "${nexus_root}-${nexus_home_dir}"
-  $nexus_work      = "${nexus_root}-${nexus_work_dir}"
+  $nexus_work      = "${nexus_root}-${nexus::params::nexus_work_dir}"
 
   $full_version    = "${version}-${revision}"
 
