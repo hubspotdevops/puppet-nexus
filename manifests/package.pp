@@ -45,13 +45,6 @@ class nexus::package (
   $dl_file         = "${nexus_root}/${nexus_archive}"
   $nexus_home_real = "${nexus_root}/nexus-${full_version}-bundle"
 
-  file{ $nexus_root:
-    ensure => directory,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-  }
-
   # NOTE: When setting version to 'latest' the site redirects to the latest
   # release. But, nexus-latest-bundle.tar.gz will already exist and
   # therefore the exec will never be triggered.  In reality 'latest' will
