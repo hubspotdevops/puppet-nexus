@@ -56,7 +56,11 @@ class nexus (
     require        => Anchor['nexus::begin']
   }
 
-  class{'nexus::service':}
+  class{'nexus::service':
+    nexus_home => "${nexus_root}/${nexus_home_dir}",
+    nexus_user => $nexus_user,
+    require    => Class['nexus::package']
+  }
 
   anchor{'nexus::end':
     require => Service['nexus::service']
