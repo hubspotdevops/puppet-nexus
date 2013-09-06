@@ -28,9 +28,9 @@
 # Copyright 2013 Hubspot
 #
 class nexus::package (
-  $version    = $nexus::params::version,
-  $revision   = $nexus::params::revision,
-  $nexus_root = $nexus::params::nexus_root
+  $version,
+  $revision,
+  $nexus_root
 ) inherits nexus::params {
 
   $download_site   = $nexus::params::download_site
