@@ -34,14 +34,14 @@ class nexus::service(
   }
 
   file_line{ 'nexus_NEXUS_HOME':
-    file    => $nexus_init,
+    path    => $nexus_init,
     match   => '#?NEXUS_HOME=',
     line    => "NEXUS_HOME=${nexus_home}",
     require => File[$nexus_init]
   }
 
   file_line{ 'nexus_RUN_AS_USER':
-    file    => $nexus_init,
+    path    => $nexus_init,
     match   => '#?RUN_AS_USER=',
     line    => "RUN_AS_USER=${nexus_user}",
     require => File[$nexus_init]
