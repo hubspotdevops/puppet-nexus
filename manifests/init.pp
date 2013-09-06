@@ -33,7 +33,9 @@ class nexus (
   $version        = $nexus::params::version,
   $revision       = $nexus::params::revision,
   $nexus_root     = $nexus::params::nexus_root,
-  $nexus_home_dir = $nexus::params::nexus_home_dir
+  $nexus_home_dir = $nexus::params::nexus_home_dir,
+  $nexus_user     = $nexus::params::nexus_user,
+  $nexus_group    = $nexus::params::nexus_group
 ) inherits nexus::params {
   include stdlib
 
@@ -45,11 +47,13 @@ class nexus (
   anchor{'nexus::begin':}
 
   class{'nexus::package':
-    version         => $version,
-    revision        => $revision,
-    nexus_root      => $nexus_root,
-    $nexus_home_dir => $nexus_home_dir,
-    require         => Anchor['nexus::begin']
+    version        => $version,
+    revision       => $revision,
+    nexus_root     => $nexus_root,
+    nexus_home_dir => $nexus_home_dir,
+    nexus_user     => $nexus_user,
+    nexus_group    => $nexus_group,
+    require        => Anchor['nexus::begin']
   }
 
   class{'nexus::service':}

@@ -32,6 +32,8 @@ class nexus::package (
   $revision,
   $nexus_root,
   $nexus_home_dir,
+  $nexus_user,
+  $nexus_group,
 ) inherits nexus::params {
 
   $download_site   = $nexus::params::download_site
@@ -66,6 +68,20 @@ class nexus::package (
     creates => $nexus_home_real,
     path    => ['/bin','/usr/bin'],
     require => File[$nexus_root]
+  }
+
+  file{ $nexus_home_real:
+    ensure  => present,
+    owner   => $nexus_user,
+    group   => $nexus_group,
+    require => Exec[ 'nexus-untar']
+  }
+
+  file{ $nexus_work:
+    ensure  => present,
+    owner   => $nexus_user,
+    group   => $nexus_group,
+    require => Exec[ 'nexus-untar']
   }
 
   file{ $nexus_home:
