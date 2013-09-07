@@ -27,13 +27,13 @@ class nexus::service(
 
   file_line{ 'nexus_NEXUS_HOME':
     path    => $nexus_script,
-    match   => '#?NEXUS_HOME=',
+    match   => '^#?NEXUS_HOME=',
     line    => "NEXUS_HOME=${nexus_home}",
   }
 
   file_line{ 'nexus_RUN_AS_USER':
     path    => $nexus_script,
-    match   => '#?RUN_AS_USER=',
+    match   => '^#?RUN_AS_USER=',
     line    => "RUN_AS_USER=${nexus_user}",
   }
 
