@@ -34,7 +34,7 @@ class nexus::service(
   file_line{ 'nexus_RUN_AS_USER':
     path    => $nexus_script,
     match   => '^#?RUN_AS_USER=',
-    line    => "RUN_AS_USER=${nexus_user}",
+    line    => "RUN_AS_USER=\${run_as_user:-${nexus_user}}",
   }
 
   file{ '/etc/init.d/nexus':
@@ -49,11 +49,11 @@ class nexus::service(
   }
 
   service{ 'nexus':
-    ensure     => running,
-    enable     => true,
-    hasrestart => true,
-    require    => [File['/etc/init.d/nexus'],
-                   File_line['nexus_NEXUS_HOME'],
-                   File_line['nexus_RUN_AS_USER'],]
+    ensure  => running,
+    enable  => true,
+    status  => 'env run_as_user=root /etc/init.d/nexus status',
+    require => [File['/etc/init.d/nexus'],
+                File_line['nexus_NEXUS_HOME'],
+                File_line['nexus_RUN_AS_USER'],]
   }
 }
