@@ -30,7 +30,7 @@ class nexus::service(
     owner  => 'root',
     group  => 'root',
     mode   => '0755',
-    source => "file:///${nexus_root}/bin/nexus"
+    source => "file:///${nexus_home}/bin/nexus"
   }
 
   file_line{ 'nexus_NEXUS_HOME':
