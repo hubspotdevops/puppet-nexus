@@ -44,7 +44,8 @@ class nexus::service(
     mode    => '0755',
     source  => "file://${nexus_script}",
     require => [File_line['nexus_NEXUS_HOME'],
-                File_line['nexus_RUN_AS_USER']]
+                File_line['nexus_RUN_AS_USER']],
+    notify  => Service['nexus']
   }
 
   service{ 'nexus':

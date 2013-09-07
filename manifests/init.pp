@@ -57,7 +57,8 @@ class nexus (
     nexus_home_dir => $nexus_home_dir,
     nexus_user     => $nexus_user,
     nexus_group    => $nexus_group,
-    require        => Anchor['nexus::begin']
+    require        => Anchor['nexus::begin'],
+    notify         => Class['nexus::service']
   }
 
   class{ 'nexus::config':
@@ -65,7 +66,8 @@ class nexus (
     nexus_home_dir => $nexus_home_dir,
     nexus_host     => $nexus_host,
     nexus_port     => $nexus_port,
-    require        => Class['nexus::package']
+    require        => Class['nexus::package'],
+    notify         => Class['nexus::service']
   }
 
   class{ 'nexus::service':
