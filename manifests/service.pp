@@ -23,28 +23,28 @@ class nexus::service(
   $nexus_user
 ) inherits nexus::params {
 
-  $nexus_init = '/etc/init.d/nexus'
-
-  file{ $nexus_init:
-    ensure => present,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0755',
-    source => "file:///${nexus_home}/bin/nexus"
-  }
+  $nexus_script = "${nexus_home}/bin/nexus"
 
   file_line{ 'nexus_NEXUS_HOME':
-    path    => $nexus_init,
+    path    => $nexus_script,
     match   => '#?NEXUS_HOME=',
     line    => "NEXUS_HOME=${nexus_home}",
-    require => File[$nexus_init]
   }
 
   file_line{ 'nexus_RUN_AS_USER':
-    path    => $nexus_init,
+    path    => $nexus_script,
     match   => '#?RUN_AS_USER=',
     line    => "RUN_AS_USER=${nexus_user}",
-    require => File[$nexus_init]
+  }
+
+  file{ '/etc/init.d/nexus':
+    ensure => present,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0755',
+    source  => "file://${nexus_script}",
+    require => [File_line['nexus_NEXUS_HOME'],
+                File_line['nexus_RUN_AS_USER']]
   }
 
   service{ 'nexus':
