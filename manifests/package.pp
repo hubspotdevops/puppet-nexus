@@ -72,6 +72,7 @@ class nexus::package (
     ensure  => directory,
     owner   => $nexus_user,
     group   => $nexus_group,
+    recurse => true,
     require => Exec[ 'nexus-untar']
   }
 
@@ -79,6 +80,7 @@ class nexus::package (
     ensure  => directory,
     owner   => $nexus_user,
     group   => $nexus_group,
+    recurse => true,
     require => Exec[ 'nexus-untar']
   }
 
