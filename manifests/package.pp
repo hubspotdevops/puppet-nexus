@@ -69,7 +69,7 @@ class nexus::package (
   }
 
   file{ $nexus_home_real:
-    ensure  => present,
+    ensure  => directory,
     owner   => $nexus_user,
     group   => $nexus_group,
     require => Exec[ 'nexus-untar']
