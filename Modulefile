@@ -1,4 +1,4 @@
-name    'puppet-nexus'
+name    'hubspot-nexus'
 version '1.0.0'
 source 'http://github.com/hubspotdevops/puppet-nexus'
 author 'Tom McLaughlin <tmclaughlin@hubspot.com>'
