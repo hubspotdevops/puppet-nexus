@@ -1,5 +1,5 @@
 name    'puppet-nexus'
-version '0.0.0'
+version '1.0.0'
 source 'http://github.com/hubspotdevops/puppet-nexus'
 author 'Tom McLaughlin <tmclaughlin@hubspot.com>'
 license 'BSD License'
