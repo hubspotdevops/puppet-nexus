@@ -11,5 +11,5 @@ project_page 'http://github.com/hubspotdevops/puppet-nexus'
 
 ## Add dependencies, if any:
 # dependency 'username/name', '>= 1.2.0'
-dependency 'puppetlabs/stdlib', '>=0'
+dependency 'puppetlabs/stdlib', '>=0.0.0'
 dependency 'maestrodev/wget', '>=1.0.0'
