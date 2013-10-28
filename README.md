@@ -46,7 +46,7 @@ class role_nexus_server {
   Class['::java'] ->
   Group[$nexus_group] ->
   User[$nexus_user] ->
-  Class['::nexus'] ->
+  Class['::nexus']
 ```
 
 ### Nginx proxy
