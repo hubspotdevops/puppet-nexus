@@ -30,14 +30,15 @@
 # Copyright 2013 Hubspot
 #
 class nexus (
-  $version        = $nexus::params::version,
-  $revision       = $nexus::params::revision,
-  $nexus_root     = $nexus::params::nexus_root,
-  $nexus_home_dir = $nexus::params::nexus_home_dir,
-  $nexus_user     = $nexus::params::nexus_user,
-  $nexus_group    = $nexus::params::nexus_group,
-  $nexus_host     = $nexus::params::nexus_host,
-  $nexus_port     = $nexus::params::nexus_port,
+  $version             = $nexus::params::version,
+  $revision            = undef,
+  $revision_in_archive = undef,
+  $nexus_root          = $nexus::params::nexus_root,
+  $nexus_home_dir      = $nexus::params::nexus_home_dir,
+  $nexus_user          = $nexus::params::nexus_user,
+  $nexus_group         = $nexus::params::nexus_group,
+  $nexus_host          = $nexus::params::nexus_host,
+  $nexus_port          = $nexus::params::nexus_port,
 ) inherits nexus::params {
   include stdlib
 
@@ -51,14 +52,15 @@ class nexus (
   anchor{ 'nexus::begin':}
 
   class{ 'nexus::package':
-    version        => $version,
-    revision       => $revision,
-    nexus_root     => $nexus_root,
-    nexus_home_dir => $nexus_home_dir,
-    nexus_user     => $nexus_user,
-    nexus_group    => $nexus_group,
-    require        => Anchor['nexus::begin'],
-    notify         => Class['nexus::service']
+    version             => $version,
+    revision            => $revision,
+    revision_in_archive => $revision_in_archive,
+    nexus_root          => $nexus_root,
+    nexus_home_dir      => $nexus_home_dir,
+    nexus_user          => $nexus_user,
+    nexus_group         => $nexus_group,
+    require             => Anchor['nexus::begin'],
+    notify              => Class['nexus::service']
   }
 
   class{ 'nexus::config':
