@@ -39,7 +39,10 @@ class nexus (
   $nexus_host     = $nexus::params::nexus_host,
   $nexus_port     = $nexus::params::nexus_port,
 ) inherits nexus::params {
-  include stdlib
+  
+  if !defined(Package['stdlib']) {
+    include stdlib
+  }
 
   # Bail if $version is not set.  Hopefully we can one day use 'latest'.
   if ($version == 'latest') or ($version == undef) {
