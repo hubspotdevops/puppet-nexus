@@ -39,7 +39,7 @@ class nexus (
   $nexus_host     = $nexus::params::nexus_host,
   $nexus_port     = $nexus::params::nexus_port,
 ) inherits nexus::params {
-  
+
   if !defined(Package['stdlib']) {
     include stdlib
   }
