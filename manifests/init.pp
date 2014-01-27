@@ -50,6 +50,14 @@ class nexus (
 
   anchor{ 'nexus::begin':}
 
+  user { $nexus_user:
+    ensure     => present,
+    name       => $nexus_user,
+    comment    => 'Nexus User',
+    home       => $nexus_root,
+    managehome => true
+  }
+
   class{ 'nexus::package':
     version        => $version,
     revision       => $revision,
