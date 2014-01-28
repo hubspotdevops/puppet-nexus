@@ -38,6 +38,7 @@ class nexus (
   $nexus_group    = $nexus::params::nexus_group,
   $nexus_host     = $nexus::params::nexus_host,
   $nexus_port     = $nexus::params::nexus_port,
+  $manage_nexus_user = $nexus::params::manage_nexus_user,
 ) inherits nexus::params {
   include stdlib
 
@@ -50,12 +51,19 @@ class nexus (
 
   anchor{ 'nexus::begin':}
 
-  user { $nexus_user:
-    ensure     => present,
-    name       => $nexus_user,
-    comment    => 'Nexus User',
-    home       => $nexus_root,
-    managehome => true
+  if($manage_nexus_user){
+    group { $nexus_group :
+        ensure  => present
+    }
+
+    user { $nexus_user:
+      ensure     => present,
+      name       => $nexus_user,
+      comment    => 'Nexus User',
+      home       => $nexus_root,
+      managehome => true,
+      groups     => [$nexus_group]
+    }
   }
 
   class{ 'nexus::package':
