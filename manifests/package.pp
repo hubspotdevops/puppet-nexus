@@ -89,4 +89,17 @@ class nexus::package (
     target  => $nexus_home_real,
     require => Exec['nexus-untar']
   }
+  
+   case $::osfamily {
+
+      'RedHat', 'Linux': {
+        file{"${nexus_home}/bin/jsw/linux-x86-32/wrapper":
+          mode => '0754'
+        }
+        file{"${nexus_home}/bin/jsw/linux-x86-64/wrapper":
+          mode => '0754'
+        }
+      }
+
+    }
 }
