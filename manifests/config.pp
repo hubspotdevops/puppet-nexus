@@ -23,6 +23,7 @@ class nexus::config(
   $nexus_home_dir,
   $nexus_host,
   $nexus_port,
+  $nexus_context,
 ) inherits nexus::params {
 
   $nexus_properties_file = "${nexus_root}/${nexus_home_dir}/conf/nexus.properties"
@@ -38,4 +39,12 @@ class nexus::config(
     match => '^application-port',
     line  => "application-port=${nexus_port}"
   }
+
+  file_line{ 'nexus-webapp-context-path':
+    path  => $nexus_properties_file,
+    match => '^nexus-webapp-context-path',
+    line  => "nexus-webapp-context-path=${nexus_context}"
+  }
+
+
 }
