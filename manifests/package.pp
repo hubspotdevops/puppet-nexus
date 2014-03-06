@@ -27,24 +27,16 @@
 #
 # Copyright 2013 Hubspot
 #
-class nexus::package (
-  $version,
-  $revision,
-  $nexus_root,
-  $nexus_home_dir,
-  $nexus_user,
-  $nexus_group,
-) inherits nexus::params {
+class nexus::package ($version, $revision, $nexus_root, $nexus_home_dir, $nexus_user, $nexus_group,) inherits nexus::params {
+  $download_site = $nexus::params::download_site
+  $nexus_home = "${nexus_root}/${nexus_home_dir}"
+  $nexus_work = "${nexus_root}/${nexus::params::nexus_work_dir}"
 
-  $download_site   = $nexus::params::download_site
-  $nexus_home      = "${nexus_root}/${nexus_home_dir}"
-  $nexus_work      = "${nexus_root}/${nexus::params::nexus_work_dir}"
+  $full_version = "${version}-${revision}"
 
-  $full_version    = "${version}-${revision}"
-
-  $nexus_archive   = "nexus-${full_version}-bundle.tar.gz"
-  $download_url    = "${download_site}/${nexus_archive}"
-  $dl_file         = "${nexus_root}/${nexus_archive}"
+  $nexus_archive = "nexus-${full_version}-bundle.tar.gz"
+  $download_url = "${download_site}/${nexus_archive}"
+  $dl_file = "${nexus_root}/${nexus_archive}"
   $nexus_home_real = "${nexus_root}/nexus-${full_version}"
 
   # NOTE: When setting version to 'latest' the site redirects to the latest
@@ -55,35 +47,37 @@ class nexus::package (
   # NOTE:  I *think* this won't repeatedly download the file because it's
   # linked to an exec resource which won't be realized if a directory
   # already exists.
-  wget::fetch{ $nexus_archive:
+  wget::fetch { $nexus_archive:
     source      => $download_url,
     destination => $dl_file,
     before      => Exec['nexus-untar'],
   }
 
-  exec{ 'nexus-untar':
+  exec { 'nexus-untar':
     command => "tar zxf ${dl_file}",
     cwd     => $nexus_root,
     creates => $nexus_home_real,
-    path    => ['/bin','/usr/bin'],
+    path    => ['/bin', '/usr/bin'],
   }
 
-  file{ $nexus_home_real:
+  file { $nexus_home_real:
     ensure  => directory,
     owner   => $nexus_user,
     group   => $nexus_group,
     recurse => true,
-    require => Exec[ 'nexus-untar']
+    require => Exec['nexus-untar']
   }
 
-  file{ $nexus_work:
-    ensure  => directory,
-    owner   => $nexus_user,
-    group   => $nexus_group,
-    require => Exec[ 'nexus-untar']
+  file { $nexus_work:
+    ensure       => directory,
+    owner        => $nexus_user,
+    group        => $nexus_group,
+    recurse      => true,
+    recurselimit => 1,
+    require      => Exec['nexus-untar']
   }
 
-  file{ $nexus_home:
+  file { $nexus_home:
     ensure  => link,
     target  => $nexus_home_real,
     require => Exec['nexus-untar']
