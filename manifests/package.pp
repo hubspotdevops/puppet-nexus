@@ -66,22 +66,24 @@ class nexus::package (
     cwd     => $nexus_root,
     creates => $nexus_home_real,
     path    => ['/bin','/usr/bin'],
+    notify  => [
+      Exec["${nexus_home_real}-ownership"],
+      Exec["${nexus_work}-ownership"],
+    ],
   }
 
-  file{ $nexus_home_real:
-    ensure  => directory,
-    owner   => $nexus_user,
-    group   => $nexus_group,
-    recurse => true,
-    require => Exec[ 'nexus-untar']
+  exec { "${nexus_home_real}-ownership" :
+    command     => "/bin/chown -R ${nexus_user}:${nexus_group} ${nexus_home_real}",
+    path        => ['/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin',],
+    refreshonly => true,
+    logoutput   => true,
   }
 
-  file{ $nexus_work:
-    ensure  => directory,
-    owner   => $nexus_user,
-    group   => $nexus_group,
-    recurse => true,
-    require => Exec[ 'nexus-untar']
+  exec { "${nexus_work}-ownership" :
+    command     => "/bin/chown -R ${nexus_user}:${nexus_group} ${nexus_work}",
+    path        => ['/usr/local/sbin', '/usr/local/bin', '/usr/sbin', '/usr/bin', '/sbin', '/bin',],
+    refreshonly => true,
+    logoutput   => true,
   }
 
   file{ $nexus_home:
