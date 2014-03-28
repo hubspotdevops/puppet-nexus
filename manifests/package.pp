@@ -73,7 +73,8 @@ class nexus::package (
     owner   => $nexus_user,
     group   => $nexus_group,
     recurse => true,
-    require => Exec[ 'nexus-untar']
+    require => Exec[ 'nexus-untar'],
+    mode    => undef
   }
 
   file{ $nexus_work:
@@ -81,12 +82,14 @@ class nexus::package (
     owner   => $nexus_user,
     group   => $nexus_group,
     recurse => true,
-    require => Exec[ 'nexus-untar']
+    require => Exec[ 'nexus-untar'],
+    mode    => undef
   }
 
   file{ $nexus_home:
     ensure  => link,
     target  => $nexus_home_real,
-    require => Exec['nexus-untar']
+    require => Exec['nexus-untar'],
+    mode    => undef
   }
 }
