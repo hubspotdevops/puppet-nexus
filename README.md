@@ -14,20 +14,18 @@ download link and determining the name of the nexus directory.
 
 ```puppet
 class role_nexus_server {
-  
+
   # puppetlabs-java
   # NOTE: Nexus requires
-  class{ '::java':
-    distribution => 'java-1.7.0-openjdk'
-  }
+  class { '::java': }
 
-  group{ 'nexus':
+  group { 'nexus':
     ensure => present,
     system => true
   }
 
-  user{ 'nexus':
-    ensure => present,
+  user { 'nexus':
+    ensure  => present,
     comment => 'Nexus user',
     gid     => 'nexus',
     home    => '/srv/nexus',
@@ -36,17 +34,14 @@ class role_nexus_server {
     require => Group['nexus']
   }
 
-  class{ '::nexus':
-    version        => '2.6.2',
-    nexus_user     => 'nexus',
-    nexus_group    => 'nexus'
-    nexus_root     => '/srv', # All directories and files will be relative to this
+  class { '::nexus':
+    version        => '2.8.0',
+    revision       => '05'
   }
-  
-  Class['::java'] ->
-  Group[$nexus_group] ->
-  User[$nexus_user] ->
-  Class['::nexus']
+
+  Class['::java'] -> Group[nexus] -> User[nexus] -> Class['::nexus']
+
+}
 ```
 
 ### Nginx proxy
