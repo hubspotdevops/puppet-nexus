@@ -30,13 +30,13 @@
 class nexus::package (
   $version,
   $revision,
+  $download_site,
   $nexus_root,
   $nexus_home_dir,
   $nexus_user,
   $nexus_group,
 ) inherits nexus::params {
 
-  $download_site   = $nexus::params::download_site
   $nexus_home      = "${nexus_root}/${nexus_home_dir}"
   $nexus_work      = "${nexus_root}/${nexus::params::nexus_work_dir}"
 
