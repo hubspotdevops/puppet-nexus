@@ -32,6 +32,7 @@
 class nexus (
   $version        = $nexus::params::version,
   $revision       = $nexus::params::revision,
+  $download_site  = $nexus::params::download_site,
   $nexus_root     = $nexus::params::nexus_root,
   $nexus_home_dir = $nexus::params::nexus_home_dir,
   $nexus_user     = $nexus::params::nexus_user,
@@ -69,6 +70,7 @@ class nexus (
   class{ 'nexus::package':
     version        => $version,
     revision       => $revision,
+    download_site  => $download_site,
     nexus_root     => $nexus_root,
     nexus_home_dir => $nexus_home_dir,
     nexus_user     => $nexus_user,
