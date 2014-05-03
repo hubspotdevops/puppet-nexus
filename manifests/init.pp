@@ -55,16 +55,17 @@ class nexus (
 
   if($nexus_manage_user){
     group { $nexus_group :
-        ensure  => present
+      ensure  => present
     }
 
     user { $nexus_user:
       ensure     => present,
-      name       => $nexus_user,
       comment    => 'Nexus User',
+      gid        => $nexus_group,
       home       => $nexus_root,
-      managehome => true,
-      groups     => [$nexus_group]
+      shell      => '/bin/sh', # unfortunately required to start application via script.
+      system     => true,
+      require    => Group['nexus']
     }
   }
 
