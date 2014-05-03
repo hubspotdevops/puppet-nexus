@@ -40,7 +40,7 @@ class nexus (
   $nexus_host        = $nexus::params::nexus_host,
   $nexus_port        = $nexus::params::nexus_port,
   $nexus_context     = $nexus::params::nexus_context,
-  $manage_nexus_user = $nexus::params::manage_nexus_user,
+  $nexus_manage_user = $nexus::params::nexus_manage_user,
 ) inherits nexus::params {
   include stdlib
 
@@ -53,7 +53,7 @@ class nexus (
 
   anchor{ 'nexus::begin':}
 
-  if($manage_nexus_user){
+  if($nexus_manage_user){
     group { $nexus_group :
         ensure  => present
     }
