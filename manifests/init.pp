@@ -30,15 +30,16 @@
 # Copyright 2013 Hubspot
 #
 class nexus (
-  $version        = $nexus::params::version,
-  $revision       = $nexus::params::revision,
-  $download_site  = $nexus::params::download_site,
-  $nexus_root     = $nexus::params::nexus_root,
-  $nexus_home_dir = $nexus::params::nexus_home_dir,
-  $nexus_user     = $nexus::params::nexus_user,
-  $nexus_group    = $nexus::params::nexus_group,
-  $nexus_host     = $nexus::params::nexus_host,
-  $nexus_port     = $nexus::params::nexus_port,
+  $version           = $nexus::params::version,
+  $revision          = $nexus::params::revision,
+  $download_site     = $nexus::params::download_site,
+  $nexus_root        = $nexus::params::nexus_root,
+  $nexus_home_dir    = $nexus::params::nexus_home_dir,
+  $nexus_user        = $nexus::params::nexus_user,
+  $nexus_group       = $nexus::params::nexus_group,
+  $nexus_host        = $nexus::params::nexus_host,
+  $nexus_port        = $nexus::params::nexus_port,
+  $nexus_context     = $nexus::params::nexus_context,
   $manage_nexus_user = $nexus::params::manage_nexus_user,
 ) inherits nexus::params {
   include stdlib
@@ -84,6 +85,7 @@ class nexus (
     nexus_home_dir => $nexus_home_dir,
     nexus_host     => $nexus_host,
     nexus_port     => $nexus_port,
+    nexus_context  => $nexus_context,
     require        => Class['nexus::package'],
     notify         => Class['nexus::service']
   }
