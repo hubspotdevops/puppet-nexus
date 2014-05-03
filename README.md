@@ -39,7 +39,7 @@ class role_nexus_server {
   class{ '::nexus':
     version        => '2.6.2',
     nexus_user     => 'nexus',
-    nexus_group    => 'nexus'
+    nexus_group    => 'nexus',
     nexus_root     => '/srv', # All directories and files will be relative to this
   }
   
