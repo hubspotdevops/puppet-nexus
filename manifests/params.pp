@@ -27,6 +27,7 @@ class nexus::params {
   $nexus_root     = '/srv'
   $nexus_home_dir = 'nexus'
   $nexus_work_dir = "$nexus_root/sonatype-work"
+  $nexus_work_dir_recurse = true
   $nexus_user     = 'nexus'
   $nexus_group    = 'nexus'
   $nexus_host     = '0.0.0.0'

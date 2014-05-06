@@ -36,6 +36,7 @@ class nexus::package (
   $nexus_user,
   $nexus_group,
   $nexus_work_dir,
+  $nexus_work_recurse,
 ) inherits nexus::params {
 
   $nexus_home      = "${nexus_root}/${nexus_home_dir}"
@@ -81,7 +82,7 @@ class nexus::package (
     ensure  => directory,
     owner   => $nexus_user,
     group   => $nexus_group,
-    recurse => true,
+    recurse => $nexus_work_recurse,
     require => Exec[ 'nexus-untar']
   }
 
