@@ -14,7 +14,7 @@ download link and determining the name of the nexus directory.
 
 ```puppet
 class role_nexus_server {
-  
+
   # puppetlabs-java
   # NOTE: Nexus requires
   class{ '::java': }
@@ -27,6 +27,7 @@ class role_nexus_server {
 
   Class['::java'] ->
   Class['::nexus']
+}
 ```
 
 ### Nginx proxy
