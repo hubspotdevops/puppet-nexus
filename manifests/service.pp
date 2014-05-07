@@ -38,7 +38,7 @@ class nexus::service(
   }
 
   file{ '/etc/init.d/nexus':
-    ensure => present,
+    ensure  => present,
     owner   => 'root',
     group   => 'root',
     mode    => '0755',
