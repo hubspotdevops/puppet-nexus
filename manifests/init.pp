@@ -63,7 +63,7 @@ class nexus (
       comment    => 'Nexus User',
       gid        => $nexus_group,
       home       => $nexus_root,
-      shell      => '/bin/sh', # unfortunately required to start application via script.
+      shell      => '/bin/sh', # required to start application via script.
       system     => true,
       require    => Group['nexus']
     }
