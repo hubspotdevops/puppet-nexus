@@ -32,5 +32,5 @@ class nexus::params {
   $nexus_host     = '0.0.0.0'
   $nexus_port     = '8081'
   $nexus_context  = '/nexus'
-  $manage_nexus_user = true
+  $nexus_manage_user = true
 }
