@@ -66,7 +66,16 @@ class nexus (
       shell      => '/bin/sh', # required to start application via script.
       system     => true,
       require    => Group['nexus']
+    } ->
+
+    file { $nexus_root:
+      ensure => present,
+      path   => $nexus_root,
+      owner  => $nexus_user,
+      group  => $nexus_group,
+      mode   => '0755'
     }
+
   }
 
   class{ 'nexus::package':
