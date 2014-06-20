@@ -49,8 +49,6 @@ class nexus (
     fail('Cannot set version nexus version to "latest" or leave undefined.')
   }
 
-
-
   anchor{ 'nexus::begin':}
 
   if($nexus_manage_user){
@@ -66,14 +64,17 @@ class nexus (
       shell      => '/bin/sh', # required to start application via script.
       system     => true,
       require    => Group['nexus']
-    } ->
+    }
 
-    file { $nexus_root:
-      ensure => directory,
-      path   => $nexus_root,
-      owner  => $nexus_user,
-      group  => $nexus_group,
-      mode   => '0755'
+
+    if ($nexus_root != $nexus::params::nexus_root) {
+      file { $nexus_root:
+        ensure => directory,
+        path   => $nexus_root,
+        owner  => $nexus_user,
+        group  => $nexus_group,
+        mode   => '0755'
+      }
     }
 
   }
