@@ -69,7 +69,7 @@ class nexus (
     } ->
 
     file { $nexus_root:
-      ensure => present,
+      ensure => directory,
       path   => $nexus_root,
       owner  => $nexus_user,
       group  => $nexus_group,
