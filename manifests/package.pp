@@ -68,11 +68,17 @@ class nexus::package (
     path    => ['/bin','/usr/bin'],
   }
 
+  file{ $nexus_root:
+    ensure  => directory,
+    owner   => $nexus_user,
+    group   => $nexus_group,
+    require => Exec[ 'nexus-untar' ]
+  }
+
   file{ $nexus_home_real:
     ensure  => directory,
     owner   => $nexus_user,
     group   => $nexus_group,
-    recurse => true,
     require => Exec[ 'nexus-untar']
   }
 
@@ -80,7 +86,6 @@ class nexus::package (
     ensure  => directory,
     owner   => $nexus_user,
     group   => $nexus_group,
-    recurse => true,
     require => Exec[ 'nexus-untar']
   }
 
