@@ -26,7 +26,7 @@ class nexus::params {
   $download_site  = 'http://www.sonatype.org/downloads'
   $nexus_root     = '/srv'
   $nexus_home_dir = 'nexus'
-  $nexus_work_dir = 'sonatype-work'
+  $nexus_work_dir = "$nexus_root/sonatype-work"
   $nexus_user     = 'nexus'
   $nexus_group    = 'nexus'
   $nexus_host     = '0.0.0.0'

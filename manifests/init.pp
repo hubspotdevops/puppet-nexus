@@ -41,6 +41,7 @@ class nexus (
   $nexus_port        = $nexus::params::nexus_port,
   $nexus_context     = $nexus::params::nexus_context,
   $nexus_manage_user = $nexus::params::nexus_manage_user,
+  $nexus_work_dir    = $nexus::params::nexus_work_dir,
 ) inherits nexus::params {
   include stdlib
 
@@ -77,6 +78,7 @@ class nexus (
     nexus_home_dir => $nexus_home_dir,
     nexus_user     => $nexus_user,
     nexus_group    => $nexus_group,
+    nexus_work_dir => $nexus_work_dir,
     require        => Anchor['nexus::begin'],
     notify         => Class['nexus::service']
   }
@@ -87,6 +89,7 @@ class nexus (
     nexus_host     => $nexus_host,
     nexus_port     => $nexus_port,
     nexus_context  => $nexus_context,
+    nexus_work_dir => $nexus_work_dir,
     require        => Class['nexus::package'],
     notify         => Class['nexus::service']
   }
