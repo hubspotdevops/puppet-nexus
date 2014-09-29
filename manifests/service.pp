@@ -48,10 +48,16 @@ class nexus::service(
     notify  => Service['nexus']
   }
 
+  if $version !~ /\d.*/ or versioncmp($version, '2.8.0') >= 0 {
+    status_line = "env run_as_user=${nexus_user} /etc/init.d/nexus status"
+  } else {
+    status_line = 'env run_as_user=root /etc/init.d/nexus status'
+  }
+
   service{ 'nexus':
     ensure  => running,
     enable  => true,
-    status  => 'env run_as_user=root /etc/init.d/nexus status',
+    status  => $status_line,
     require => [File['/etc/init.d/nexus'],
                 File_line['nexus_NEXUS_HOME'],
                 File_line['nexus_RUN_AS_USER'],]
