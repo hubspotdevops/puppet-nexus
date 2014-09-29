@@ -40,9 +40,8 @@ class nexus::package (
 ) inherits nexus::params {
 
   $nexus_home      = "${nexus_root}/${nexus_home_dir}"
-  $nexus_work      = "${nexus_work_dir}"
 
-  $full_version    = "${version}-${revision}"
+  $full_version = "${version}-${revision}"
 
   $nexus_archive   = "nexus-${version}-bundle.tar.gz"
   $download_url    = "${download_site}/${nexus_archive}"
@@ -78,7 +77,7 @@ class nexus::package (
     require => Exec[ 'nexus-untar']
   }
 
-  file{ $nexus_work:
+  file{ $nexus_work_dir:
     ensure  => directory,
     owner   => $nexus_user,
     group   => $nexus_group,

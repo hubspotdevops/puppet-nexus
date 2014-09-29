@@ -49,9 +49,9 @@ class nexus::service(
   }
 
   if $version !~ /\d.*/ or versioncmp($version, '2.8.0') >= 0 {
-    status_line = "env run_as_user=${nexus_user} /etc/init.d/nexus status"
+    $status_line = "env run_as_user=${nexus_user} /etc/init.d/nexus status"
   } else {
-    status_line = 'env run_as_user=root /etc/init.d/nexus status'
+    $status_line = 'env run_as_user=root /etc/init.d/nexus status'
   }
 
   service{ 'nexus':

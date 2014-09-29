@@ -51,8 +51,6 @@ class nexus (
     fail('Cannot set version nexus version to "latest" or leave undefined.')
   }
 
-
-
   anchor{ 'nexus::begin':}
 
   if($nexus_manage_user){
