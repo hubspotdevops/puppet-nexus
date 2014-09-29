@@ -51,7 +51,7 @@ class nexus::service(
   service{ 'nexus':
     ensure  => running,
     enable  => true,
-    status  => 'env run_as_user=root /etc/init.d/nexus status',
+    status  => "env run_as_user=${nexus_user} /etc/init.d/nexus status",
     require => [File['/etc/init.d/nexus'],
                 File_line['nexus_NEXUS_HOME'],
                 File_line['nexus_RUN_AS_USER'],]
