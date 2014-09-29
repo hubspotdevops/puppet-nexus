@@ -29,24 +29,23 @@
 #
 class nexus::package (
   $version,
-  $revision,
   $download_site,
   $nexus_root,
   $nexus_home_dir,
   $nexus_user,
   $nexus_group,
   $nexus_work_dir,
+  $nexus_work_recurse,
 ) inherits nexus::params {
 
   $nexus_home      = "${nexus_root}/${nexus_home_dir}"
   $nexus_work      = "${nexus_work_dir}"
 
-  $full_version    = "${version}-${revision}"
 
-  $nexus_archive   = "nexus-${full_version}-bundle.tar.gz"
+  $nexus_archive   = "nexus-${version}-bundle.tar.gz"
   $download_url    = "${download_site}/${nexus_archive}"
   $dl_file         = "${nexus_root}/${nexus_archive}"
-  $nexus_home_real = "${nexus_root}/nexus-${full_version}"
+  $nexus_home_real = "${nexus_root}/nexus-${version}"
 
   # NOTE: When setting version to 'latest' the site redirects to the latest
   # release. But, nexus-latest-bundle.tar.gz will already exist and
@@ -81,7 +80,7 @@ class nexus::package (
     ensure  => directory,
     owner   => $nexus_user,
     group   => $nexus_group,
-    recurse => true,
+    recurse => $nexus_work_recurse,
     require => Exec[ 'nexus-untar']
   }
 

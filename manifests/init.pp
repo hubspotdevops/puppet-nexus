@@ -30,24 +30,29 @@
 # Copyright 2013 Hubspot
 #
 class nexus (
-  $version           = $nexus::params::version,
-  $revision          = $nexus::params::revision,
-  $download_site     = $nexus::params::download_site,
-  $nexus_root        = $nexus::params::nexus_root,
-  $nexus_home_dir    = $nexus::params::nexus_home_dir,
-  $nexus_user        = $nexus::params::nexus_user,
-  $nexus_group       = $nexus::params::nexus_group,
-  $nexus_host        = $nexus::params::nexus_host,
-  $nexus_port        = $nexus::params::nexus_port,
-  $nexus_context     = $nexus::params::nexus_context,
-  $nexus_manage_user = $nexus::params::nexus_manage_user,
-  $nexus_work_dir    = $nexus::params::nexus_work_dir,
+  $version            = $nexus::params::version,
+  $revision           = $nexus::params::revision,
+  $download_site      = $nexus::params::download_site,
+  $nexus_root         = $nexus::params::nexus_root,
+  $nexus_home_dir     = $nexus::params::nexus_home_dir,
+  $nexus_user         = $nexus::params::nexus_user,
+  $nexus_group        = $nexus::params::nexus_group,
+  $nexus_host         = $nexus::params::nexus_host,
+  $nexus_port         = $nexus::params::nexus_port,
+  $nexus_work_recurse = $nexus::params::nexus_work_recurse,
+  $nexus_context      = $nexus::params::nexus_context,
+  $nexus_manage_user  = $nexus::params::nexus_manage_user,
+  $nexus_work_dir     = $nexus::params::nexus_work_dir,
 ) inherits nexus::params {
   include stdlib
 
   # Bail if $version is not set.  Hopefully we can one day use 'latest'.
   if ($version == 'latest') or ($version == undef) {
     fail('Cannot set version nexus version to "latest" or leave undefined.')
+  }
+
+  if $revision != 'deprecated' {
+    warning('$revision parameter is deprecated. Sonotype no longer sets this in package names.')
   }
 
 
@@ -71,16 +76,16 @@ class nexus (
   }
 
   class{ 'nexus::package':
-    version        => $version,
-    revision       => $revision,
-    download_site  => $download_site,
-    nexus_root     => $nexus_root,
-    nexus_home_dir => $nexus_home_dir,
-    nexus_user     => $nexus_user,
-    nexus_group    => $nexus_group,
-    nexus_work_dir => $nexus_work_dir,
-    require        => Anchor['nexus::begin'],
-    notify         => Class['nexus::service']
+    version            => $version,
+    download_site      => $download_site,
+    nexus_root         => $nexus_root,
+    nexus_home_dir     => $nexus_home_dir,
+    nexus_user         => $nexus_user,
+    nexus_group        => $nexus_group,
+    nexus_work_dir     => $nexus_work_dir,
+    nexus_work_recurse => $nexus_work_recurse,
+    require            => Anchor['nexus::begin'],
+    notify             => Class['nexus::service']
   }
 
   class{ 'nexus::config':
