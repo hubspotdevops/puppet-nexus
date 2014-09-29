@@ -50,6 +50,10 @@ class nexus (
     fail('Cannot set version nexus version to "latest" or leave undefined.')
   }
 
+  if $revision != 'deprecated' {
+    warning('$revision parameter is deprecated. Sonotype no longer sets this in package names.')
+  }
+
 
 
   anchor{ 'nexus::begin':}
@@ -72,7 +76,6 @@ class nexus (
 
   class{ 'nexus::package':
     version        => $version,
-    revision       => $revision,
     download_site  => $download_site,
     nexus_root     => $nexus_root,
     nexus_home_dir => $nexus_home_dir,
