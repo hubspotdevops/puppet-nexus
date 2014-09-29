@@ -76,15 +76,16 @@ class nexus (
   }
 
   class{ 'nexus::package':
-    version        => $version,
-    download_site  => $download_site,
-    nexus_root     => $nexus_root,
-    nexus_home_dir => $nexus_home_dir,
-    nexus_user     => $nexus_user,
-    nexus_group    => $nexus_group,
-    nexus_work_dir => $nexus_work_dir,
-    require        => Anchor['nexus::begin'],
-    notify         => Class['nexus::service']
+    version            => $version,
+    download_site      => $download_site,
+    nexus_root         => $nexus_root,
+    nexus_home_dir     => $nexus_home_dir,
+    nexus_user         => $nexus_user,
+    nexus_group        => $nexus_group,
+    nexus_work_dir     => $nexus_work_dir,
+    nexus_work_recurse => $nexus_work_recurse,
+    require            => Anchor['nexus::begin'],
+    notify             => Class['nexus::service']
   }
 
   class{ 'nexus::config':
