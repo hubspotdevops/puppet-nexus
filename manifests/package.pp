@@ -29,6 +29,7 @@
 #
 class nexus::package (
   $version,
+  $revision,
   $download_site,
   $nexus_root,
   $nexus_home_dir,
