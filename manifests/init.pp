@@ -39,7 +39,7 @@ class nexus (
   $nexus_group        = $nexus::params::nexus_group,
   $nexus_host         = $nexus::params::nexus_host,
   $nexus_port         = $nexus::params::nexus_port,
-  $nexus_work_recurse = $nexus::params::nexus_work_dir_recurse,
+  $nexus_work_recurse = $nexus::params::nexus_work_recurse,
   $nexus_context      = $nexus::params::nexus_context,
   $nexus_manage_user  = $nexus::params::nexus_manage_user,
   $nexus_work_dir     = $nexus::params::nexus_work_dir,
