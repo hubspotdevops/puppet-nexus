@@ -97,7 +97,7 @@ class nexus (
     nexus_host     => $nexus_host,
     nexus_port     => $nexus_port,
     nexus_context  => $nexus_context,
-    nexus_work_dir => $nexus_work_dir,
+    nexus_work_dir => $real_nexus_work_dir,
     require        => Class['nexus::package'],
     notify         => Class['nexus::service']
   }
