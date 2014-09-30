@@ -35,6 +35,7 @@ class nexus (
   $download_site      = $nexus::params::download_site,
   $nexus_root         = $nexus::params::nexus_root,
   $nexus_home_dir     = $nexus::params::nexus_home_dir,
+  $nexus_work_dir     = undef,
   $nexus_user         = $nexus::params::nexus_user,
   $nexus_group        = $nexus::params::nexus_group,
   $nexus_host         = $nexus::params::nexus_host,
@@ -42,13 +43,18 @@ class nexus (
   $nexus_work_recurse = $nexus::params::nexus_work_recurse,
   $nexus_context      = $nexus::params::nexus_context,
   $nexus_manage_user  = $nexus::params::nexus_manage_user,
-  $nexus_work_dir     = $nexus::params::nexus_work_dir,
 ) inherits nexus::params {
   include stdlib
 
   # Bail if $version is not set.  Hopefully we can one day use 'latest'.
   if ($version == 'latest') or ($version == undef) {
     fail('Cannot set version nexus version to "latest" or leave undefined.')
+  }
+
+  if $nexus_work_dir != undef {
+    $real_nexus_work_dirc= $nexus_work_dir
+  } else {
+    $real_nexus_work_dir = "${nexus_root}/sonatype-work"
   }
 
   anchor{ 'nexus::begin':}
@@ -77,7 +83,7 @@ class nexus (
     nexus_home_dir     => $nexus_home_dir,
     nexus_user         => $nexus_user,
     nexus_group        => $nexus_group,
-    nexus_work_dir     => $nexus_work_dir,
+    nexus_work_dir     => $real_nexus_work_dir,
     nexus_work_recurse => $nexus_work_recurse,
     require            => Anchor['nexus::begin'],
     notify             => Class['nexus::service']
