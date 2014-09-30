@@ -69,6 +69,9 @@ class nexus::package (
     path    => ['/bin','/usr/bin'],
   }
 
+  # NOTE: $nexus_work_dir in later releases was moved to a directory not
+  # under the application.  This is why we do not make recursing optional
+  # for this resource but do for $nexus_work_dir.
   file{ $nexus_home_real:
     ensure  => directory,
     owner   => $nexus_user,
