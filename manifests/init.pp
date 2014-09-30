@@ -67,6 +67,18 @@ class nexus (
       system     => true,
       require    => Group['nexus']
     }
+
+
+    if ($nexus_root != $nexus::params::nexus_root) {
+      file { $nexus_root:
+        ensure => directory,
+        path   => $nexus_root,
+        owner  => $nexus_user,
+        group  => $nexus_group,
+        mode   => '0755'
+      }
+    }
+
   }
 
   class{ 'nexus::package':
