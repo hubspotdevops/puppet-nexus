@@ -36,6 +36,7 @@ class nexus::package (
   $nexus_user,
   $nexus_group,
   $nexus_work_dir,
+  $nexus_work_dir_manage,
   $nexus_work_recurse,
 ) inherits nexus::params {
 
@@ -69,6 +70,9 @@ class nexus::package (
     path    => ['/bin','/usr/bin'],
   }
 
+  # NOTE: $nexus_work_dir in later releases was moved to a directory not
+  # under the application.  This is why we do not make recursing optional
+  # for this resource but do for $nexus_work_dir.
   file{ $nexus_home_real:
     ensure  => directory,
     owner   => $nexus_user,
@@ -77,12 +81,17 @@ class nexus::package (
     require => Exec[ 'nexus-untar']
   }
 
-  file{ $nexus_work_dir:
-    ensure  => directory,
-    owner   => $nexus_user,
-    group   => $nexus_group,
-    recurse => $nexus_work_recurse,
-    require => Exec[ 'nexus-untar']
+
+  # I have an EBS volume for $nexus_work_dir and mounting code in our tree
+  # creates this and results in a duplicate resource. -tmclaughlin
+  if $nexus_work_dir_manage == true {
+    file{ $nexus_work_dir:
+      ensure  => directory,
+      owner   => $nexus_user,
+      group   => $nexus_group,
+      recurse => $nexus_work_recurse,
+      require => Exec[ 'nexus-untar']
+    }
   }
 
   file{ $nexus_home:

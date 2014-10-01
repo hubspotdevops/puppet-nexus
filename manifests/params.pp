@@ -21,17 +21,17 @@
 #
 class nexus::params {
   # See nexus::package on why this won't increment the package version.
-  $version            = 'latest'
-  $revision           = '01'
-  $download_site      = 'http://download.sonatype.com/nexus/oss'
-  $nexus_root         = '/srv'
-  $nexus_home_dir     = 'nexus'
-  $nexus_work_dir     = "${nexus_root}/sonatype-work"
-  $nexus_work_recurse = true
-  $nexus_user         = 'nexus'
-  $nexus_group        = 'nexus'
-  $nexus_host         = '0.0.0.0'
-  $nexus_port         = '8081'
-  $nexus_context      = '/nexus'
-  $nexus_manage_user  = true
+  $version               = 'latest'
+  $revision              = '01'
+  $download_site         = 'http://download.sonatype.com/nexus/oss'
+  $nexus_root            = '/srv'
+  $nexus_home_dir        = 'nexus'
+  $nexus_work_recurse    = true
+  $nexus_work_dir_manage = true
+  $nexus_user            = 'nexus'
+  $nexus_group           = 'nexus'
+  $nexus_host            = '0.0.0.0'
+  $nexus_port            = '8081'
+  $nexus_context         = '/nexus'
+  $nexus_manage_user     = true
 }
