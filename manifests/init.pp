@@ -53,7 +53,7 @@ class nexus (
   }
 
   if $nexus_work_dir != undef {
-    $real_nexus_work_dirc = $nexus_work_dir
+    $real_nexus_work_dir = $nexus_work_dir
   } else {
     $real_nexus_work_dir = "${nexus_root}/sonatype-work/nexus"
   }
