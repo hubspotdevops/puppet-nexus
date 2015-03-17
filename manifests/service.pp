@@ -18,10 +18,11 @@
 #
 # Copyright 2013 Hubspot
 #
-class nexus::service(
-  $nexus_home,
-  $nexus_user
-) inherits nexus::params {
+class nexus::service {
+  # acquire our needed parameters out of the master class
+  $nexus_home = "${::nexus::nexus_root}/${::nexus::nexus_home_dir}"
+  $nexus_user = $::nexus::nexus_user
+  $version = $::nexus::version
 
   $nexus_script = "${nexus_home}/bin/nexus"
 
