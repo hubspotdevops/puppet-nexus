@@ -1,0 +1,6 @@
+fixtures:
+  forge_modules:
+    stdlib: 'puppetlabs/stdlib'
+    wget: 'maestrodev/wget'
+  symlinks:
+    nexus: "#{source_dir}"
