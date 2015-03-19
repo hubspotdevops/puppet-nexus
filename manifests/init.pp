@@ -101,7 +101,11 @@ class nexus (
     notify         => Class['nexus::service']
   }
 
-  include '::nexus::service'
+  class { 'nexus::service':
+    nexus_home => "${nexus_root}/${nexus_home_dir}",
+    nexus_user => $nexus_user,
+    version    => $version,
+  }
 
   Anchor['nexus::begin'] ->
     Class['nexus::package'] ->
