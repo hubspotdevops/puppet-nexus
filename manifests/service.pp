@@ -6,9 +6,24 @@
 #
 # NONE
 #
+# === Variables
+#
+# [*nexus_home*] 
+#   The home location for the service
+#
+# [*nexus_user*]
+#   The user to run the service as
+#
+# [*version*]
+#   The version of nexus
+#
 # === Examples
 #
-# class{ 'nexus::service': }
+# class{ 'nexus::service':
+#   nexus_home => '/srv/nexus',
+#   nexus_user => 'nexus',
+#   version    => '2.8.0',
+# }
 #
 # === Authors
 #
@@ -18,11 +33,11 @@
 #
 # Copyright 2013 Hubspot
 #
-class nexus::service(
+class nexus::service (
   $nexus_home,
-  $nexus_user
-) inherits nexus::params {
-
+  $nexus_user,
+  $version
+) {
   $nexus_script = "${nexus_home}/bin/nexus"
 
   file_line{ 'nexus_NEXUS_HOME':

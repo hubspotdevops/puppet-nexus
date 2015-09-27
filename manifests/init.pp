@@ -58,7 +58,8 @@ class nexus (
     $real_nexus_work_dir = "${nexus_root}/sonatype-work/nexus"
   }
 
-  anchor{ 'nexus::begin':}
+  anchor{ 'nexus::begin': }
+  anchor{ 'nexus::end': }
 
   if($nexus_manage_user){
     group { $nexus_group :
@@ -87,7 +88,6 @@ class nexus (
     nexus_work_dir        => $real_nexus_work_dir,
     nexus_work_dir_manage => $nexus_work_dir_manage,
     nexus_work_recurse    => $nexus_work_recurse,
-    require               => Anchor['nexus::begin'],
     notify                => Class['nexus::service']
   }
 
@@ -98,17 +98,18 @@ class nexus (
     nexus_port     => $nexus_port,
     nexus_context  => $nexus_context,
     nexus_work_dir => $real_nexus_work_dir,
-    require        => Class['nexus::package'],
     notify         => Class['nexus::service']
   }
 
-  class{ 'nexus::service':
+  class { 'nexus::service':
     nexus_home => "${nexus_root}/${nexus_home_dir}",
     nexus_user => $nexus_user,
-    require    => Class['nexus::config']
+    version    => $version,
   }
 
-  anchor{ 'nexus::end':
-    require => Class['nexus::service']
-  }
+  Anchor['nexus::begin'] ->
+    Class['nexus::package'] ->
+    Class['nexus::config'] ->
+    Class['nexus::service'] ->
+  Anchor['nexus::end']
 }
