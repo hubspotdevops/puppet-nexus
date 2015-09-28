@@ -20,6 +20,19 @@ describe 'nexus', :type => :class do
     it { should create_class('nexus::package') }
     it { should create_class('nexus::config') }
     it { should create_class('nexus::service') }
+
+    it 'should handle deploy_pro' do
+      params.merge!(
+        {
+          'deploy_pro' => true,
+        }
+      )
+
+      should create_class('nexus::package').with(
+        'deploy_pro'    => true,
+        'download_site' => 'http://download.sonatype.com/nexus/professional-bundle',
+      )
+    end
   end
 end
 
