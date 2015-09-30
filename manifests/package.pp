@@ -30,6 +30,7 @@
 class nexus::package (
   $version,
   $revision,
+  $deploy_pro,
   $download_site,
   $nexus_root,
   $nexus_home_dir,
@@ -44,10 +45,16 @@ class nexus::package (
 
   $full_version = "${version}-${revision}"
 
-  $nexus_archive   = "nexus-${version}-bundle.tar.gz"
+  if ($deploy_pro) {
+    $bundle_type = '-professional'
+  } else {
+    $bundle_type = ''
+  }
+
+  $nexus_archive   = "nexus${bundle_type}-${full_version}-bundle.tar.gz"
   $download_url    = "${download_site}/${nexus_archive}"
   $dl_file         = "${nexus_root}/${nexus_archive}"
-  $nexus_home_real = "${nexus_root}/nexus-${full_version}"
+  $nexus_home_real = "${nexus_root}/nexus${bundle_type}-${full_version}"
 
   # NOTE: When setting version to 'latest' the site redirects to the latest
   # release. But, nexus-latest-bundle.tar.gz will already exist and

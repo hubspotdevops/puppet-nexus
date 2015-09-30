@@ -30,6 +30,9 @@ class role_nexus_server {
 }
 ```
 
+NOTE: If you wish to deploy a Nexus Pro server instead of Nexus OSS set
+`deploy_pro => true`
+
 ### Nginx proxy
 The following is setup for using the
 [jfryman/puppet-nginx](https://github.com/jfryman/puppet-nginx) module. Nexus

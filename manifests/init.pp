@@ -32,6 +32,7 @@
 class nexus (
   $version               = $nexus::params::version,
   $revision              = $nexus::params::revision,
+  $deploy_pro            = $nexus::params::deploy_pro,
   $download_site         = $nexus::params::download_site,
   $nexus_root            = $nexus::params::nexus_root,
   $nexus_home_dir        = $nexus::params::nexus_home_dir,
@@ -58,6 +59,23 @@ class nexus (
     $real_nexus_work_dir = "${nexus_root}/sonatype-work/nexus"
   }
 
+  # Determine if Nexus Pro should be deployed instead of OSS
+  validate_bool($deploy_pro)
+  if ($deploy_pro) {
+    if ( $download_site != $nexus::params::download_site) {
+      # Use any download site that was passed in
+      $real_download_site = $download_site
+    } else {
+      # No download site was specifically defined, the default is
+      # incorrect for pro so switch to the correct one
+      $real_download_site = $nexus::params::pro_download_site
+    }
+  } else {
+    # Deploy OSS version. The default download_site, or whatever is
+    # passed in is the correct location to download from
+    $real_download_site = $download_site
+  }
+
   anchor{ 'nexus::begin': }
   anchor{ 'nexus::end': }
 
@@ -80,7 +98,8 @@ class nexus (
   class{ 'nexus::package':
     version               => $version,
     revision              => $revision,
-    download_site         => $download_site,
+    deploy_pro            => $deploy_pro,
+    download_site         => $real_download_site,
     nexus_root            => $nexus_root,
     nexus_home_dir        => $nexus_home_dir,
     nexus_user            => $nexus_user,
