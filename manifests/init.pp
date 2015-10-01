@@ -91,7 +91,7 @@ class nexus (
       home    => $nexus_root,
       shell   => '/bin/sh', # required to start application via script.
       system  => true,
-      require => Group['nexus']
+      require => Group[$nexus_group]
     }
   }
 
