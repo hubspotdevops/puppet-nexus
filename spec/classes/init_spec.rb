@@ -17,6 +17,9 @@ describe 'nexus', :type => :class do
   end
 
   context 'with a version set' do
+    it { should contain_class('nexus') }
+    it { should contain_class('nexus::params') }
+
     it { should contain_group('nexus').with(
       'ensure' => 'present',
     ) }
@@ -52,6 +55,17 @@ describe 'nexus', :type => :class do
         'deploy_pro'    => true,
         'download_site' => 'http://download.sonatype.com/nexus/professional-bundle',
       )
+    end
+
+    it 'should not have a user or group if nexus_manage_user is false' do
+      params.merge!(
+        {
+          'nexus_manage_user' => false,
+        }
+      )
+
+      should_not contain_group('nexus')
+      should_not contain_user('nexus')
     end
   end
 end
