@@ -29,13 +29,13 @@ class nexus::config(
 
   $nexus_properties_file = "${nexus_root}/${nexus_home_dir}/conf/nexus.properties"
 
-  file_line{ 'nexus-appliction-host':
+  file_line{ 'nexus-application-host':
     path  => $nexus_properties_file,
     match => '^application-host',
     line  => "application-host=${nexus_host}"
   }
 
-  file_line{ 'nexus-appliction-port':
+  file_line{ 'nexus-application-port':
     path  => $nexus_properties_file,
     match => '^application-port',
     line  => "application-port=${nexus_port}"
