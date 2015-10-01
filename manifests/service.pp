@@ -41,15 +41,15 @@ class nexus::service (
   $nexus_script = "${nexus_home}/bin/nexus"
 
   file_line{ 'nexus_NEXUS_HOME':
-    path    => $nexus_script,
-    match   => '^#?NEXUS_HOME=',
-    line    => "NEXUS_HOME=${nexus_home}",
+    path  => $nexus_script,
+    match => '^#?NEXUS_HOME=',
+    line  => "NEXUS_HOME=${nexus_home}",
   }
 
   file_line{ 'nexus_RUN_AS_USER':
-    path    => $nexus_script,
-    match   => '^#?RUN_AS_USER=',
-    line    => "RUN_AS_USER=\${run_as_user:-${nexus_user}}",
+    path  => $nexus_script,
+    match => '^#?RUN_AS_USER=',
+    line  => "RUN_AS_USER=\${run_as_user:-${nexus_user}}",
   }
 
   file{ '/etc/init.d/nexus':

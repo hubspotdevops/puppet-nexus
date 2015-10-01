@@ -65,7 +65,7 @@ describe 'nexus::package', :type => :class do
       'require' => 'Exec[nexus-untar]',
     ) }
 
-    it 'should handle deploy_true' do
+    it 'should handle deploy_pro' do
       params.merge!(
         {
           'deploy_pro'    => true,
