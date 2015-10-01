@@ -85,13 +85,13 @@ class nexus (
     }
 
     user { $nexus_user:
-      ensure     => present,
-      comment    => 'Nexus User',
-      gid        => $nexus_group,
-      home       => $nexus_root,
-      shell      => '/bin/sh', # required to start application via script.
-      system     => true,
-      require    => Group['nexus']
+      ensure  => present,
+      comment => 'Nexus User',
+      gid     => $nexus_group,
+      home    => $nexus_root,
+      shell   => '/bin/sh', # required to start application via script.
+      system  => true,
+      require => Group['nexus']
     }
   }
 
