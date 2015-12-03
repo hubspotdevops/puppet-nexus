@@ -81,11 +81,12 @@ class nexus::package (
   # under the application.  This is why we do not make recursing optional
   # for this resource but do for $nexus_work_dir.
   file{ $nexus_home_real:
-    ensure  => directory,
-    owner   => $nexus_user,
-    group   => $nexus_group,
-    recurse => true,
-    require => Exec[ 'nexus-untar']
+    ensure                  => directory,
+    owner                   => $nexus_user,
+    group                   => $nexus_group,
+    recurse                 => true,
+    selinux_ignore_defaults => $nexus_selinux_ignore_defaults,
+    require                 => Exec[ 'nexus-untar']
   }
 
 
@@ -93,11 +94,12 @@ class nexus::package (
   # creates this and results in a duplicate resource. -tmclaughlin
   if $nexus_work_dir_manage == true {
     file{ $nexus_work_dir:
-      ensure  => directory,
-      owner   => $nexus_user,
-      group   => $nexus_group,
-      recurse => $nexus_work_recurse,
-      require => Exec[ 'nexus-untar']
+      ensure                  => directory,
+      owner                   => $nexus_user,
+      group                   => $nexus_group,
+      recurse                 => $nexus_work_recurse,
+      selinux_ignore_defaults => $nexus_selinux_ignore_defaults,
+      require                 => Exec[ 'nexus-untar']
     }
   }
 
