@@ -25,7 +25,7 @@ class nexus::config(
   $nexus_port,
   $nexus_context,
   $nexus_work_dir,
-) inherits nexus::params {
+) {
 
   $nexus_properties_file = "${nexus_root}/${nexus_home_dir}/conf/nexus.properties"
 

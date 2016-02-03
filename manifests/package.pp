@@ -39,7 +39,7 @@ class nexus::package (
   $nexus_work_dir,
   $nexus_work_dir_manage,
   $nexus_work_recurse,
-) inherits nexus::params {
+) {
 
   $nexus_home      = "${nexus_root}/${nexus_home_dir}"
 
