@@ -19,12 +19,12 @@
 # Copyright 2013 Hubspot
 #
 class nexus::config(
-  $nexus_root,
-  $nexus_home_dir,
-  $nexus_host,
-  $nexus_port,
-  $nexus_context,
-  $nexus_work_dir,
+  $nexus_root = $::nexus::nexus_root,
+  $nexus_home_dir = $::nexus::nexus_home_dir,
+  $nexus_host = $::nexus::nexus_host,
+  $nexus_port = $::nexus::nexus_port,
+  $nexus_context = $::nexus::nexus_context,
+  $nexus_work_dir = $::nexus::nexus_work_dir,
 ) {
 
   $nexus_properties_file = "${nexus_root}/${nexus_home_dir}/conf/nexus.properties"
@@ -46,7 +46,7 @@ class nexus::config(
     match => '^nexus-webapp-context-path',
     line  => "nexus-webapp-context-path=${nexus_context}"
   }
-  
+
   file_line{ 'nexus-work':
     path  => $nexus_properties_file,
     match => '^nexus-work',

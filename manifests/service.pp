@@ -8,7 +8,7 @@
 #
 # === Variables
 #
-# [*nexus_home*] 
+# [*nexus_home*]
 #   The home location for the service
 #
 # [*nexus_user*]
@@ -34,9 +34,9 @@
 # Copyright 2013 Hubspot
 #
 class nexus::service (
-  $nexus_home,
-  $nexus_user,
-  $version
+  $nexus_home = $::nexus::nexus_home,
+  $nexus_user = $::nexus::nexus_user,
+  $version = $::nexus::version,
 ) {
   $nexus_script = "${nexus_home}/bin/nexus"
 

@@ -28,17 +28,18 @@
 # Copyright 2013 Hubspot
 #
 class nexus::package (
-  $version,
-  $revision,
-  $deploy_pro,
-  $download_site,
-  $nexus_root,
-  $nexus_home_dir,
-  $nexus_user,
-  $nexus_group,
-  $nexus_work_dir,
-  $nexus_work_dir_manage,
-  $nexus_work_recurse,
+  $version = $::nexus::version,
+  $revision = $::nexus::revision,
+  $deploy_pro = $::nexus::deploy_pro,
+  $download_site = $::nexus::download_site,
+  $nexus_root = $::nexus::nexus_root,
+  $nexus_home_dir = $::nexus::nexus_home_dir,
+  $nexus_user = $::nexus::nexus_user,
+  $nexus_group = $::nexus::nexus_group,
+  $nexus_work_dir = $::nexus::nexus_work_dir,
+  $nexus_work_dir_manage = $::nexus::nexus_work_dir_manage,
+  $nexus_work_recurse = $::nexus::nexus_work_recurse,
+  $nexus_selinux_ignore_defaults = $::nexus::nexus_selinux_ignore_defaults,
 ) {
 
   $nexus_home      = "${nexus_root}/${nexus_home_dir}"
