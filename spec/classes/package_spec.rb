@@ -18,15 +18,6 @@ describe 'nexus::package', :type => :class do
     }
   }
 
-  context 'no params set' do
-    let(:params) {{}}
-
-    it 'should fail' do
-      expect { should compile }.to raise_error(RSpec::Expectations::ExpectationNotMetError,
-              /Must pass /)
-    end
-  end
-
   context 'with default values' do
     it { should contain_class('nexus::package') }
 

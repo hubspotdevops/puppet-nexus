@@ -9,15 +9,6 @@ describe 'nexus::service', :type => :class do
     }
   }
 
-  context 'no params set' do
-    let(:params) {{}}
-
-    it 'should fail' do
-      expect { should compile }.to raise_error(RSpec::Expectations::ExpectationNotMetError,
-              /Must pass nexus_home/)
-    end
-  end
-
   context 'with test values' do
     it { should contain_class('nexus::service') }
 
