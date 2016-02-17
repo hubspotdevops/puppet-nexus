@@ -15,6 +15,7 @@ describe 'nexus::package', :type => :class do
       # Assume a good revision as init.pp screens for us
       'revision'              => '01',
       'version'               => '2.11.2',
+      'download_folder'       => '/srv',
     }
   }
 
@@ -28,8 +29,7 @@ describe 'nexus::package', :type => :class do
     ) }
 
     it { should contain_exec('nexus-untar').with(
-      'command' => 'tar zxf /srv/nexus-2.11.2-01-bundle.tar.gz',
-      'cwd'     => '/srv',
+      'command' => 'tar zxf /srv/nexus-2.11.2-01-bundle.tar.gz --directory /srv',
       'creates' => '/srv/nexus-2.11.2-01',
       'path'    => [ '/bin', '/usr/bin' ],
     ) }
@@ -70,7 +70,7 @@ describe 'nexus::package', :type => :class do
       )
 
       should contain_exec('nexus-untar').with(
-        'command' => 'tar zxf /srv/nexus-professional-2.11.2-01-bundle.tar.gz',
+        'command' => 'tar zxf /srv/nexus-professional-2.11.2-01-bundle.tar.gz --directory /srv',
         'creates' => '/srv/nexus-professional-2.11.2-01',
       )
 
