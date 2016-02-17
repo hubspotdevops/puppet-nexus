@@ -29,8 +29,14 @@ describe 'apt class' do
       it { is_expected.to be_running }
     end
 
-    describe command('curl 0.0.0.0:8081/nexus/') do
-      its(:stdout) { should match /Sonatype Nexus&trade; 2.8.0-05/ }
+    context 'Nexus should be running on the default port' do
+      describe command('sleep 30 && echo "Give Nexus time to start"') do
+        its(:exit_status) { should eq 0 }
+      end
+
+      describe command('curl 0.0.0.0:8081/nexus/') do
+        its(:stdout) { should match /Sonatype Nexus&trade; 2.8.0-05/ }
+      end
     end
 
   end
