@@ -45,6 +45,7 @@ class nexus (
   $nexus_work_recurse    = $nexus::params::nexus_work_recurse,
   $nexus_context         = $nexus::params::nexus_context,
   $nexus_manage_user     = $nexus::params::nexus_manage_user,
+  $download_folder       = $nexus::params::download_folder,
 ) inherits nexus::params {
   include stdlib
 

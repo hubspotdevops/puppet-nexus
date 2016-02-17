@@ -40,6 +40,7 @@ class nexus::package (
   $nexus_work_dir_manage = $::nexus::nexus_work_dir_manage,
   $nexus_work_recurse = $::nexus::nexus_work_recurse,
   $nexus_selinux_ignore_defaults = $::nexus::nexus_selinux_ignore_defaults,
+  $download_folder = $::nexus::download_folder,
 ) {
 
   $nexus_home      = "${nexus_root}/${nexus_home_dir}"
@@ -54,7 +55,7 @@ class nexus::package (
 
   $nexus_archive   = "nexus${bundle_type}-${full_version}-bundle.tar.gz"
   $download_url    = "${download_site}/${nexus_archive}"
-  $dl_file         = "${nexus_root}/${nexus_archive}"
+  $dl_file         = "${download_folder}/${nexus_archive}"
   $nexus_home_real = "${nexus_root}/nexus${bundle_type}-${full_version}"
 
   # NOTE: When setting version to 'latest' the site redirects to the latest
@@ -72,8 +73,7 @@ class nexus::package (
   }
 
   exec{ 'nexus-untar':
-    command => "tar zxf ${dl_file}",
-    cwd     => $nexus_root,
+    command => "tar zxf ${download_folder}/${nexus_archive} --directory ${nexus_root}",
     creates => $nexus_home_real,
     path    => ['/bin','/usr/bin'],
   }
