@@ -34,6 +34,7 @@ class nexus (
   $revision              = $nexus::params::revision,
   $deploy_pro            = $nexus::params::deploy_pro,
   $download_site         = $nexus::params::download_site,
+  $nexus_type            = $nexus::params::type,
   $nexus_root            = $nexus::params::nexus_root,
   $nexus_home_dir        = $nexus::params::nexus_home_dir,
   $nexus_work_dir        = undef,

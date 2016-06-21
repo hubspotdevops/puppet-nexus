@@ -23,6 +23,7 @@ class nexus::params {
   # See nexus::package on why this won't increment the package version.
   $version                       = 'latest'
   $revision                      = '01'
+  $type                          = 'bundle'
   $deploy_pro                    = false
   $download_site                 = 'http://download.sonatype.com/nexus/oss'
   $nexus_root                    = '/srv'

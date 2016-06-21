@@ -32,6 +32,7 @@ class nexus::package (
   $revision = $::nexus::revision,
   $deploy_pro = $::nexus::deploy_pro,
   $download_site = $::nexus::download_site,
+  $nexus_type = $::nexus::nexus_type,
   $nexus_root = $::nexus::nexus_root,
   $nexus_home_dir = $::nexus::nexus_home_dir,
   $nexus_user = $::nexus::nexus_user,
@@ -53,7 +54,7 @@ class nexus::package (
     $bundle_type = ''
   }
 
-  $nexus_archive   = "nexus${bundle_type}-${full_version}-bundle.tar.gz"
+  $nexus_archive   = "nexus${bundle_type}-${full_version}-${nexus_type}.tar.gz"
   $download_url    = "${download_site}/${nexus_archive}"
   $dl_file         = "${download_folder}/${nexus_archive}"
   $nexus_home_real = "${nexus_root}/nexus${bundle_type}-${full_version}"
