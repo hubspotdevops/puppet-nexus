@@ -33,6 +33,26 @@ class role_nexus_server {
 NOTE: If you wish to deploy a Nexus Pro server instead of Nexus OSS set
 `deploy_pro => true`
 
+### Usage(draft): Nexus 3 support
+
+```puppet
+class role_nexus_server {
+
+  class{ '::nexus':
+    version               => '3.0.0',
+    revision              => '03',
+    download_site         => 'http://download.sonatype.com/nexus/3',
+    nexus_type            => 'unix',
+    nexus_work_dir_manage => false,
+    manage_config         => false,
+  }
+
+}
+```
+
+NOTE: If you wish to use Nexus **3**, `manage_config` and `nexus_work_dir_manage`
+need to be set to `false` because this module support **only** Nexus **3** installation
+
 ### Nginx proxy
 The following is setup for using the
 [jfryman/puppet-nginx](https://github.com/jfryman/puppet-nginx) module. Nexus
@@ -69,7 +89,6 @@ https://${::fqdn}/nexus/
     ssl       => true,
   }
 ```
-
 ## TODO
 * Find a way to not require a version to be passed to Class['nexus']
 
