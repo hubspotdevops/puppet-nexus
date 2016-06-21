@@ -47,6 +47,7 @@ class nexus (
   $nexus_context         = $nexus::params::nexus_context,
   $nexus_manage_user     = $nexus::params::nexus_manage_user,
   $download_folder       = $nexus::params::download_folder,
+  $manage_config         = $nexus::params::manage_config,
 ) inherits nexus::params {
   include stdlib
 
@@ -77,9 +78,6 @@ class nexus (
     # passed in is the correct location to download from
     $real_download_site = $download_site
   }
-
-  anchor{ 'nexus::begin': }
-  anchor{ 'nexus::end': }
 
   if($nexus_manage_user){
     group { $nexus_group :
@@ -112,14 +110,17 @@ class nexus (
     notify                => Class['nexus::service']
   }
 
-  class{ 'nexus::config':
-    nexus_root     => $nexus_root,
-    nexus_home_dir => $nexus_home_dir,
-    nexus_host     => $nexus_host,
-    nexus_port     => $nexus_port,
-    nexus_context  => $nexus_context,
-    nexus_work_dir => $real_nexus_work_dir,
-    notify         => Class['nexus::service']
+  if $manage_config {
+    class{ 'nexus::config':
+      nexus_root     => $nexus_root,
+      nexus_home_dir => $nexus_home_dir,
+      nexus_host     => $nexus_host,
+      nexus_port     => $nexus_port,
+      nexus_context  => $nexus_context,
+      nexus_work_dir => $real_nexus_work_dir,
+      notify         => Class['nexus::service'],
+      require        => Anchor['nexus::setup']
+    }
   }
 
   class { 'nexus::service':
@@ -128,9 +129,5 @@ class nexus (
     version    => $version,
   }
 
-  Anchor['nexus::begin'] ->
-    Class['nexus::package'] ->
-    Class['nexus::config'] ->
-    Class['nexus::service'] ->
-  Anchor['nexus::end']
+  anchor{ 'nexus::setup': }
 }
