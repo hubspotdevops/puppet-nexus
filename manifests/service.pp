@@ -70,7 +70,7 @@ class nexus::service (
 
       file{ '/etc/init.d/nexus':
         ensure  => 'link',
-        target  => "${nexus_script}/bin/nexus",
+        target  => $nexus_script,
         require => [
           File_line['nexus_NEXUS_HOME'],
           File_line['nexus_RUN_AS_USER']

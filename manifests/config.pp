@@ -25,6 +25,7 @@ class nexus::config(
   $nexus_port = $::nexus::nexus_port,
   $nexus_context = $::nexus::nexus_context,
   $nexus_work_dir = $::nexus::nexus_work_dir,
+  $nexus_data_folder = $::nexus::nexus_data_folder,
   $version = $::nexus::version
 ) {
 
@@ -34,6 +35,7 @@ class nexus::config(
     $conf_path = 'conf/nexus.properties'
   }
   $nexus_properties_file = "${nexus_root}/${nexus_home_dir}/${conf_path}"
+  $nexus_data_dir = "${nexus_root}/${nexus_home_dir}/data"
 
   file_line{ 'nexus-application-host':
     path  => $nexus_properties_file,
@@ -58,4 +60,14 @@ class nexus::config(
     match => '^nexus-work',
     line  => "nexus-work=${nexus_work_dir}"
   }
+
+  if $nexus_data_folder {
+    file{ $nexus_data_dir :
+      ensure  => 'link',
+      target  => $nexus_data_folder,
+      force   => true,
+      notify  => Service['nexus']
+    }
+  }
+  
 }

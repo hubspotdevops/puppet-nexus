@@ -38,6 +38,7 @@ class nexus::params {
   $nexus_context                 = '/nexus'
   $nexus_manage_user             = true
   $pro_download_site             = 'http://download.sonatype.com/nexus/professional-bundle'
+  $nexus_data_folder             = undef,
   $download_folder               = '/srv'
   $manage_config                 = true
 }
