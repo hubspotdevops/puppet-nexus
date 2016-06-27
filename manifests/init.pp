@@ -46,6 +46,7 @@ class nexus (
   $nexus_work_recurse    = $nexus::params::nexus_work_recurse,
   $nexus_context         = $nexus::params::nexus_context,
   $nexus_manage_user     = $nexus::params::nexus_manage_user,
+  $nexus_data_folder     = $nexus::params::nexus_data_folder,
   $download_folder       = $nexus::params::download_folder,
   $manage_config         = $nexus::params::manage_config,
 ) inherits nexus::params {
@@ -112,14 +113,15 @@ class nexus (
 
   if $manage_config {
     class{ 'nexus::config':
-      nexus_root     => $nexus_root,
-      nexus_home_dir => $nexus_home_dir,
-      nexus_host     => $nexus_host,
-      nexus_port     => $nexus_port,
-      nexus_context  => $nexus_context,
-      nexus_work_dir => $real_nexus_work_dir,
-      notify         => Class['nexus::service'],
-      require        => Anchor['nexus::setup']
+      nexus_root        => $nexus_root,
+      nexus_home_dir    => $nexus_home_dir,
+      nexus_host        => $nexus_host,
+      nexus_port        => $nexus_port,
+      nexus_context     => $nexus_context,
+      nexus_work_dir    => $real_nexus_work_dir,
+      nexus_data_folder => $nexus_data_folder,
+      notify            => Class['nexus::service'],
+      require           => Anchor['nexus::setup']
     }
   }
 

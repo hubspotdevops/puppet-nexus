@@ -43,14 +43,13 @@ class role_nexus_server {
     revision              => '03',
     download_site         => 'http://download.sonatype.com/nexus/3',
     nexus_type            => 'unix',
-    nexus_work_dir_manage => false,
-    manage_config         => false,
+    nexus_work_dir_manage => false
   }
 
 }
 ```
 
-NOTE: If you wish to use Nexus **3**, `manage_config` and `nexus_work_dir_manage`
+NOTE: If you wish to use Nexus **3**, `nexus_work_dir_manage`
 need to be set to `false` because this module support **only** Nexus **3** installation
 
 ### Nginx proxy
@@ -97,4 +96,3 @@ https://${::fqdn}/nexus/
 
 ## Copyright
 Hubspot, Inc.
-

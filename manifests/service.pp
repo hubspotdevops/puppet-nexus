@@ -62,27 +62,33 @@ class nexus::service (
         line  => "NEXUS_HOME=${nexus_home}",
       }
 
-      file_line{ 'nexus_RUN_AS_USER':
-        path  => $nexus_script,
-        match => '^#?RUN_AS_USER=',
-        line  => "RUN_AS_USER=\${run_as_user:-${nexus_user}}",
-      }
-
       file{ '/etc/init.d/nexus':
-        ensure  => present,
-        owner   => 'root',
-        group   => 'root',
-        mode    => '0755',
-        source  => "file://${nexus_script}",
-        require => [File_line['nexus_NEXUS_HOME'],
-          File_line['nexus_RUN_AS_USER']],
+        ensure  => 'link',
+        target  => $nexus_script,
+        require => [
+          File_line['nexus_NEXUS_HOME'],
+          File_line['nexus_RUN_AS_USER']
+        ],
         notify  => Service['nexus']
       }
 
       if $version !~ /\d.*/ or versioncmp($version, '2.8.0') >= 0 {
         $status_line = "env run_as_user=${nexus_user} /etc/init.d/nexus status"
+
+        file_line{ 'nexus_RUN_AS_USER':
+          path  => $nexus_script,
+          match => '^run_as_user\=',
+          line  => "run_as_user=\${run_as_user:-${nexus_user}}",
+        }
+
       } else {
         $status_line = 'env run_as_user=root /etc/init.d/nexus status'
+
+        file_line{ 'nexus_RUN_AS_USER':
+          path  => $nexus_script,
+          match => '^#?RUN_AS_USER=',
+          line  => "RUN_AS_USER=\${run_as_user:-${nexus_user}}",
+        }
       }
 
       service{ 'nexus':
