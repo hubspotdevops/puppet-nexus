@@ -25,9 +25,15 @@ class nexus::config(
   $nexus_port = $::nexus::nexus_port,
   $nexus_context = $::nexus::nexus_context,
   $nexus_work_dir = $::nexus::nexus_work_dir,
+  $version = $::nexus::version
 ) {
 
-  $nexus_properties_file = "${nexus_root}/${nexus_home_dir}/conf/nexus.properties"
+  if $version !~ /\d.*/ or versioncmp($version, '3.0.0') >= 0 {
+    $conf_path = 'etc/org.sonatype.nexus.cfg'
+  } else {
+    $conf_path = 'conf/nexus.properties'
+  }
+  $nexus_properties_file = "${nexus_root}/${nexus_home_dir}/${conf_path}"
 
   file_line{ 'nexus-application-host':
     path  => $nexus_properties_file,
