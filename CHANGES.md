@@ -1,5 +1,11 @@
 puppet-nexus
 ===
+
+1.4.0
+---
+ * Support for Nexus 3
+ * Support for Debian 8
+
 1.3.1
 ---
 * Fix the location of the Nexus work directory if $nexus_work_dir is not is not passed in.
