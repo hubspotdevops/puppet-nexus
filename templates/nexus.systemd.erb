@@ -1,0 +1,14 @@
+[Unit]
+Description=nexus service
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=<%= scope.lookupvar('nexus::service::nexus_script') %> start
+ExecStop=<%= scope.lookupvar('nexus::service::nexus_script') %> stop
+User=<%= scope.lookupvar('nexus::service::nexus_user') %>
+Group=<%= scope.lookupvar('nexus::service::nexus_group') %>
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
