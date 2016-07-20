@@ -131,5 +131,5 @@ class nexus (
     version    => $version,
   }
 
-  anchor{ 'nexus::setup': }
+  anchor{ 'nexus::setup': } -> Class['nexus::package'] -> Class['nexus::config'] -> Class['nexus::Service'] -> anchor { 'nexus::done': }
 }
