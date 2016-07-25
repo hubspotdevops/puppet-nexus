@@ -1,6 +1,10 @@
 puppet-nexus
 ===
 
+1.5.0
+---
+ * Support for Puppet 4.5.2 https://github.com/hubspotdevops/puppet-nexus/pull/65
+
 1.4.0
 ---
  * Support for Nexus 3
