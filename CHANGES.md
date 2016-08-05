@@ -1,6 +1,10 @@
 puppet-nexus
 ===
 
+1.6.1
+--
+ * Suppoer for older versions of Ubuntu: https://github.com/hubspotdevops/puppet-nexus/pull/70
+
 1.6.0
 --
  * Support for Ubuntu https://github.com/hubspotdevops/puppet-nexus/pull/67
