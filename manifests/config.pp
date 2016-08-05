@@ -26,7 +26,7 @@ class nexus::config(
   $nexus_context = $::nexus::nexus_context,
   $nexus_work_dir = $::nexus::nexus_work_dir,
   $nexus_data_folder = $::nexus::nexus_data_folder,
-  $version = $::nexus::version
+  $version = $::nexus::version,
 ) {
 
   if $version !~ /\d.*/ or versioncmp($version, '3.0.0') >= 0 {
@@ -63,11 +63,10 @@ class nexus::config(
 
   if $nexus_data_folder {
     file{ $nexus_data_dir :
-      ensure  => 'link',
-      target  => $nexus_data_folder,
-      force   => true,
-      notify  => Service['nexus']
+      ensure => 'link',
+      target => $nexus_data_folder,
+      force  => true,
+      notify => Service['nexus']
     }
   }
-  
 }

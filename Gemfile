@@ -11,7 +11,7 @@ group :test do
   if RUBY_VERSION >= '1.8.7' and RUBY_VERSION < '1.9'
     gem 'rspec', '~> 2.0'
   end
-
+  gem 'safe_yaml', '~> 1.0.4'
   gem 'rake'
   gem 'puppet-lint'
   gem 'rspec-puppet', :git => 'https://github.com/rodjek/rspec-puppet.git'
@@ -19,6 +19,7 @@ group :test do
   gem 'puppetlabs_spec_helper'
   gem 'simplecov'
   gem 'metadata-json-lint'
+  gem 'rspec-puppet-facts', :require => false
 end
 
 group :development do

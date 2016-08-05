@@ -3,16 +3,18 @@ require 'spec_helper'
 describe 'nexus::config', :type => :class do
   let(:params) {
     {
-      'nexus_root'     => '/foo',
-      'nexus_home_dir' => '/bar',
-      'nexus_host'     => '1.1.1.1',
-      'nexus_port'     => '8888',
-      'nexus_context'  => '/baz',
-      'nexus_work_dir' => '/foom',
+      'nexus_root'        => '/foo',
+      'nexus_home_dir'    => '/bar',
+      'nexus_host'        => '1.1.1.1',
+      'nexus_port'        => '8888',
+      'nexus_context'     => '/baz',
+      'nexus_work_dir'    => '/foom',
+      'version'           => '2.11.2',
+      'nexus_data_folder' => '',
     }
   }
 
-  context 'with test values' do
+  context 'with nexus version 2.x test values' do
     it { should contain_class('nexus::config') }
 
     it { should contain_file_line('nexus-application-host').with(
