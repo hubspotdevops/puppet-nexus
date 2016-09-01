@@ -73,7 +73,7 @@ class nexus::service (
       notify  => Service['nexus']
     }
 
-    if $version !~ /\d.*/ or versioncmp($version, '2.8.0') >= 0 {
+    if $version !~ /\d.*/ or versioncmp($version, '3.0.0') >= 0 {
       $status_line = "env run_as_user=${nexus_user} /etc/init.d/nexus status"
 
       file_line{ 'nexus_RUN_AS_USER':
