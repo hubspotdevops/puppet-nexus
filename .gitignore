@@ -8,3 +8,4 @@ spec/fixtures/
 .vagrant/
 log/
 vendor/
+bin/
