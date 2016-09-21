@@ -1,0 +1,16 @@
+HOSTS:
+  centos-7-x64:
+    roles:
+      - default
+      - master
+      - database
+    platform: el-7-x86_64
+    hypervisor: docker
+    image: centos:7
+    docker_preserve_image: true
+    docker_cmd: '["/usr/sbin/init"]'
+    # install various tools required to get the image up to usable levels
+    docker_image_commands:
+      - 'yum install -y tar wget openssl nc net-tools iproute'
+CONFIG:
+trace_limit: 200
