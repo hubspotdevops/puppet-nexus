@@ -43,7 +43,7 @@ class nexus::service (
 
   if ($::operatingsystem == 'Debian' and versioncmp($::operatingsystemrelease, '8.0') > 0) or
   ($::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '15.04') > 0) or
-  (($::operatingsystem == 'CentOS' or $::operatingsystem == 'RedHat')and versioncmp($::operatingsystemmajrelease, '7') >= 0) {
+  (($::operatingsystem == 'CentOS' or $::operatingsystem == 'RedHat') and versioncmp($::operatingsystemmajrelease, '7') >= 0) {
     file { '/lib/systemd/system/nexus.service':
       mode    => '0644',
       owner   => 'root',
