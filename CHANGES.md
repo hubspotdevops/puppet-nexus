@@ -1,6 +1,10 @@
 puppet-nexus
 ===
 
+1.7.0
+--
+ * Support for CentOS and RedHat versions using systemd: https://github.com/hubspotdevops/puppet-nexus/pull/76
+
 1.6.1
 --
  * Support for older versions of Ubuntu: https://github.com/hubspotdevops/puppet-nexus/pull/70
