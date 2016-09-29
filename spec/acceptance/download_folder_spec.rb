@@ -31,8 +31,11 @@ describe 'nexus class' do
     end
 
     context 'Nexus should be running on the default port' do
-      describe command('sleep 30 && echo "Give Nexus time to start"') do
-        its(:exit_status) { should eq 0 }
+      describe port(8081) do
+        it {
+          sleep(90) # Waiting start up
+          should be_listening
+        }
       end
       describe command('curl 0.0.0.0:8081/nexus/') do
         its(:stdout) { should match /Sonatype Nexus&trade; 2.8.0-05/ }

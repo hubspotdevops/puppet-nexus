@@ -6,6 +6,35 @@
   "license": "MIT",
   "summary": "Puppet module for Sonatype Nexus",
   "project_page": "http://github.com/hubspotdevops/puppet-nexus",
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Centos",
+      "operatingsystemrelease": [
+        "5",
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "5",
+        "6",
+        "7"
+      ]
+    },
+    {
+        "operatingsystem": "Ubuntu",
+        "operatingsystemrelease": [
+          "14.04",
+          "15.04"
+         ]
+    },
+    {
+        "operatingsystem": "Debian",
+        "operatingsystemrelease": [ "8" ]
+    }
+  ],
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
