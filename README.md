@@ -1,4 +1,4 @@
-# Sonatype Nexus Puppet module
+# Sonatype Nexus Puppet module [![Build Status](https://travis-ci.org/hubspotdevops/puppet-nexus.svg?branch=master)](https://travis-ci.org/hubspotdevops/puppet-nexus)
 Install and configure Sonatype Nexus.
 
 ## Requires
