@@ -24,6 +24,7 @@ describe 'nexus::package', :type => :class do
           'revision'                      => '01',
           'version'                       => '2.11.2',
           'download_folder'               => '/srv',
+          'md5sum'                        => '',
         }
       }
 
@@ -34,6 +35,7 @@ describe 'nexus::package', :type => :class do
           'source'      => 'http://download.sonatype.com/nexus/oss/nexus-2.11.2-01-bundle.tar.gz',
           'destination' => '/srv/nexus-2.11.2-01-bundle.tar.gz',
           'before'      => 'Exec[nexus-untar]',
+          'source_hash' => '',
         ) }
 
         it { should contain_exec('nexus-untar').with(
@@ -68,7 +70,7 @@ describe 'nexus::package', :type => :class do
           params.merge!(
             {
               'deploy_pro'    => true,
-              'download_site' => 'http://download.sonatype.com/nexus/professional-bundle',
+              'download_site' => 'http://download.sonatype.com/nexus/professional-bundle'
             }
           )
 
@@ -88,7 +90,28 @@ describe 'nexus::package', :type => :class do
             'target' => '/srv/nexus-professional-2.11.2-01',
           )
         end
+
+        it 'should working with md5sum' do
+          params.merge!(
+            {
+              'md5sum'        => '1234567890'
+            }
+          )
+          should contain_wget__fetch('nexus-2.11.2-01-bundle.tar.gz').with(
+            'source'      => 'http://download.sonatype.com/nexus/oss/nexus-2.11.2-01-bundle.tar.gz',
+            'destination' => '/srv/nexus-2.11.2-01-bundle.tar.gz',
+            'before'      => 'Exec[nexus-untar]',
+            'source_hash' => '1234567890',
+          )
+          should contain_exec('nexus-untar').with(
+            'command' => 'tar zxf /srv/nexus-2.11.2-01-bundle.tar.gz --directory /srv',
+            'creates' => '/srv/nexus-2.11.2-01',
+            'path'    => [ '/bin', '/usr/bin' ],
+          )
+        end
+
       end
+
     end
   end
 end
