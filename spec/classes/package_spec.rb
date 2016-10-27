@@ -24,7 +24,6 @@ describe 'nexus::package', :type => :class do
           'revision'                      => '01',
           'version'                       => '2.11.2',
           'download_folder'               => '/srv',
-          'md5sum'                        => '',
         }
       }
 
@@ -35,7 +34,7 @@ describe 'nexus::package', :type => :class do
           'source'      => 'http://download.sonatype.com/nexus/oss/nexus-2.11.2-01-bundle.tar.gz',
           'destination' => '/srv/nexus-2.11.2-01-bundle.tar.gz',
           'before'      => 'Exec[nexus-untar]',
-          'source_hash' => '',
+          'source_hash' => nil,
         ) }
 
         it { should contain_exec('nexus-untar').with(
