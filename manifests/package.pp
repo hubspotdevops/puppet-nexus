@@ -42,6 +42,7 @@ class nexus::package (
   $nexus_work_recurse = $::nexus::nexus_work_recurse,
   $nexus_selinux_ignore_defaults = $::nexus::nexus_selinux_ignore_defaults,
   $download_folder = $::nexus::download_folder,
+  $md5sum = $::nexus::md5sum,
 ) {
 
   $nexus_home      = "${nexus_root}/${nexus_home_dir}"
@@ -70,6 +71,7 @@ class nexus::package (
   wget::fetch{ $nexus_archive:
     source      => $download_url,
     destination => $dl_file,
+    source_hash => $md5sum,
     before      => Exec['nexus-untar'],
   }
 
