@@ -1,6 +1,10 @@
 puppet-nexus
 ===
 
+1.7.1
+--
+ * Support for validating the md5 checksum of the Nexus package file. https://github.com/hubspotdevops/puppet-nexus/pull/80
+
 1.7.0
 --
  * Support for CentOS and RedHat versions using systemd: https://github.com/hubspotdevops/puppet-nexus/pull/76
