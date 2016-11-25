@@ -29,10 +29,16 @@ class nexus::config(
   $version = $::nexus::version,
 ) {
 
-  if $version !~ /\d.*/ or versioncmp($version, '3.0.0') >= 0 {
-    $conf_path = 'etc/org.sonatype.nexus.cfg'
-  } else {
-    $conf_path = 'conf/nexus.properties'
+  case $version {
+    /^2\.\d+\.\d+$/: {
+      $conf_path = 'conf/nexus.properties'
+    }
+    /^3\.0\.\d+$/: {
+      $conf_path = 'etc/org.sonatype.nexus.cfg'
+    }
+    default: {
+      $conf_path = 'etc/nexus.properties'
+    }
   }
   $nexus_properties_file = "${nexus_root}/${nexus_home_dir}/${conf_path}"
   $nexus_data_dir = "${nexus_root}/${nexus_home_dir}/data"
