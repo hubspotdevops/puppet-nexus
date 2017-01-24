@@ -56,7 +56,22 @@ class nexus::service (
       enable => true,
     }
 
-  } else {
+  } elsif ($::operatingsystem == 'RedHat') or ($::operatingsystem == 'CentOS') {
+      file { '/etc/systemd/system/nexus.service':
+      mode    => '0644',
+      owner   => 'root',
+      group   => 'root',
+      content => template('nexus/nexus.systemd.erb'),
+    } ->
+    service { 'nexus':
+      ensure => running,
+      name   => 'nexus',
+      enable => true,
+    }
+  }
+  
+  
+    else {
 
     file_line{ 'nexus_NEXUS_HOME':
       path  => $nexus_script,
