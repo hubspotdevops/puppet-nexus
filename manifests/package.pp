@@ -105,6 +105,17 @@ class nexus::package (
       selinux_ignore_defaults => $nexus_selinux_ignore_defaults,
       require                 => Exec[ 'nexus-untar']
     }
+
+    # Nexus 3 needs to have a nexus_work_dir/etc for the properties file
+    if $version !~ /\d.*/ or versioncmp($version, '3.1.0') >= 0 {
+      file { "${nexus_work_dir}/etc":
+        ensure                  => directory,
+        owner                   => $nexus_user,
+        group                   => $nexus_group,
+        recurse                 => $nexus_work_recurse,
+        selinux_ignore_defaults => $nexus_selinux_ignore_defaults,
+      }
+    }
   }
 
   file{ $nexus_home:
