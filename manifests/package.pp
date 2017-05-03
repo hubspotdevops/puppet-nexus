@@ -60,6 +60,7 @@ class nexus::package (
   $dl_file         = "${download_folder}/${nexus_archive}"
   $nexus_home_real = "${nexus_root}/nexus${bundle_type}-${full_version}"
 
+  /*
   # NOTE: When setting version to 'latest' the site redirects to the latest
   # release. But, nexus-latest-bundle.tar.gz will already exist and
   # therefore the exec will never be triggered.  In reality 'latest' will
@@ -107,7 +108,8 @@ class nexus::package (
     }
 
     # Nexus 3 needs to have a nexus_work_dir/etc for the properties file
-    if $version !~ /\d.*/ or versioncmp($version, '3.1.0') >= 0 {
+    if $version !~ /\d.*/  /*
+ or versioncmp($version, '3.1.0') >= 0 {
       file { "${nexus_work_dir}/etc":
         ensure                  => directory,
         owner                   => $nexus_user,
@@ -116,6 +118,11 @@ class nexus::package (
         selinux_ignore_defaults => $nexus_selinux_ignore_defaults,
       }
     }
+  }
+  */
+
+  package { 'nexus':
+    ensure => 'present',
   }
 
   file{ $nexus_home:
