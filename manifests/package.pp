@@ -119,6 +119,11 @@ class nexus::package (
       }
     }
   }
+  file{ $nexus_home:
+    ensure  => link,
+    target  => $nexus_home_real,
+    require => Exec['nexus-untar']
+  }
   */
 
   package { 'nexus':
@@ -128,6 +133,5 @@ class nexus::package (
   file{ $nexus_home:
     ensure  => link,
     target  => $nexus_home_real,
-    require => Exec['nexus-untar']
   }
 }
