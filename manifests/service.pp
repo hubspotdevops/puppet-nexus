@@ -49,8 +49,8 @@ class nexus::service (
       owner   => 'root',
       group   => 'root',
       content => template('nexus/nexus.systemd.erb'),
-    } ->
-    service { 'nexus':
+    }
+    -> service { 'nexus':
       ensure => running,
       name   => 'nexus',
       enable => true,
@@ -71,7 +71,7 @@ class nexus::service (
         File_line['nexus_NEXUS_HOME'],
         File_line['nexus_RUN_AS_USER']
       ],
-      notify  => Service['nexus']
+      notify  => Service['nexus'],
     }
 
     if $version !~ /\d.*/ or versioncmp($version, '3.0.0') >= 0 {
@@ -99,7 +99,7 @@ class nexus::service (
       status  => $status_line,
       require => [File['/etc/init.d/nexus'],
         File_line['nexus_NEXUS_HOME'],
-        File_line['nexus_RUN_AS_USER'],]
+        File_line['nexus_RUN_AS_USER'],],
     }
   }
 }
