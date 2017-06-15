@@ -34,6 +34,11 @@ class nexus::config(
     # {karaf.data}/etc/nexus.properties where {karaf.data} is the work dir
     $conf_path = 'etc/nexus.properties'
     $nexus_properties_file = "${nexus_work_dir}/${conf_path}"
+    file { "${nexus_work_dir}/etc":
+      ensure => directory,
+      owner  => $::nexus::nexus_user,
+      group  => $::nexus::nexus_group,
+    }
   }
   elsif versioncmp($version, '3.0.0') >= 0 {
     $conf_path = 'etc/org.sonatype.nexus.cfg'
@@ -53,25 +58,25 @@ class nexus::config(
   file_line{ 'nexus-application-host':
     path  => $nexus_properties_file,
     match => '^application-host',
-    line  => "application-host=${nexus_host}"
+    line  => "application-host=${nexus_host}",
   }
 
   file_line{ 'nexus-application-port':
     path  => $nexus_properties_file,
     match => '^application-port',
-    line  => "application-port=${nexus_port}"
+    line  => "application-port=${nexus_port}",
   }
 
   file_line{ 'nexus-webapp-context-path':
     path  => $nexus_properties_file,
     match => '^nexus-webapp-context-path',
-    line  => "nexus-webapp-context-path=${nexus_context}"
+    line  => "nexus-webapp-context-path=${nexus_context}",
   }
 
   file_line{ 'nexus-work':
     path  => $nexus_properties_file,
     match => '^nexus-work',
-    line  => "nexus-work=${nexus_work_dir}"
+    line  => "nexus-work=${nexus_work_dir}",
   }
 
   if $nexus_data_folder {
@@ -79,7 +84,7 @@ class nexus::config(
       ensure => 'link',
       target => $nexus_data_folder,
       force  => true,
-      notify => Service['nexus']
+      notify => Service['nexus'],
     }
   }
 }
