@@ -92,14 +92,14 @@ class nexus (
 
     $my_nexus_home = "/home/${nexus_user}"
     user { $nexus_user:
-      ensure  => present,
-      comment => 'Nexus User',
-      gid     => $nexus_group,
-      home    => "$my_nexus_home",
+      ensure     => present,
+      comment    => 'Nexus User',
+      gid        => $nexus_group,
+      home       => $my_nexus_home,
       managehome => true,
-      shell   => '/bin/sh', # required to start application via script.
-      system  => true,
-      require => Group[$nexus_group]
+      shell      => '/bin/sh', # required to start application via script.
+      system     => true,
+      require    => Group[$nexus_group]
     }
   }
 
