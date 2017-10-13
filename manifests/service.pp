@@ -49,8 +49,8 @@ class nexus::service (
       owner   => 'root',
       group   => 'root',
       content => template('nexus/nexus.systemd.erb'),
-    } ->
-    service { 'nexus':
+    }
+    -> service { 'nexus':
       ensure => running,
       name   => 'nexus',
       enable => true,
