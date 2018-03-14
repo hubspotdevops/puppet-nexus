@@ -43,6 +43,8 @@ class nexus::package (
   $nexus_selinux_ignore_defaults = $::nexus::nexus_selinux_ignore_defaults,
   $download_folder = $::nexus::download_folder,
   $md5sum = $::nexus::md5sum,
+  $package_name = $::nexus::package_name,
+  $package_version = $::nexus::package_version,
 ) {
 
   $nexus_home      = "${nexus_root}/${nexus_home_dir}"
@@ -69,7 +71,7 @@ class nexus::package (
   # linked to an exec resource which won't be realized if a directory
   # already exists.
   package { $package_name:
-    ensure => $full_version,
+    ensure => $package_version,
   }
 
   # NOTE: $nexus_work_dir in later releases was moved to a directory not
