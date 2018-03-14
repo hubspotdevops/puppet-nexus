@@ -119,7 +119,7 @@ class nexus (
       nexus_work_dir_manage => $nexus_work_dir_manage,
       nexus_work_recurse    => $nexus_work_recurse,
       md5sum                => $md5sum,
-      notify                => Class['nexus::service']
+      notify                => Class['nexus::service'],
       package_name          => $package_name,
       package_version       => $package_version,
     }
