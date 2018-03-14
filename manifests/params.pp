@@ -44,4 +44,5 @@ class nexus::params {
   $md5sum                        = undef
   $package_install               = false
   $package_name                  = undef
+  $package_version               = undef
 }
