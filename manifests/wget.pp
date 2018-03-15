@@ -1,6 +1,6 @@
-# === Class: nexus::package
+# === Class: nexus::wget
 #
-# Install the Nexus package
+# Install the Nexus package using wget
 #
 # === Parameters
 #
@@ -17,7 +17,7 @@
 #
 # === Examples
 #
-# class{ 'nexus::package': }
+# class{ 'nexus::wget': }
 #
 # === Authors
 #
@@ -27,7 +27,7 @@
 #
 # Copyright 2013 Hubspot
 #
-class nexus::package (
+class nexus::wget (
   $version = $::nexus::version,
   $revision = $::nexus::revision,
   $deploy_pro = $::nexus::deploy_pro,
@@ -43,8 +43,6 @@ class nexus::package (
   $nexus_selinux_ignore_defaults = $::nexus::nexus_selinux_ignore_defaults,
   $download_folder = $::nexus::download_folder,
   $md5sum = $::nexus::md5sum,
-  $package_name = $::nexus::package_name,
-  $package_version = $::nexus::package_version,
 ) {
 
   $nexus_home      = "${nexus_root}/${nexus_home_dir}"
@@ -70,8 +68,18 @@ class nexus::package (
   # NOTE:  I *think* this won't repeatedly download the file because it's
   # linked to an exec resource which won't be realized if a directory
   # already exists.
-  package { $package_name:
-    ensure => $package_version,
+
+  wget::fetch{ $nexus_archive:
+    source      => $download_url,
+    destination => $dl_file,
+    source_hash => $md5sum,
+    before      => Exec['nexus-untar'],
+  }
+
+  exec{ 'nexus-untar':
+    command => "tar zxf ${download_folder}/${nexus_archive} --directory ${nexus_root}",
+    creates => $nexus_home_real,
+    path    => ['/bin','/usr/bin'],
   }
 
   # NOTE: $nexus_work_dir in later releases was moved to a directory not
@@ -83,7 +91,7 @@ class nexus::package (
     group                   => $nexus_group,
     recurse                 => true,
     selinux_ignore_defaults => $nexus_selinux_ignore_defaults,
-    require                 => Package[$package_name],
+    require                 => Exec[ 'nexus-untar']
   }
 
 
@@ -96,7 +104,7 @@ class nexus::package (
       group                   => $nexus_group,
       recurse                 => $nexus_work_recurse,
       selinux_ignore_defaults => $nexus_selinux_ignore_defaults,
-      require                 => Package[$package_name],
+      require                 => Exec[ 'nexus-untar']
     }
 
     # Nexus 3 needs to have a nexus_work_dir/etc for the properties file
@@ -114,6 +122,6 @@ class nexus::package (
   file{ $nexus_home:
     ensure  => link,
     target  => $nexus_home_real,
-    require => Package[$package_name],
+    require => Exec['nexus-untar']
   }
 }

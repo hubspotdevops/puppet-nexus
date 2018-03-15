@@ -50,6 +50,9 @@ class nexus (
   $download_folder       = $nexus::params::download_folder,
   $manage_config         = $nexus::params::manage_config,
   $md5sum                = $nexus::params::md5sum,
+  $package_name          = $nexus::params::package_name,
+  $package_version       = $nexus::params::package_version,
+  $package_install       = $nexus::params::package_install,
 ) inherits nexus::params {
   include stdlib
 
@@ -101,20 +104,42 @@ class nexus (
     }
   }
 
-  class{ 'nexus::package':
-    version               => $version,
-    revision              => $revision,
-    deploy_pro            => $deploy_pro,
-    download_site         => $real_download_site,
-    nexus_root            => $nexus_root,
-    nexus_home_dir        => $nexus_home_dir,
-    nexus_user            => $nexus_user,
-    nexus_group           => $nexus_group,
-    nexus_work_dir        => $real_nexus_work_dir,
-    nexus_work_dir_manage => $nexus_work_dir_manage,
-    nexus_work_recurse    => $nexus_work_recurse,
-    md5sum                => $md5sum,
-    notify                => Class['nexus::service']
+
+  if ($package_install and $package_name != undef) {
+    class{ 'nexus::package':
+      version               => $version,
+      revision              => $revision,
+      deploy_pro            => $deploy_pro,
+      download_site         => $real_download_site,
+      nexus_root            => $nexus_root,
+      nexus_home_dir        => $nexus_home_dir,
+      nexus_user            => $nexus_user,
+      nexus_group           => $nexus_group,
+      nexus_work_dir        => $real_nexus_work_dir,
+      nexus_work_dir_manage => $nexus_work_dir_manage,
+      nexus_work_recurse    => $nexus_work_recurse,
+      md5sum                => $md5sum,
+      notify                => Class['nexus::service'],
+      package_name          => $package_name,
+      package_version       => $package_version,
+    }
+  }
+  else {
+    class{ 'nexus::wget':
+      version               => $version,
+      revision              => $revision,
+      deploy_pro            => $deploy_pro,
+      download_site         => $real_download_site,
+      nexus_root            => $nexus_root,
+      nexus_home_dir        => $nexus_home_dir,
+      nexus_user            => $nexus_user,
+      nexus_group           => $nexus_group,
+      nexus_work_dir        => $real_nexus_work_dir,
+      nexus_work_dir_manage => $nexus_work_dir_manage,
+      nexus_work_recurse    => $nexus_work_recurse,
+      md5sum                => $md5sum,
+      notify                => Class['nexus::service']
+    }
   }
 
   if $manage_config {
