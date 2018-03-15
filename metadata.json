@@ -1,6 +1,6 @@
 {
   "name": "hubspot-nexus",
-  "version": "1.7.4",
+  "version": "1.7.5",
   "source": "http://github.com/hubspotdevops/puppet-nexus",
   "author": "Tom McLaughlin <tmclaughlin@hubspot.com>",
   "license": "MIT",
