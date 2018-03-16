@@ -123,6 +123,8 @@ class nexus (
       package_name          => $package_name,
       package_version       => $package_version,
     }
+
+    anchor{ 'nexus::setup': } -> Class['nexus::package'] -> Class['nexus::config'] -> Class['nexus::Service'] -> anchor { 'nexus::done': }
   }
   else {
     class{ 'nexus::wget':
@@ -140,6 +142,8 @@ class nexus (
       md5sum                => $md5sum,
       notify                => Class['nexus::service']
     }
+    
+    anchor{ 'nexus::setup': } -> Class['nexus::wget'] -> Class['nexus::config'] -> Class['nexus::Service'] -> anchor { 'nexus::done': }
   }
 
   if $manage_config {
@@ -162,5 +166,5 @@ class nexus (
     version    => $version,
   }
 
-  anchor{ 'nexus::setup': } -> Class['nexus::package'] -> Class['nexus::config'] -> Class['nexus::Service'] -> anchor { 'nexus::done': }
+  #  anchor{ 'nexus::setup': } -> Class['nexus::package'] -> Class['nexus::config'] -> Class['nexus::Service'] -> anchor { 'nexus::done': }
 }
