@@ -26,6 +26,9 @@ class nexus::config(
   $nexus_context = $::nexus::nexus_context,
   $nexus_work_dir = $::nexus::nexus_work_dir,
   $nexus_data_folder = $::nexus::nexus_data_folder,
+  $nexus_java_initmemory = $::nexus::nexus_java_initmemory,
+  $nexus_java_maxmemory  = $::nexus::nexus_java_maxmemory,
+  $nexus_java_add_number = $::nexus::nexus_java_add_number,
   $version = $::nexus::version,
 ) {
 
@@ -34,11 +37,14 @@ class nexus::config(
     # {karaf.data}/etc/nexus.properties where {karaf.data} is the work dir
     $conf_path = 'etc/nexus.properties'
     $nexus_properties_file = "${nexus_work_dir}/${conf_path}"
+    $java_config_file = "${nexus_root}/${nexus_home_dir}/bin/nexus.vmoptions"
   }
   elsif versioncmp($version, '3.0.0') >= 0 {
     $conf_path = 'etc/org.sonatype.nexus.cfg'
     $nexus_properties_file = "${nexus_root}/${nexus_home_dir}/${conf_path}"
+    $java_config_file = "${nexus_root}/${nexus_home_dir}/bin/nexus.vmoptions"
   } else {
+    $java_config_file = "${nexus_root}/${nexus_home_dir}/bin/jsw/conf/wrapper.conf"
     $conf_path = 'conf/nexus.properties'
     $nexus_properties_file = "${nexus_root}/${nexus_home_dir}/${conf_path}"
   }
@@ -80,6 +86,55 @@ class nexus::config(
       target => $nexus_data_folder,
       force  => true,
       notify => Service['nexus']
+    }
+  }
+
+  if $nexus_java_initmemory {
+    if (versioncmp($version, '3.0.0') < 0) {
+      file_line {'comment_nexus_java_initmemory':
+        path  => $java_config_file,
+        line  => '#wrapper.java.initmemory=',
+        match => '^wrapper.java.initmemory=',
+      }
+      file_line {'set_nexus_java_xms':
+        path  => $java_config_file,
+        line  => "wrapper.java.additional.${nexus_java_add_number}=-Xms${nexus_java_initmemory}",
+        match => "^wrapper.java.additional.${nexus_java_add_number}=-Xms",
+      }
+    } else {
+      file_line {'set_nexus_java_xms':
+        path  => $java_config_file,
+        line  => "-Xms${nexus_java_initmemory}",
+        match => '^-Xms',
+      }
+    }
+  }
+
+  if $nexus_java_maxmemory {
+    if (versioncmp($version, '3.0.0') < 0) {
+      file_line {'comment_nexus_java_maxmemory':
+        path  => $java_config_file,
+        line  => '#wrapper.java.maxmemory=',
+        match => '^wrapper.java.maxmemory=',
+      }
+
+      if $nexus_java_initmemory {
+        $_num = $nexus_java_add_number + 1
+      } else {
+        $_num = $nexus_java_add_number
+      }
+
+      file_line {'set_nexus_java_xmx':
+        path  => $java_config_file,
+        line  => "wrapper.java.additional.${_num}=-Xmx${nexus_java_maxmemory}",
+        match => "^wrapper.java.additional.${_num}=-Xmx",
+      }
+    } else {
+      file_line {'set_nexus_java_xmx':
+        path  => $java_config_file,
+        line  => "-Xmx${nexus_java_maxmemory}",
+        match => '^-Xmx',
+      }
     }
   }
 }
