@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'nexus::config', :type => :class do
-  let(:defautl_params) {
+  let(:default_params) {
     {
       'nexus_root'            => '/foo',
       'nexus_home_dir'        => '/bar',
@@ -19,7 +19,7 @@ describe 'nexus::config', :type => :class do
 
   context 'with nexus version 2.x test values' do
     let (:params) do
-      defautl_params
+      default_params
     end
     it { should contain_class('nexus::config') }
 
@@ -69,7 +69,7 @@ describe 'nexus::config', :type => :class do
   end
   context 'with nexus version 3.x test values' do
     let (:params) do
-      defautl_params.merge({
+      default_params.merge({
         'version' => '3.0.0',
       })
     end
