@@ -50,6 +50,7 @@ class nexus (
   $download_folder       = $nexus::params::download_folder,
   $manage_config         = $nexus::params::manage_config,
   $md5sum                = $nexus::params::md5sum,
+  $vmoptions             = $nexus::params::vmoptions,
 ) inherits nexus::params {
   include stdlib
 

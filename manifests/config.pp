@@ -27,6 +27,7 @@ class nexus::config(
   $nexus_work_dir = $::nexus::nexus_work_dir,
   $nexus_data_folder = $::nexus::nexus_data_folder,
   $version = $::nexus::version,
+  $vmoptions = $::nexus::vmoptions,
 ) {
 
   if $version !~ /\d.*/ or versioncmp($version, '3.1.0') >= 0 {
@@ -72,6 +73,10 @@ class nexus::config(
     path  => $nexus_properties_file,
     match => '^nexus-work',
     line  => "nexus-work=${nexus_work_dir}"
+  }
+
+  if $vmoptions {
+    create_resources(file_line, $vmoptions, { path => "${nexus_root}/${nexus_home_dir}/bin/nexus.vmoptions" })
   }
 
   if $nexus_data_folder {
