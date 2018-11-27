@@ -75,7 +75,7 @@ class nexus::config(
     line  => "nexus-work=${nexus_work_dir}"
   }
 
-  if $vmoptions {
+  if ! empty($vmoptions) {
     create_resources(file_line, $vmoptions, { path => "${nexus_root}/${nexus_home_dir}/bin/nexus.vmoptions" })
   }
 

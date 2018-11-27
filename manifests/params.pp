@@ -42,5 +42,5 @@ class nexus::params {
   $download_folder               = '/srv'
   $manage_config                 = true
   $md5sum                        = undef
-  $vmoptions                     = undef
+  $vmoptions                     = {}
 }
