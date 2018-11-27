@@ -11,6 +11,7 @@ describe 'nexus::config', :type => :class do
       'nexus_work_dir'    => '/foom',
       'version'           => '2.11.2',
       'nexus_data_folder' => '',
+      'vmoptions'         => '',
     }
   }
 
