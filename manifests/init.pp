@@ -131,11 +131,8 @@ class nexus (
       notify            => Class['nexus::service'],
       require           => Anchor['nexus::setup']
     }
-    anchor { 'nexus::setup': } ->
-    Class['nexus::package'] ->
-    Class['nexus::config'] ->
-    Class['nexus::Service'] ->
-    anchor { 'nexus::done': }
+    anchor { 'nexus::setup': } -> Class['nexus::package'] -> Class['nexus::config'] -> Class['nexus::Service'] -> anchor
+      { 'nexus::done': }
   }
 
   class { 'nexus::service':

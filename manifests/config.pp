@@ -79,18 +79,17 @@ class nexus::config (
     $vmoptions.each | $key, $val | {
       notice "${key} is ${val}"
       $line = $val ? {
-        '-'     => "$key",
+        '-'     => $key,
         default => $key ? {
-          '-Xms' => "${key}${val}",
-          '-Xmx' => "${key}${val}",
-          default =>"${key}=${val}"
+          '-Xms'  => "${key}${val}",
+          '-Xmx'  => "${key}${val}",
+          default => "${key}=${val}"
         }
       }
       file_line { "${key}-${val}":
         path  => "${nexus_root}/${nexus_home_dir}/bin/nexus.vmoptions",
-        line  => "${line}",
+        line  => $line,
         match => "^${key}.*$",
-        # append_on_no_match => true,
       }
     }
   }
