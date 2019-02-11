@@ -2,7 +2,7 @@
 Install and configure Sonatype Nexus.
 
 ## Requires
-* maestrodev/wget
+* puppet/wget
 * puppetlabs/stdlib
 
 ## Usage
@@ -43,9 +43,14 @@ class role_nexus_server {
     revision              => '03',
     download_site         => 'http://download.sonatype.com/nexus/3',
     nexus_type            => 'unix',
-    nexus_work_dir_manage => false
+    nexus_work_dir_manage => false,
+    vmoptions             => {
+      "-Xms"                    => "1300M",
+      "-Xmx"                    => "1300M",
+      "-XX:MaxDirectMemorySize" => "3G",
+      "-XX:-OmitStackTraceInFastThrow" =>'-' # Options with '-' will be added to nexus.vmoptions without values
+    }
   }
-
 }
 ```
 
