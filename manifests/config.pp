@@ -18,15 +18,16 @@
 #
 # Copyright 2013 Hubspot
 #
-class nexus::config(
-  $nexus_root = $::nexus::nexus_root,
-  $nexus_home_dir = $::nexus::nexus_home_dir,
-  $nexus_host = $::nexus::nexus_host,
-  $nexus_port = $::nexus::nexus_port,
-  $nexus_context = $::nexus::nexus_context,
-  $nexus_work_dir = $::nexus::nexus_work_dir,
+class nexus::config (
+  $nexus_root        = $::nexus::nexus_root,
+  $nexus_home_dir    = $::nexus::nexus_home_dir,
+  $nexus_host        = $::nexus::nexus_host,
+  $nexus_port        = $::nexus::nexus_port,
+  $nexus_context     = $::nexus::nexus_context,
+  $nexus_work_dir    = $::nexus::nexus_work_dir,
   $nexus_data_folder = $::nexus::nexus_data_folder,
-  $version = $::nexus::version,
+  $version           = $::nexus::version,
+  $vmoptions         = $::nexus::vmoptions,
 ) {
 
   if $version !~ /\d.*/ or versioncmp($version, '3.1.0') >= 0 {
@@ -47,35 +48,55 @@ class nexus::config(
   # Nexus >=3.x do no necesarily have a properties file in place to
   # modify. Make sure that there is at least a minmal file there
   file { $nexus_properties_file:
-    ensure =>  present,
+    ensure => present,
   }
 
-  file_line{ 'nexus-application-host':
+  file_line { 'nexus-application-host':
     path  => $nexus_properties_file,
     match => '^application-host',
     line  => "application-host=${nexus_host}"
   }
 
-  file_line{ 'nexus-application-port':
+  file_line { 'nexus-application-port':
     path  => $nexus_properties_file,
     match => '^application-port',
     line  => "application-port=${nexus_port}"
   }
 
-  file_line{ 'nexus-webapp-context-path':
+  file_line { 'nexus-webapp-context-path':
     path  => $nexus_properties_file,
     match => '^nexus-webapp-context-path',
     line  => "nexus-webapp-context-path=${nexus_context}"
   }
 
-  file_line{ 'nexus-work':
+  file_line { 'nexus-work':
     path  => $nexus_properties_file,
     match => '^nexus-work',
     line  => "nexus-work=${nexus_work_dir}"
   }
 
+  if  $vmoptions != undef {
+    $vmoptions.each | $key, $val | {
+      notice "${key} is ${val}"
+      $line = $val ? {
+        '-'     => "$key",
+        default => $key ? {
+          '-Xms' => "${key}${val}",
+          '-Xmx' => "${key}${val}",
+          default =>"${key}=${val}"
+        }
+      }
+      file_line { "${key}-${val}":
+        path  => "${nexus_root}/${nexus_home_dir}/bin/nexus.vmoptions",
+        line  => "${line}",
+        match => "^${key}.*$",
+        # append_on_no_match => true,
+      }
+    }
+  }
+
   if $nexus_data_folder {
-    file{ $nexus_data_dir :
+    file { $nexus_data_dir:
       ensure => 'link',
       target => $nexus_data_folder,
       force  => true,

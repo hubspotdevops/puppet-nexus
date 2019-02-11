@@ -50,6 +50,7 @@ class nexus (
   $download_folder       = $nexus::params::download_folder,
   $manage_config         = $nexus::params::manage_config,
   $md5sum                = $nexus::params::md5sum,
+  $vmoptions             = undef
 ) inherits nexus::params {
   include stdlib
 
@@ -85,9 +86,9 @@ class nexus (
     $real_download_site = $download_site
   }
 
-  if($nexus_manage_user){
-    group { $nexus_group :
-      ensure  => present
+  if($nexus_manage_user) {
+    group { $nexus_group:
+      ensure => present
     }
 
     user { $nexus_user:
@@ -101,7 +102,7 @@ class nexus (
     }
   }
 
-  class{ 'nexus::package':
+  class { 'nexus::package':
     version               => $version,
     revision              => $revision,
     deploy_pro            => $deploy_pro,
@@ -118,7 +119,7 @@ class nexus (
   }
 
   if $manage_config {
-    class{ 'nexus::config':
+    class { 'nexus::config':
       nexus_root        => $nexus_root,
       nexus_home_dir    => $nexus_home_dir,
       nexus_host        => $nexus_host,
@@ -126,9 +127,15 @@ class nexus (
       nexus_context     => $nexus_context,
       nexus_work_dir    => $real_nexus_work_dir,
       nexus_data_folder => $nexus_data_folder,
+      vmoptions         => $vmoptions,
       notify            => Class['nexus::service'],
       require           => Anchor['nexus::setup']
     }
+    anchor { 'nexus::setup': } ->
+    Class['nexus::package'] ->
+    Class['nexus::config'] ->
+    Class['nexus::Service'] ->
+    anchor { 'nexus::done': }
   }
 
   class { 'nexus::service':
@@ -136,6 +143,4 @@ class nexus (
     nexus_user => $nexus_user,
     version    => $version,
   }
-
-  anchor{ 'nexus::setup': } -> Class['nexus::package'] -> Class['nexus::config'] -> Class['nexus::Service'] -> anchor { 'nexus::done': }
 }
