@@ -40,10 +40,10 @@ class nexus::service (
   $version = $::nexus::version,
 ) {
   $nexus_script = "${nexus_home}/bin/nexus"
-
+  notice "Operating system is ${::operatingsystem}. Relase ${operatingsystemmajrelease}"
   if ($::operatingsystem == 'Debian' and versioncmp($::operatingsystemrelease, '8.0') > 0) or
   ($::operatingsystem == 'Ubuntu' and versioncmp($::operatingsystemrelease, '15.04') > 0) or
-  (($::operatingsystem == 'CentOS' or $::operatingsystem == 'RedHat') and versioncmp($::operatingsystemmajrelease, '7') >= 0) {
+  (($::operatingsystem == 'CentOS' or $::operatingsystem == 'RedHat' or $::operatingsystem == 'OracleLinux') and versioncmp($::operatingsystemmajrelease, '7') >= 0) {
     file { '/lib/systemd/system/nexus.service':
       mode    => '0644',
       owner   => 'root',
