@@ -41,5 +41,6 @@ class nexus::params {
   $nexus_data_folder             = undef
   $download_folder               = '/srv'
   $manage_config                 = true
-  $md5sum                        = undef
+  $checksum                      = undef
+  $checksum_type                 = 'none'
 }

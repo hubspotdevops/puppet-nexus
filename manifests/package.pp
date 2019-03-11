@@ -42,7 +42,8 @@ class nexus::package (
   $nexus_work_recurse = $::nexus::nexus_work_recurse,
   $nexus_selinux_ignore_defaults = $::nexus::nexus_selinux_ignore_defaults,
   $download_folder = $::nexus::download_folder,
-  $md5sum = $::nexus::md5sum,
+  $checksum = $::nexus::checksum,
+  $checksum_type = $::nexus::checksum_type,
 ) {
 
   $nexus_home      = "${nexus_root}/${nexus_home_dir}"
@@ -68,11 +69,12 @@ class nexus::package (
   # NOTE:  I *think* this won't repeatedly download the file because it's
   # linked to an exec resource which won't be realized if a directory
   # already exists.
-  wget::fetch{ $nexus_archive:
-    source      => $download_url,
-    destination => $dl_file,
-    source_hash => $md5sum,
-    before      => Exec['nexus-untar'],
+  archive{ $nexus_archive:
+    source        => $download_url,
+    path          => $dl_file,
+    checksum      => $checksum,
+    checksum_type => $checksum_type,
+    before        => Exec['nexus-untar'],
   }
 
   exec{ 'nexus-untar':
