@@ -25,6 +25,7 @@ describe 'nexus::package', :type => :class do
           'version'                       => '2.11.2',
           'download_folder'               => '/srv',
           'checksum'                      => '',
+          'checksum_type'                 => 'none'
         }
       }
 
@@ -94,7 +95,8 @@ describe 'nexus::package', :type => :class do
         it 'should working with md5sum' do
           params.merge!(
             {
-              'md5sum'        => '1234567890'
+              'checksum'        => '1234567890',
+              'checksum_type'   => 'md5',
             }
           )
           should contain_archive('nexus-2.11.2-01-bundle.tar.gz').with(
@@ -102,7 +104,8 @@ describe 'nexus::package', :type => :class do
             'path' => '/srv/nexus-2.11.2-01-bundle.tar.gz',
             'before'      => 'Exec[nexus-untar]',
             'checksum' => '1234567890',
-          )
+            'checksum_type' => 'md5',
+           )
           should contain_exec('nexus-untar').with(
             'command' => 'tar zxf /srv/nexus-2.11.2-01-bundle.tar.gz --directory /srv',
             'creates' => '/srv/nexus-2.11.2-01',

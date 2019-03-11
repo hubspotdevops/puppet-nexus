@@ -11,7 +11,8 @@ describe 'apt class' do
       class{ '::nexus':
         version               => '2.8.0',
         revision              => '05',
-        md5sum                => 'e1cece1ae5eb3a12f857e2368a3e9dbc',
+        checksum              => 'e1cece1ae5eb3a12f857e2368a3e9dbc',
+        checksum_type         => 'md5',
         nexus_root => '/srv',
       }
       EOS
