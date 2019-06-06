@@ -107,6 +107,7 @@ class nexus (
   }
 
   if $manage_package {
+
     class{ 'nexus::package':
       version               => $version,
       revision              => $revision,
@@ -125,6 +126,12 @@ class nexus (
   }
 
   if $manage_config {
+    if $manage_package {
+      $require_class = Class['nexus::package']
+    } else {
+      $require_class = undef
+    }
+
     class{ 'nexus::config':
       nexus_root        => $nexus_root,
       nexus_home_dir    => $nexus_home_dir,
@@ -133,8 +140,8 @@ class nexus (
       nexus_context     => $nexus_context,
       nexus_work_dir    => $real_nexus_work_dir,
       nexus_data_folder => $nexus_data_folder,
+      require           => $require_class,
       notify            => Class['nexus::service'],
-      require           => Anchor['nexus::setup']
     }
   }
 
@@ -144,5 +151,4 @@ class nexus (
     version    => $version,
   }
 
-  anchor{ 'nexus::setup': } -> Class['nexus::package'] -> Class['nexus::config'] -> Class['nexus::Service'] -> anchor { 'nexus::done': }
 }
