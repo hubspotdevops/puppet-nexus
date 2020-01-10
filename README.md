@@ -1,6 +1,9 @@
 # Sonatype Nexus Puppet module [![Build Status](https://travis-ci.org/hubspotdevops/puppet-nexus.svg?branch=master)](https://travis-ci.org/hubspotdevops/puppet-nexus)
 Install and configure Sonatype Nexus.
 
+## !!! No Longer Maintained !!!
+We are not actively using or maintaining this project and welcome the community to fork this repo.
+
 ## Requires
 * maestrodev/wget
 * puppetlabs/stdlib
