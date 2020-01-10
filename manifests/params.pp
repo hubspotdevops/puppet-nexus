@@ -36,6 +36,9 @@ class nexus::params {
   $nexus_host                    = '0.0.0.0'
   $nexus_port                    = '8081'
   $nexus_context                 = '/nexus'
+  $nexus_java_initmemory         = undef
+  $nexus_java_maxmemory          = undef
+  $nexus_java_add_number         = 5
   $nexus_manage_user             = true
   $pro_download_site             = 'http://download.sonatype.com/nexus/professional-bundle'
   $nexus_data_folder             = undef
