@@ -5,7 +5,7 @@ Install and configure Sonatype Nexus.
 We are not actively using or maintaining this project and welcome the community to fork this repo.
 
 ## Requires
-* maestrodev/wget
+* puppet/archive
 * puppetlabs/stdlib
 
 ## Usage
