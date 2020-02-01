@@ -11,6 +11,7 @@ describe 'nexus::package', :type => :class do
         {
           'deploy_pro'                    => false,
           'download_site'                 => 'http://download.sonatype.com/nexus/oss',
+          'download_provider'             => 'wget::fetch',
           'nexus_root'                    => '/srv',
           'nexus_home_dir'                => 'nexus',
           'nexus_user'                    => 'nexus',
@@ -42,6 +43,7 @@ describe 'nexus::package', :type => :class do
           'command' => 'tar zxf /srv/nexus-2.11.2-01-bundle.tar.gz --directory /srv',
           'creates' => '/srv/nexus-2.11.2-01',
           'path'    => [ '/bin', '/usr/bin' ],
+          'before'  => 'File[/srv/nexus/2.11.2-01]'
         ) }
 
         it { should contain_file('/srv/nexus-2.11.2-01').with(
@@ -49,7 +51,7 @@ describe 'nexus::package', :type => :class do
           'owner'   => 'nexus',
           'group'   => 'nexus',
           'recurse' => true,
-          'require' => 'Exec[nexus-untar]',
+          # 'require' => 'Exec[nexus-untar]',
         ) }
 
         it { should contain_file('/srv/sonatype-work/nexus').with(
@@ -63,7 +65,7 @@ describe 'nexus::package', :type => :class do
         it { should contain_file('/srv/nexus').with(
           'ensure'  => 'link',
           'target'  => '/srv/nexus-2.11.2-01',
-          'require' => 'Exec[nexus-untar]',
+          'require' => 'File[/srv/nexus-2.11.2-01]',
         ) }
 
         it 'should handle deploy_pro' do

@@ -48,6 +48,7 @@ class nexus (
   $nexus_manage_user     = $nexus::params::nexus_manage_user,
   $nexus_data_folder     = $nexus::params::nexus_data_folder,
   $download_folder       = $nexus::params::download_folder,
+  $download_provider     = $nexus::params::download_provider,
   $manage_config         = $nexus::params::manage_config,
   $md5sum                = $nexus::params::md5sum,
 ) inherits nexus::params {
@@ -106,6 +107,7 @@ class nexus (
     revision              => $revision,
     deploy_pro            => $deploy_pro,
     download_site         => $real_download_site,
+    download_provider     => $download_provider,
     nexus_root            => $nexus_root,
     nexus_home_dir        => $nexus_home_dir,
     nexus_user            => $nexus_user,

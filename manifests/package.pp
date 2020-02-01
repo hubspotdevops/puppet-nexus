@@ -42,6 +42,7 @@ class nexus::package (
   $nexus_work_recurse = $::nexus::nexus_work_recurse,
   $nexus_selinux_ignore_defaults = $::nexus::nexus_selinux_ignore_defaults,
   $download_folder = $::nexus::download_folder,
+  $download_provider = $::nexus::download_provider,
   $md5sum = $::nexus::md5sum,
 ) {
 
@@ -60,25 +61,64 @@ class nexus::package (
   $dl_file         = "${download_folder}/${nexus_archive}"
   $nexus_home_real = "${nexus_root}/nexus${bundle_type}-${full_version}"
 
-  # NOTE: When setting version to 'latest' the site redirects to the latest
-  # release. But, nexus-latest-bundle.tar.gz will already exist and
-  # therefore the exec will never be triggered.  In reality 'latest' will
-  # lock you to a version.
-  #
-  # NOTE:  I *think* this won't repeatedly download the file because it's
-  # linked to an exec resource which won't be realized if a directory
-  # already exists.
-  wget::fetch{ $nexus_archive:
-    source      => $download_url,
-    destination => $dl_file,
-    source_hash => $md5sum,
-    before      => Exec['nexus-untar'],
-  }
+  case $download_provider {
+    'wget::fetch': {
+      # NOTE: When setting version to 'latest' the site redirects to the latest
+      # release. But, nexus-latest-bundle.tar.gz will already exist and
+      # therefore the exec will never be triggered.  In reality 'latest' will
+      # lock you to a version.
+      #
+      # NOTE:  I *think* this won't repeatedly download the file because it's
+      # linked to an exec resource which won't be realized if a directory
+      # already exists.
+      wget::fetch{ $nexus_archive:
+        source      => $download_url,
+        destination => $dl_file,
+        source_hash => $md5sum,
+        before      => Exec['nexus-untar'],
+      }
 
-  exec{ 'nexus-untar':
-    command => "tar zxf ${download_folder}/${nexus_archive} --directory ${nexus_root}",
-    creates => $nexus_home_real,
-    path    => ['/bin','/usr/bin'],
+      exec{ 'nexus-untar':
+        command => "tar zxf ${download_folder}/${nexus_archive} --directory ${nexus_root}",
+        creates => $nexus_home_real,
+        path    => ['/bin','/usr/bin'],
+        before  => File[$nexus_home_real]
+      }
+
+      if $nexus_work_dir_manage == true {
+        Wget::Fetch[$nexus_archive] -> File[$nexus_work_dir]
+      }
+    }
+    'archive': {
+      case $md5sum {
+        undef: {
+          $md5sum_real = undef
+          $md5sum_type = undef
+        }
+        default: {
+          $md5sum_real = $md5sum
+          $md5sum_type = 'md5'
+        }
+      }
+
+      archive{ $dl_file:
+        ensure        => present,
+        extract       => true,
+        extract_path  => $nexus_root,
+        source        => $download_url,
+        checksum      => $md5sum_real,
+        checksum_type => $md5sum_type,
+        creates       => $nexus_home_real,
+        before        => File[$nexus_home_real]
+      }
+
+      if $nexus_work_dir_manage == true {
+        Archive[$dl_file] -> File[$nexus_work_dir]
+      }
+    }
+    default: {
+      fail("Download_provider ${download_provider} not supported.")
+    }
   }
 
   # NOTE: $nexus_work_dir in later releases was moved to a directory not
@@ -89,8 +129,7 @@ class nexus::package (
     owner                   => $nexus_user,
     group                   => $nexus_group,
     recurse                 => true,
-    selinux_ignore_defaults => $nexus_selinux_ignore_defaults,
-    require                 => Exec[ 'nexus-untar']
+    selinux_ignore_defaults => $nexus_selinux_ignore_defaults
   }
 
 
@@ -103,7 +142,7 @@ class nexus::package (
       group                   => $nexus_group,
       recurse                 => $nexus_work_recurse,
       selinux_ignore_defaults => $nexus_selinux_ignore_defaults,
-      require                 => Exec[ 'nexus-untar']
+      # require                 => Exec[ 'nexus-untar']
     }
 
     # Nexus 3 needs to have a nexus_work_dir/etc for the properties file
@@ -121,6 +160,6 @@ class nexus::package (
   file{ $nexus_home:
     ensure  => link,
     target  => $nexus_home_real,
-    require => Exec['nexus-untar']
+    require => File[$nexus_home_real]
   }
 }

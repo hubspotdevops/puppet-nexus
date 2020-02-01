@@ -40,6 +40,7 @@ class nexus::params {
   $pro_download_site             = 'http://download.sonatype.com/nexus/professional-bundle'
   $nexus_data_folder             = undef
   $download_folder               = '/srv'
+  $download_provider             = 'wget::fetch'
   $manage_config                 = true
   $md5sum                        = undef
 }
