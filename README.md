@@ -1,5 +1,7 @@
-# Sonatype Nexus Puppet module [![Build Status](https://travis-ci.org/hubspotdevops/puppet-nexus.svg?branch=master)](https://travis-ci.org/hubspotdevops/puppet-nexus)
+# Sonatype Nexus Puppet module
 Install and configure Sonatype Nexus.
+
+This module was forked from [hubspot/nexus](https://forge.puppet.com/hubspot/nexus).
 
 ## Requires
 * puppet/wget
@@ -54,7 +56,7 @@ need to be set to `false` because this module support **only** Nexus **3** insta
 
 ### Nginx proxy
 The following is setup for using the
-[jfryman/puppet-nginx](https://github.com/jfryman/puppet-nginx) module. Nexus
+[puppet/puppet-nginx](https://github.com/voxpupuli/puppet-nginx) module. Nexus
 does not adequately support HTTP and HTTPS simultaneously.  Below forces
 all connections to HTTPS.  Be sure to login after the app is up and head
 to Administration -> Server.  Change the base URL to "https" and check
