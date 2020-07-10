@@ -11,6 +11,10 @@
 #   The revision of the archive. This is needed for the name of the
 #   directory the archive is extracted to.  The default should suffice.
 #
+# [*manage_package*]
+#   Boolean that allows skipping the installation done in nexus::package
+#   This allows to implement your own installation, for example through pre-build packages
+#
 # [*nexus_root*]
 #   The root directory where the nexus application will live and tarballs
 #   will be downloaded to.
@@ -32,6 +36,7 @@
 class nexus (
   $version               = $nexus::params::version,
   $revision              = $nexus::params::revision,
+  $manage_package        = $nexus::params::manage_package,
   $deploy_pro            = $nexus::params::deploy_pro,
   $download_site         = $nexus::params::download_site,
   $nexus_type            = $nexus::params::type,
@@ -101,23 +106,32 @@ class nexus (
     }
   }
 
-  class{ 'nexus::package':
-    version               => $version,
-    revision              => $revision,
-    deploy_pro            => $deploy_pro,
-    download_site         => $real_download_site,
-    nexus_root            => $nexus_root,
-    nexus_home_dir        => $nexus_home_dir,
-    nexus_user            => $nexus_user,
-    nexus_group           => $nexus_group,
-    nexus_work_dir        => $real_nexus_work_dir,
-    nexus_work_dir_manage => $nexus_work_dir_manage,
-    nexus_work_recurse    => $nexus_work_recurse,
-    md5sum                => $md5sum,
-    notify                => Class['nexus::service']
+  if $manage_package {
+
+    class{ 'nexus::package':
+      version               => $version,
+      revision              => $revision,
+      deploy_pro            => $deploy_pro,
+      download_site         => $real_download_site,
+      nexus_root            => $nexus_root,
+      nexus_home_dir        => $nexus_home_dir,
+      nexus_user            => $nexus_user,
+      nexus_group           => $nexus_group,
+      nexus_work_dir        => $real_nexus_work_dir,
+      nexus_work_dir_manage => $nexus_work_dir_manage,
+      nexus_work_recurse    => $nexus_work_recurse,
+      md5sum                => $md5sum,
+      notify                => Class['nexus::service']
+    }
   }
 
   if $manage_config {
+    if $manage_package {
+      $require_class = Class['nexus::package']
+    } else {
+      $require_class = undef
+    }
+
     class{ 'nexus::config':
       nexus_root        => $nexus_root,
       nexus_home_dir    => $nexus_home_dir,
@@ -126,8 +140,8 @@ class nexus (
       nexus_context     => $nexus_context,
       nexus_work_dir    => $real_nexus_work_dir,
       nexus_data_folder => $nexus_data_folder,
+      require           => $require_class,
       notify            => Class['nexus::service'],
-      require           => Anchor['nexus::setup']
     }
   }
 
@@ -137,5 +151,4 @@ class nexus (
     version    => $version,
   }
 
-  anchor{ 'nexus::setup': } -> Class['nexus::package'] -> Class['nexus::config'] -> Class['nexus::Service'] -> anchor { 'nexus::done': }
 }

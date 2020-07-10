@@ -40,15 +40,10 @@ describe 'nexus', :type => :class do
           'require' => 'Group[nexus]',
         ) }
 
-        it { should contain_anchor('nexus::setup') }
-        it { should contain_class('nexus::package').that_requires(
-          'Anchor[nexus::setup]' ) }
         it { should contain_class('nexus::config').that_requires(
           'Class[nexus::package]' ).that_notifies('Class[nexus::service]') }
         it { should contain_class('nexus::service').that_subscribes_to(
           'Class[nexus::config]' ) }
-        it { should contain_anchor('nexus::done').that_requires(
-          'Class[nexus::service]' ) }
 
         it 'should handle deploy_pro' do
           params.merge!(
