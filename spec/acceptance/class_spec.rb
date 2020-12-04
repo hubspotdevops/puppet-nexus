@@ -1,10 +1,9 @@
 require 'spec_helper_acceptance'
 
 describe 'apt class' do
-
   context 'default parameters' do
     # Using puppet_apply as a helper
-    it 'should work with no errors' do
+    it 'works with no errors' do
       pp = <<-EOS
       class{ '::java': }
 
@@ -16,12 +15,12 @@ describe 'apt class' do
       EOS
 
       # Run it twice and test for idempotency
-      apply_manifest(pp, :catch_failures => true)
-      apply_manifest(pp, :catch_failures => true)
+      apply_manifest(pp, catch_failures: true)
+      apply_manifest(pp, catch_failures: true)
     end
 
     describe user('nexus') do
-      it { should belong_to_group 'nexus' }
+      it { is_expected.to belong_to_group 'nexus' }
     end
 
     describe service('nexus') do
@@ -33,14 +32,13 @@ describe 'apt class' do
       describe port(8081) do
         it {
           sleep(90) # Waiting start up
-          should be_listening
+          is_expected.to be_listening
         }
       end
 
       describe command('curl 0.0.0.0:8081/nexus/') do
-        its(:stdout) { should match /Sonatype Nexus&trade; 2.8.0-05/ }
+        its(:stdout) { is_expected.to match %r{Sonatype Nexus&trade; 2.8.0-05} }
       end
     end
-
   end
 end

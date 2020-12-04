@@ -1,9 +1,8 @@
 require 'spec_helper'
 
-describe 'nexus::params', :type => :class do
-
+describe 'nexus::params', type: :class do
   context 'with default params' do
-    it { should contain_class('nexus::params') }
+    it { is_expected.to contain_class('nexus::params') }
   end
 end
 

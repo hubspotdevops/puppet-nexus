@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.7.5
+
+ * Extended test suite to puppet 5 and puppet 6
+ * Fix test suite
+ * Updated README.md and metadata.json
+ * Added .sync.yml for `pdk update`
+
 ## 1.7.4
 
  * Replaced obsolete `maestrodev/wget` module by [puppet/wget](https://github.com/voxpupuli/puppet-wget)
