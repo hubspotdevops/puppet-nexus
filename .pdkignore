@@ -7,7 +7,6 @@
 /.bundle/
 /.idea/
 /.vagrant/
-/Vagrantfile
 /coverage/
 /bin/
 /doc/
@@ -41,3 +40,5 @@
 /.yardopts
 /spec/
 /.vscode/
+/.github/
+Vagrantfile

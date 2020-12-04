@@ -1,12 +1,12 @@
 {
   "name": "pest-nexus",
-  "version": "1.7.4",
-  "author": "Tom McLaughlin <tmclaughlin@hubspot.com>, Puppet Enterprise Support Team",
+  "version": "1.7.5",
+  "author": "Puppets Epic Show Theatre",
   "summary": "Puppet module for Sonatype Nexus",
   "license": "MIT",
-  "source": "https://github.com/puppet-enterprise-support-team/puppet-nexus",
-  "project_page": "https://github.com/puppet-enterprise-support-team/puppet-nexus",
-  "issues_url": "https://github.com/puppet-enterprise-support-team/puppet-nexus/issues",
+  "source": "https://github.com/puppets-epic-show-theatre/puppet-nexus",
+  "project_page": "https://github.com/puppets-epic-show-theatre/puppet-nexus",
+  "issues_url": "https://github.com/puppets-epic-show-theatre/puppet-nexus/issues",
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
@@ -21,16 +21,12 @@
     {
       "operatingsystem": "Centos",
       "operatingsystemrelease": [
-        "5",
-        "6",
         "7"
       ]
     },
     {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
-        "5",
-        "6",
         "7"
       ]
     },
@@ -44,7 +40,6 @@
     {
       "operatingsystem": "Debian",
       "operatingsystemrelease": [
-        "8",
         "9",
         "10"
       ]
@@ -56,7 +51,7 @@
       "version_requirement": ">= 4.10.0 < 7.0.0"
     }
   ],
-  "pdk-version": "1.16.0",
-  "template-url": "pdk-default#1.16.0",
-  "template-ref": "tags/1.16.0-0-gaf44904"
+  "pdk-version": "1.18.1",
+  "template-url": "pdk-default#1.18.1",
+  "template-ref": "tags/1.18.1-0-g3d2e75c"
 }
