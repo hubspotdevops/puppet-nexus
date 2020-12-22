@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.8.0
+
+ * Replaced obsolete `puppet/wget` module by [puppet/archive](https://github.com/voxpupuli/puppet-archive)
+ * Nexus artifact downloads get always validated against published md5 sum - md5sum parameter is currently getting ignored
+
 ## 1.7.5
 
  * Extended test suite to puppet 5 and puppet 6
