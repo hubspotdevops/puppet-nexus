@@ -32,19 +32,11 @@ describe 'nexus::package', type: :class do
         it { is_expected.to contain_class('nexus::package') }
 
         it {
-          is_expected.to contain_wget__fetch('nexus-2.11.2-01-bundle.tar.gz').with(
-            'source'      => 'http://download.sonatype.com/nexus/oss/nexus-2.11.2-01-bundle.tar.gz',
-            'destination' => '/srv/nexus-2.11.2-01-bundle.tar.gz',
-            'before'      => 'Exec[nexus-untar]',
-            'source_hash' => '',
-          )
-        }
-
-        it {
-          is_expected.to contain_exec('nexus-untar').with(
-            'command' => 'tar zxf /srv/nexus-2.11.2-01-bundle.tar.gz --directory /srv',
-            'creates' => '/srv/nexus-2.11.2-01',
-            'path'    => ['/bin', '/usr/bin'],
+          is_expected.to contain_archive('/srv/nexus-2.11.2-01-bundle.tar.gz').with(
+            'creates'      => '/srv/nexus-2.11.2-01',
+            'extract'      => true,
+            'extract_path' => '/srv',
+            'source'       => 'http://download.sonatype.com/nexus/oss/nexus-2.11.2-01-bundle.tar.gz',
           )
         }
 
@@ -54,7 +46,7 @@ describe 'nexus::package', type: :class do
             'owner'   => 'nexus',
             'group'   => 'nexus',
             'recurse' => true,
-            'require' => 'Exec[nexus-untar]',
+            'require' => 'Archive[/srv/nexus-2.11.2-01-bundle.tar.gz]',
           )
         }
 
@@ -64,7 +56,7 @@ describe 'nexus::package', type: :class do
             'owner'   => 'nexus',
             'group'   => 'nexus',
             'recurse' => true,
-            'require' => 'Exec[nexus-untar]',
+            'require' => 'Archive[/srv/nexus-2.11.2-01-bundle.tar.gz]',
           )
         }
 
@@ -72,7 +64,7 @@ describe 'nexus::package', type: :class do
           is_expected.to contain_file('/srv/nexus').with(
             'ensure'  => 'link',
             'target'  => '/srv/nexus-2.11.2-01',
-            'require' => 'Exec[nexus-untar]',
+            'require' => 'Archive[/srv/nexus-2.11.2-01-bundle.tar.gz]',
           )
         }
 
@@ -82,35 +74,17 @@ describe 'nexus::package', type: :class do
             'download_site' => 'http://download.sonatype.com/nexus/professional-bundle',
           )
 
-          is_expected.to contain_wget__fetch('nexus-professional-2.11.2-01-bundle.tar.gz').with(
-            'source' => 'http://download.sonatype.com/nexus/professional-bundle/nexus-professional-2.11.2-01-bundle.tar.gz',
-            'destination' => '/srv/nexus-professional-2.11.2-01-bundle.tar.gz',
-          )
-
-          is_expected.to contain_exec('nexus-untar').with(
-            'command' => 'tar zxf /srv/nexus-professional-2.11.2-01-bundle.tar.gz --directory /srv',
-            'creates' => '/srv/nexus-professional-2.11.2-01',
+          is_expected.to contain_archive('/srv/nexus-professional-2.11.2-01-bundle.tar.gz').with(
+            'creates'      => '/srv/nexus-professional-2.11.2-01',
+            'extract'      => true,
+            'extract_path' => '/srv',
+            'source'       => 'http://download.sonatype.com/nexus/professional-bundle/nexus-professional-2.11.2-01-bundle.tar.gz',
           )
 
           is_expected.to contain_file('/srv/nexus-professional-2.11.2-01')
 
           is_expected.to contain_file('/srv/nexus').with(
             'target' => '/srv/nexus-professional-2.11.2-01',
-          )
-        end
-
-        it 'workings with md5sum' do
-          params['md5sum'] = '1234567890'
-          is_expected.to contain_wget__fetch('nexus-2.11.2-01-bundle.tar.gz').with(
-            'source'      => 'http://download.sonatype.com/nexus/oss/nexus-2.11.2-01-bundle.tar.gz',
-            'destination' => '/srv/nexus-2.11.2-01-bundle.tar.gz',
-            'before'      => 'Exec[nexus-untar]',
-            'source_hash' => '1234567890',
-          )
-          is_expected.to contain_exec('nexus-untar').with(
-            'command' => 'tar zxf /srv/nexus-2.11.2-01-bundle.tar.gz --directory /srv',
-            'creates' => '/srv/nexus-2.11.2-01',
-            'path'    => ['/bin', '/usr/bin'],
           )
         end
       end
