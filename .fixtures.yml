@@ -1,6 +1,6 @@
 fixtures:
   forge_modules:
     stdlib: 'puppetlabs/stdlib'
-    wget: 'puppet/wget'
+    archive: 'puppet/archive'
   symlinks:
     nexus: "#{source_dir}"
