@@ -50,32 +50,32 @@ class nexus::config(
     ensure =>  present,
   }
 
-  file_line{ 'nexus-application-host':
+  file_line { 'nexus-application-host':
     path  => $nexus_properties_file,
-    match => '^application-host',
+    match => '^application-host=',
     line  => "application-host=${nexus_host}"
   }
 
-  file_line{ 'nexus-application-port':
+  file_line { 'nexus-application-port':
     path  => $nexus_properties_file,
-    match => '^application-port',
+    match => '^application-port=',
     line  => "application-port=${nexus_port}"
   }
 
-  file_line{ 'nexus-webapp-context-path':
+  file_line { 'nexus-webapp-context-path':
     path  => $nexus_properties_file,
-    match => '^nexus-webapp-context-path',
+    match => '^nexus-webapp-context-path=',
     line  => "nexus-webapp-context-path=${nexus_context}"
   }
 
-  file_line{ 'nexus-work':
+  file_line { 'nexus-work':
     path  => $nexus_properties_file,
-    match => '^nexus-work',
+    match => '^nexus-work=',
     line  => "nexus-work=${nexus_work_dir}"
   }
 
   if $nexus_data_folder {
-    file{ $nexus_data_dir :
+    file { $nexus_data_dir :
       ensure => 'link',
       target => $nexus_data_folder,
       force  => true,
