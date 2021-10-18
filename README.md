@@ -4,11 +4,11 @@ Install and configure Sonatype Nexus.
 This module was forked from [hubspot/nexus](https://forge.puppet.com/hubspot/nexus).
 
 ## Requires
-* puppet/wget
+* puppet/archive
 * puppetlabs/stdlib
 
 ## Usage
-The following is a basic role class for building a nexus host.  Adjust
+The following is a basic role class for building a nexus host. Adjust
 accordingly as needed.
 
 NOTE: you must pass version to Class['nexus'].  This is needed for the
@@ -35,24 +35,22 @@ class role_nexus_server {
 NOTE: If you wish to deploy a Nexus Pro server instead of Nexus OSS set
 `deploy_pro => true`
 
-### Usage(draft): Nexus 3 support
+### Usage
 
 ```puppet
 class role_nexus_server {
 
   class{ '::nexus':
-    version               => '3.0.0',
-    revision              => '03',
-    download_site         => 'http://download.sonatype.com/nexus/3',
+    version               => '3.34.1',
+    revision              => '01',
+    download_site         => 'https://download.sonatype.com/nexus/3',
     nexus_type            => 'unix',
-    nexus_work_dir_manage => false
   }
 
 }
 ```
 
-NOTE: If you wish to use Nexus **3**, `nexus_work_dir_manage`
-need to be set to `false` because this module support **only** Nexus **3** installation
+Valid versions and revisions can be picked from the [official page](https://help.sonatype.com/repomanager3/download/download-archives---repository-manager-3)
 
 ### Nginx proxy
 The following is setup for using the
