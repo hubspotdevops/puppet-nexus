@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.9.0
+
+* Updated [README.md](README.md)
+* Dropped end of life distributions
+* Updated module dependencies
+* Extended test suite to puppet 7
+* Fix too wide match strings - [issue #8](https://github.com/puppets-epic-show-theatre/puppet-nexus/issues/9)
+* Changes by `pdk update`
+
 ## 1.8.0
 
 * Replaced obsolete `puppet/wget` module by [puppet/archive](https://github.com/voxpupuli/puppet-archive)
