@@ -28,7 +28,7 @@ describe 'nexus' do
             it {
               is_expected.to contain_file_line('nexus-application-host').with(
                 'path'  => '/foo//bar/conf/nexus.properties',
-                'match' => '^application-host',
+                'match' => '^application-host=',
                 'line'  => 'application-host=1.1.1.1',
               )
             }
@@ -36,7 +36,7 @@ describe 'nexus' do
             it {
               is_expected.to contain_file_line('nexus-application-port').with(
                 'path'  => '/foo//bar/conf/nexus.properties',
-                'match' => '^application-port',
+                'match' => '^application-port=',
                 'line'  => 'application-port=8888',
               )
             }
@@ -44,7 +44,7 @@ describe 'nexus' do
             it {
               is_expected.to contain_file_line('nexus-webapp-context-path').with(
                 'path'  => '/foo//bar/conf/nexus.properties',
-                'match' => '^nexus-webapp-context-path',
+                'match' => '^nexus-webapp-context-path=',
                 'line'  => 'nexus-webapp-context-path=/baz',
               )
             }
@@ -52,7 +52,7 @@ describe 'nexus' do
             it {
               is_expected.to contain_file_line('nexus-work').with(
                 'path'  => '/foo//bar/conf/nexus.properties',
-                'match' => '^nexus-work',
+                'match' => '^nexus-work=',
                 'line'  => 'nexus-work=/foom',
               )
             }
