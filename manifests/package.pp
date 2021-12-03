@@ -81,7 +81,7 @@ class nexus::package (
     ensure                  => directory,
     owner                   => $nexus_user,
     group                   => $nexus_group,
-    recurse                 => true,
+    recurse                 => $nexus_work_recurse,
     selinux_ignore_defaults => $nexus_selinux_ignore_defaults,
     require                 => Archive[ $dl_file ]
   }

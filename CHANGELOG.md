@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.9.1
+* Set file recurse variable for nexus_home_real
+
 ## 1.9.0
 
 * Updated [README.md](README.md)
