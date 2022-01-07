@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.9.2
+* Allow proxy use to download the archive
+
 ## 1.9.1
 * Set file recurse variable for nexus_home_real
 
