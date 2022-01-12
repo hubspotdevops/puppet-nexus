@@ -42,6 +42,7 @@ class nexus::package (
   $nexus_work_recurse = $::nexus::nexus_work_recurse,
   $nexus_selinux_ignore_defaults = $::nexus::nexus_selinux_ignore_defaults,
   $download_folder = $::nexus::download_folder,
+  $download_proxy = $::nexus::download_proxy,
   $md5sum = $::nexus::md5sum,
 ) {
 
@@ -71,6 +72,7 @@ class nexus::package (
     extract_path    => $nexus_root,
     checksum_url    => "${download_url}.md5",
     checksum_type   => 'md5',
+    proxy_server    => $download_proxy,
     creates         => $nexus_home_real,
   }
 

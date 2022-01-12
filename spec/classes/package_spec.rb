@@ -11,6 +11,7 @@ describe 'nexus::package', type: :class do
         {
           'deploy_pro'                    => false,
           'download_site'                 => 'http://download.sonatype.com/nexus/oss',
+          'download_proxy'                => 'http://proxy:3128',
           'nexus_root'                    => '/srv',
           'nexus_home_dir'                => 'nexus',
           'nexus_user'                    => 'nexus',
@@ -36,6 +37,7 @@ describe 'nexus::package', type: :class do
             'creates'      => '/srv/nexus-2.11.2-01',
             'extract'      => true,
             'extract_path' => '/srv',
+            'proxy_server' => 'http://proxy:3128',
             'source'       => 'http://download.sonatype.com/nexus/oss/nexus-2.11.2-01-bundle.tar.gz',
           )
         }
@@ -78,6 +80,7 @@ describe 'nexus::package', type: :class do
             'creates'      => '/srv/nexus-professional-2.11.2-01',
             'extract'      => true,
             'extract_path' => '/srv',
+            'proxy_server' => 'http://proxy:3128',
             'source'       => 'http://download.sonatype.com/nexus/professional-bundle/nexus-professional-2.11.2-01-bundle.tar.gz',
           )
 
