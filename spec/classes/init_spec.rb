@@ -18,13 +18,12 @@ describe 'nexus', type: :class do
 
         it 'fails if no version configured' do
           expect { is_expected.to compile }.to raise_error(RSpec::Expectations::ExpectationNotMetError,
-                                                           %r{Cannot set version nexus version to "latest" or leave undefined.})
+                                                           %r{match for Pattern})
         end
       end
 
       context 'with a version set' do
         it { is_expected.to contain_class('nexus') }
-        it { is_expected.to contain_class('nexus::params') }
 
         it {
           is_expected.to contain_group('nexus').with(
@@ -71,7 +70,7 @@ describe 'nexus', type: :class do
 
           is_expected.to create_class('nexus::package').with(
             'deploy_pro'    => true,
-            'download_site' => 'http://download.sonatype.com/nexus/professional-bundle',
+            'download_site' => 'https://download.sonatype.com/nexus/professional-bundle',
           )
         end
 

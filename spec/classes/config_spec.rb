@@ -11,14 +11,13 @@ describe 'nexus' do
         describe 'nexus::config', type: :class do
           let(:params) do
             {
-              'nexus_root' => '/foo',
+              'nexus_root'        => '/foo',
               'nexus_home_dir'    => '/bar',
               'nexus_host'        => '1.1.1.1',
-              'nexus_port'        => '8888',
+              'nexus_port'        => 8888,
               'nexus_context'     => '/baz',
               'nexus_work_dir'    => '/foom',
               'version'           => '2.11.2',
-              'nexus_data_folder' => '',
             }
           end
 

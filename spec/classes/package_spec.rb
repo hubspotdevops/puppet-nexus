@@ -10,7 +10,7 @@ describe 'nexus::package', type: :class do
       let(:params) do
         {
           'deploy_pro'                    => false,
-          'download_site'                 => 'http://download.sonatype.com/nexus/oss',
+          'download_site'                 => 'https://download.sonatype.com/nexus/oss',
           'download_proxy'                => 'http://proxy:3128',
           'nexus_root'                    => '/srv',
           'nexus_home_dir'                => 'nexus',
@@ -25,7 +25,6 @@ describe 'nexus::package', type: :class do
           'revision'                      => '01',
           'version'                       => '2.11.2',
           'download_folder'               => '/srv',
-          'md5sum'                        => '',
         }
       end
 
@@ -38,7 +37,7 @@ describe 'nexus::package', type: :class do
             'extract'      => true,
             'extract_path' => '/srv',
             'proxy_server' => 'http://proxy:3128',
-            'source'       => 'http://download.sonatype.com/nexus/oss/nexus-2.11.2-01-bundle.tar.gz',
+            'source'       => 'https://download.sonatype.com/nexus/oss/nexus-2.11.2-01-bundle.tar.gz',
           )
         }
 
@@ -73,7 +72,7 @@ describe 'nexus::package', type: :class do
         it 'handles deploy_pro' do
           params.merge!(
             'deploy_pro' => true,
-            'download_site' => 'http://download.sonatype.com/nexus/professional-bundle',
+            'download_site' => 'https://download.sonatype.com/nexus/professional-bundle',
           )
 
           is_expected.to contain_archive('/srv/nexus-professional-2.11.2-01-bundle.tar.gz').with(
@@ -81,7 +80,7 @@ describe 'nexus::package', type: :class do
             'extract'      => true,
             'extract_path' => '/srv',
             'proxy_server' => 'http://proxy:3128',
-            'source'       => 'http://download.sonatype.com/nexus/professional-bundle/nexus-professional-2.11.2-01-bundle.tar.gz',
+            'source'       => 'https://download.sonatype.com/nexus/professional-bundle/nexus-professional-2.11.2-01-bundle.tar.gz',
           )
 
           is_expected.to contain_file('/srv/nexus-professional-2.11.2-01')

@@ -28,26 +28,23 @@
 # Copyright 2013 Hubspot
 #
 class nexus::package (
-  $version = $::nexus::version,
-  $revision = $::nexus::revision,
-  $deploy_pro = $::nexus::deploy_pro,
-  $download_site = $::nexus::download_site,
-  $nexus_type = $::nexus::nexus_type,
-  $nexus_root = $::nexus::nexus_root,
-  $nexus_home_dir = $::nexus::nexus_home_dir,
-  $nexus_user = $::nexus::nexus_user,
-  $nexus_group = $::nexus::nexus_group,
-  $nexus_work_dir = $::nexus::nexus_work_dir,
-  $nexus_work_dir_manage = $::nexus::nexus_work_dir_manage,
-  $nexus_work_recurse = $::nexus::nexus_work_recurse,
-  $nexus_selinux_ignore_defaults = $::nexus::nexus_selinux_ignore_defaults,
-  $download_folder = $::nexus::download_folder,
-  $download_proxy = $::nexus::download_proxy,
-  $md5sum = $::nexus::md5sum,
+  Pattern[/\d+.\d+.\d+/] $version = $::nexus::version,
+  String[1] $revision = $::nexus::revision,
+  Boolean $deploy_pro = $::nexus::deploy_pro,
+  Stdlib::HTTPUrl $download_site = $::nexus::download_site,
+  Enum['unix', 'win64', 'mac', 'bundle'] $nexus_type = $::nexus::nexus_type,
+  Stdlib::Absolutepath $nexus_root = $::nexus::nexus_root,
+  String[1] $nexus_home_dir = $::nexus::nexus_home_dir,
+  String[1] $nexus_user = $::nexus::nexus_user,
+  String[1] $nexus_group = $::nexus::nexus_group,
+  Optional[Stdlib::Absolutepath] $nexus_work_dir = $::nexus::nexus_work_dir,
+  Boolean $nexus_work_dir_manage = $::nexus::nexus_work_dir_manage,
+  Boolean $nexus_work_recurse = $::nexus::nexus_work_recurse,
+  Boolean $nexus_selinux_ignore_defaults = $::nexus::nexus_selinux_ignore_defaults,
+  Stdlib::Absolutepath $download_folder = $::nexus::download_folder,
+  Optional[Stdlib::HTTPUrl] $download_proxy = $::nexus::download_proxy,
 ) {
-
   $nexus_home      = "${nexus_root}/${nexus_home_dir}"
-
   $full_version = "${version}-${revision}"
 
   if ($deploy_pro) {

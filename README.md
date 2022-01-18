@@ -1,9 +1,9 @@
-# Sonatype Nexus Puppet module
+# Sonatype Nexus Repository Manager Puppet module
 Install and configure Sonatype Nexus.
 
 This module was forked from [hubspot/nexus](https://forge.puppet.com/hubspot/nexus).
 
-## Requires
+## Requirements of this module
 * puppet/archive
 * puppetlabs/stdlib
 
@@ -11,41 +11,24 @@ This module was forked from [hubspot/nexus](https://forge.puppet.com/hubspot/nex
 The following is a basic role class for building a nexus host. Adjust
 accordingly as needed.
 
-NOTE: you must pass version to Class['nexus'].  This is needed for the
+NOTE: you must pass version to `Class['nexus']`. This is needed for the
 download link and determining the name of the nexus directory.
 
 ```puppet
 class role_nexus_server {
-
+  
   # puppetlabs-java
   # NOTE: Nexus requires
-  class{ '::java': }
-
-  class{ '::nexus':
-    version    => '2.8.0',
-    revision   => '05',
-    nexus_root => '/srv', # All directories and files will be relative to this
-  }
-
-  Class['::java'] ->
-  Class['::nexus']
-}
-```
-
-NOTE: If you wish to deploy a Nexus Pro server instead of Nexus OSS set
-`deploy_pro => true`
-
-### Usage
-
-```puppet
-class role_nexus_server {
-
-  class{ '::nexus':
-    version               => '3.34.1',
-    revision              => '01',
-    download_site         => 'https://download.sonatype.com/nexus/3',
+  class{ 'java': }
+  
+  class{ 'nexus':
+    version               => '3.37.3',
+    revision              => '02',
     nexus_type            => 'unix',
   }
+  
+  Class['java'] ->
+  Class['nexus']
 
 }
 ```
