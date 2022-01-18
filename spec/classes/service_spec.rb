@@ -64,7 +64,6 @@ describe 'nexus::service', type: :class do
           'nexus_home'  => '/srv/nexus',
           'nexus_user'  => 'nexus',
           'nexus_group' => 'nexus',
-          'version'     => '01',
         }
       end
 

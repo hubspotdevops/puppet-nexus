@@ -1,6 +1,6 @@
 {
   "name": "pest-nexus",
-  "version": "1.9.2",
+  "version": "2.0.0",
   "author": "Puppets Epic Show Theatre",
   "summary": "Puppet module for Sonatype Nexus",
   "license": "MIT",
@@ -52,7 +52,7 @@
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 4.10.0 < 8.0.0"
+      "version_requirement": ">= 6.0.0 < 8.0.0"
     }
   ],
   "pdk-version": "2.2.0",

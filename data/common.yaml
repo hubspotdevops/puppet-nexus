@@ -1,0 +1,23 @@
+---
+nexus::deploy_pro: false
+nexus::download_folder: /srv
+nexus::download_proxy: null
+nexus::download_site: https://download.sonatype.com/nexus/oss
+nexus::manage_config: true
+nexus::nexus_context: /nexus
+nexus::nexus_data_folder: null
+nexus::nexus_group: nexus
+nexus::nexus_home_dir: nexus
+nexus::nexus_host: 0.0.0.0
+nexus::nexus_manage_user: true
+nexus::nexus_port: 8081
+nexus::nexus_root: /srv
+nexus::nexus_selinux_ignore_defaults: true
+nexus::nexus_type: bundle
+nexus::nexus_user: nexus
+nexus::nexus_work_dir: null
+nexus::nexus_work_dir_manage: true
+nexus::nexus_work_recurse: true
+nexus::pro_download_site: https://download.sonatype.com/nexus/professional-bundle
+nexus::revision: '01'
+nexus::version: latest

@@ -18,18 +18,17 @@
 #
 # Copyright 2013 Hubspot
 #
-class nexus::config(
-  $nexus_root = $::nexus::nexus_root,
-  $nexus_home_dir = $::nexus::nexus_home_dir,
-  $nexus_host = $::nexus::nexus_host,
-  $nexus_port = $::nexus::nexus_port,
-  $nexus_context = $::nexus::nexus_context,
-  $nexus_work_dir = $::nexus::nexus_work_dir,
-  $nexus_data_folder = $::nexus::nexus_data_folder,
-  $version = $::nexus::version,
+class nexus::config (
+  Stdlib::Absolutepath $nexus_root = $::nexus::nexus_root,
+  String[1] $nexus_home_dir = $::nexus::nexus_home_dir,
+  Stdlib::Host $nexus_host = $::nexus::nexus_host,
+  Stdlib::Port $nexus_port = $::nexus::nexus_port,
+  String[1] $nexus_context = $::nexus::nexus_context,
+  Optional[Stdlib::Absolutepath] $nexus_work_dir = $::nexus::nexus_work_dir,
+  Optional[Stdlib::Absolutepath] $nexus_data_folder = $::nexus::nexus_data_folder,
+  Pattern[/\d+.\d+.\d+/] $version = $::nexus::version,
 ) {
-
-  if $version !~ /\d.*/ or versioncmp($version, '3.1.0') >= 0 {
+  if versioncmp($version, '3.1.0') >= 0 {
     # Per the Sonatype documentation the custom nexus properties file is
     # {karaf.data}/etc/nexus.properties where {karaf.data} is the work dir
     $conf_path = 'etc/nexus.properties'

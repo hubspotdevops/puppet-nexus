@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## 2.0.0
+* Change http download urls to https
+* Change from params.pp pattern to hiera lookup
+* Add proper data types for module parameter
+* Change nexus_port from data type string to integer (Stdlib::Port)
+* Drop `version` parameter from `nexus::service` class as it is not used
+* Drop `md5sum` parameter from `nexus` class as it is not used (checksum source depends on download url)
+* Drop Nexus Repository Manager 2 example - next major version will drop support for that version
+* Drop support for end of life puppet versions
+
 ## 1.9.2
 * Allow proxy use to download the archive
 

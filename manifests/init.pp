@@ -30,39 +30,35 @@
 # Copyright 2013 Hubspot
 #
 class nexus (
-  $version               = $nexus::params::version,
-  $revision              = $nexus::params::revision,
-  $deploy_pro            = $nexus::params::deploy_pro,
-  $download_site         = $nexus::params::download_site,
-  $download_proxy        = undef,
-  $nexus_type            = $nexus::params::type,
-  $nexus_root            = $nexus::params::nexus_root,
-  $nexus_home_dir        = $nexus::params::nexus_home_dir,
-  $nexus_work_dir        = undef,
-  $nexus_work_dir_manage = $nexus::params::nexus_work_dir_manage,
-  $nexus_user            = $nexus::params::nexus_user,
-  $nexus_group           = $nexus::params::nexus_group,
-  $nexus_host            = $nexus::params::nexus_host,
-  $nexus_port            = $nexus::params::nexus_port,
-  $nexus_work_recurse    = $nexus::params::nexus_work_recurse,
-  $nexus_context         = $nexus::params::nexus_context,
-  $nexus_manage_user     = $nexus::params::nexus_manage_user,
-  $nexus_data_folder     = $nexus::params::nexus_data_folder,
-  $download_folder       = $nexus::params::download_folder,
-  $manage_config         = $nexus::params::manage_config,
-  $md5sum                = $nexus::params::md5sum,
-) inherits nexus::params {
+  Pattern[/\d+.\d+.\d+/] $version,
+  String[1] $revision,
+  Boolean $deploy_pro,
+  Stdlib::HTTPUrl $download_site,
+  Stdlib::HTTPUrl $pro_download_site,
+  Optional[Stdlib::HTTPUrl] $download_proxy,
+  Enum['unix', 'win64', 'mac', 'bundle'] $nexus_type,
+  Stdlib::Absolutepath $nexus_root,
+  String[1] $nexus_home_dir,
+  Optional[Stdlib::Absolutepath] $nexus_work_dir,
+  Boolean $nexus_work_dir_manage,
+  String[1] $nexus_user,
+  String[1] $nexus_group,
+  Stdlib::Host $nexus_host,
+  Stdlib::Port $nexus_port,
+  Boolean $nexus_work_recurse,
+  String[1] $nexus_context,
+  Boolean $nexus_manage_user,
+  Boolean $nexus_selinux_ignore_defaults,
+  Optional[Stdlib::Absolutepath] $nexus_data_folder,
+  Stdlib::Absolutepath $download_folder,
+  Boolean $manage_config,
+) {
   include stdlib
-
-  # Bail if $version is not set.  Hopefully we can one day use 'latest'.
-  if ($version == 'latest') or ($version == undef) {
-    fail('Cannot set version nexus version to "latest" or leave undefined.')
-  }
 
   if $nexus_work_dir != undef {
     $real_nexus_work_dir = $nexus_work_dir
   } else {
-    if $version !~ /\d.*/ or versioncmp($version, '3.1.0') >= 0 {
+    if versioncmp($version, '3.1.0') >= 0 {
       $real_nexus_work_dir = "${nexus_root}/sonatype-work/nexus3"
     } else {
       $real_nexus_work_dir = "${nexus_root}/sonatype-work/nexus"
@@ -70,16 +66,8 @@ class nexus (
   }
 
   # Determine if Nexus Pro should be deployed instead of OSS
-  validate_bool($deploy_pro)
   if ($deploy_pro) {
-    if ( $download_site != $nexus::params::download_site) {
-      # Use any download site that was passed in
-      $real_download_site = $download_site
-    } else {
-      # No download site was specifically defined, the default is
-      # incorrect for pro so switch to the correct one
-      $real_download_site = $nexus::params::pro_download_site
-    }
+    $real_download_site = $pro_download_site
   } else {
     # Deploy OSS version. The default download_site, or whatever is
     # passed in is the correct location to download from
@@ -114,7 +102,6 @@ class nexus (
     nexus_work_dir        => $real_nexus_work_dir,
     nexus_work_dir_manage => $nexus_work_dir_manage,
     nexus_work_recurse    => $nexus_work_recurse,
-    md5sum                => $md5sum,
     notify                => Class['nexus::service']
   }
 
@@ -135,7 +122,6 @@ class nexus (
   class { 'nexus::service':
     nexus_home => "${nexus_root}/${nexus_home_dir}",
     nexus_user => $nexus_user,
-    version    => $version,
   }
 
   anchor{ 'nexus::setup': } -> Class['nexus::package'] -> Class['nexus::config'] -> Class['nexus::Service'] -> anchor { 'nexus::done': }
