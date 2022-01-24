@@ -9,7 +9,7 @@ describe 'nexus', type: :class do
 
       let(:params) do
         {
-          'version' => '2.11.2',
+          'version' => '3.37.3-02',
         }
       end
 
@@ -18,7 +18,20 @@ describe 'nexus', type: :class do
 
         it 'fails if no version configured' do
           expect { is_expected.to compile }.to raise_error(RSpec::Expectations::ExpectationNotMetError,
-                                                           %r{match for Pattern})
+                                                           %r{expects a value for parameter 'version'})
+        end
+      end
+
+      context 'with invalid version set' do
+        let(:params) do
+          {
+            'version' => '2.11.2',
+          }
+        end
+
+        it 'fails if no version configured' do
+          expect { is_expected.to compile }.to raise_error(RSpec::Expectations::ExpectationNotMetError,
+                                                           %r{parameter 'version' expects a match for Pattern})
         end
       end
 
@@ -36,46 +49,77 @@ describe 'nexus', type: :class do
             'ensure'  => 'present',
             'comment' => 'Nexus User',
             'gid'     => 'nexus',
-            'home'    => '/srv',
+            'home'    => '/opt',
             'shell'   => '/bin/sh',
             'system'  => true,
             'require' => 'Group[nexus]',
           )
         }
 
-        it { is_expected.to contain_anchor('nexus::setup') }
         it {
           is_expected.to contain_class('nexus::package').that_requires(
-            'Anchor[nexus::setup]',
+            'Class[nexus::user]',
           )
         }
-        it {
+
+        it 'manages the nexus config' do
           is_expected.to contain_class('nexus::config').that_requires(
             'Class[nexus::package]',
           ).that_notifies('Class[nexus::service]')
-        }
+
+          is_expected.to contain_file_line('nexus-application-host').with(
+            'path'  => '/opt/sonatype-work/nexus3/etc/nexus.properties',
+            'match' => '^application-host=',
+            'line'  => 'application-host=127.0.0.1',
+          )
+
+          is_expected.to contain_file_line('nexus-application-port').with(
+            'path'  => '/opt/sonatype-work/nexus3/etc/nexus.properties',
+            'match' => '^application-port=',
+            'line'  => 'application-port=8081',
+          )
+        end
+
         it {
           is_expected.to contain_class('nexus::service').that_subscribes_to(
             'Class[nexus::config]',
           )
         }
+
         it {
-          is_expected.to contain_anchor('nexus::done').that_requires(
-            'Class[nexus::service]',
+          is_expected.to contain_archive('/opt/nexus-3.37.3-02-unix.tar.gz').with(
+            'creates'      => '/opt/nexus-3.37.3-02',
+            'extract'      => true,
+            'extract_path' => '/opt',
+            'source'       => 'https://download.sonatype.com/nexus/3/nexus-3.37.3-02-unix.tar.gz',
           )
         }
 
-        it 'handles deploy_pro' do
-          params['deploy_pro'] = true
-
-          is_expected.to create_class('nexus::package').with(
-            'deploy_pro'    => true,
-            'download_site' => 'https://download.sonatype.com/nexus/professional-bundle',
+        it 'manages the service' do
+          is_expected.to contain_file('/lib/systemd/system/nexus.service')
+          is_expected.to contain_service('nexus').with(
+            'ensure' => 'running',
+            'enable' => true,
           )
         end
 
+        it 'manages the working directory' do
+          permission = {
+            'ensure'  => 'directory',
+            'owner'   => 'nexus',
+            'group'   => 'nexus',
+            'require' => 'Archive[/opt/nexus-3.37.3-02-unix.tar.gz]',
+          }
+
+          is_expected.to contain_file('/opt/sonatype-work/nexus3').with(permission)
+          is_expected.to contain_file('/opt/sonatype-work/nexus3/etc').with(permission)
+          is_expected.to contain_file('/opt/sonatype-work/nexus3/log').with(permission)
+          is_expected.to contain_file('/opt/sonatype-work/nexus3/orient').with(permission)
+          is_expected.to contain_file('/opt/sonatype-work/nexus3/tmp').with(permission)
+        end
+
         it 'does not have a user or group if nexus_manage_user is false' do
-          params['nexus_manage_user'] = false
+          params['manage_user'] = false
 
           is_expected.not_to contain_group('nexus')
           is_expected.not_to contain_user('nexus')

@@ -1,5 +1,5 @@
-# Sonatype Nexus Repository Manager Puppet module
-Install and configure Sonatype Nexus.
+# Sonatype Nexus Repository Manager 3 Puppet module
+Install and configure Sonatype Nexus Repository Manager 3.
 
 This module was forked from [hubspot/nexus](https://forge.puppet.com/hubspot/nexus).
 
