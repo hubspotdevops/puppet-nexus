@@ -5,10 +5,10 @@ After=network.target
 [Service]
 Type=forking
 LimitNOFILE=65536
-ExecStart=<%= scope.lookupvar('nexus::service::nexus_script') %> start
-ExecStop=<%= scope.lookupvar('nexus::service::nexus_script') %> stop
-User=<%= scope.lookupvar('nexus::service::nexus_user') %>
-Group=<%= scope.lookupvar('nexus::service::nexus_group') %>
+ExecStart=<%= scope.lookupvar('nexus::package::install_dir') %>/bin/nexus start
+ExecStop=<%= scope.lookupvar('nexus::package::install_dir') %>/bin/nexus stop
+User=<%= scope.lookupvar('nexus::user') %>
+Group=<%= scope.lookupvar('nexus::group') %>
 Restart=on-abort
 
 [Install]

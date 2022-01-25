@@ -1,5 +1,11 @@
-# @summary Manages the operation system user account which is used to start up the service
+# @summary
+#   Manages the operation system user account which is used to start up the service
+#
+# @api private
+#
 class nexus::user {
+  assert_private()
+
   if($nexus::manage_user){
     group { $nexus::group :
       ensure  => present

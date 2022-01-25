@@ -49,7 +49,7 @@ describe 'nexus', type: :class do
             'ensure'  => 'present',
             'comment' => 'Nexus User',
             'gid'     => 'nexus',
-            'home'    => '/opt',
+            'home'    => '/opt/sonatype',
             'shell'   => '/bin/sh',
             'system'  => true,
             'require' => 'Group[nexus]',
@@ -68,13 +68,13 @@ describe 'nexus', type: :class do
           ).that_notifies('Class[nexus::service]')
 
           is_expected.to contain_file_line('nexus-application-host').with(
-            'path'  => '/opt/sonatype-work/nexus3/etc/nexus.properties',
+            'path'  => '/opt/sonatype/sonatype-work/nexus3/etc/nexus.properties',
             'match' => '^application-host=',
             'line'  => 'application-host=127.0.0.1',
           )
 
           is_expected.to contain_file_line('nexus-application-port').with(
-            'path'  => '/opt/sonatype-work/nexus3/etc/nexus.properties',
+            'path'  => '/opt/sonatype/sonatype-work/nexus3/etc/nexus.properties',
             'match' => '^application-port=',
             'line'  => 'application-port=8081',
           )
@@ -87,11 +87,22 @@ describe 'nexus', type: :class do
         }
 
         it {
-          is_expected.to contain_archive('/opt/nexus-3.37.3-02-unix.tar.gz').with(
-            'creates'      => '/opt/nexus-3.37.3-02',
+          is_expected.to contain_archive('/opt/sonatype/nexus-3.37.3-02-unix.tar.gz').with(
+            'creates'      => '/opt/sonatype/nexus-3.37.3-02',
             'extract'      => true,
-            'extract_path' => '/opt',
+            'extract_path' => '/opt/sonatype',
             'source'       => 'https://download.sonatype.com/nexus/3/nexus-3.37.3-02-unix.tar.gz',
+          )
+          is_expected.to contain_file('/opt/sonatype').with(
+            'ensure'  => 'directory',
+            'backup'  => false,
+            'force'   => true,
+            'purge'   => true,
+            'recurse' => true,
+            'ignore'  => [
+              'nexus-3.37.3-02',
+              'sonatype-work',
+            ],
           )
         }
 
@@ -108,14 +119,14 @@ describe 'nexus', type: :class do
             'ensure'  => 'directory',
             'owner'   => 'nexus',
             'group'   => 'nexus',
-            'require' => 'Archive[/opt/nexus-3.37.3-02-unix.tar.gz]',
+            'require' => 'Archive[/opt/sonatype/nexus-3.37.3-02-unix.tar.gz]',
           }
 
-          is_expected.to contain_file('/opt/sonatype-work/nexus3').with(permission)
-          is_expected.to contain_file('/opt/sonatype-work/nexus3/etc').with(permission)
-          is_expected.to contain_file('/opt/sonatype-work/nexus3/log').with(permission)
-          is_expected.to contain_file('/opt/sonatype-work/nexus3/orient').with(permission)
-          is_expected.to contain_file('/opt/sonatype-work/nexus3/tmp').with(permission)
+          is_expected.to contain_file('/opt/sonatype/sonatype-work/nexus3').with(permission)
+          is_expected.to contain_file('/opt/sonatype/sonatype-work/nexus3/etc').with(permission)
+          is_expected.to contain_file('/opt/sonatype/sonatype-work/nexus3/log').with(permission)
+          is_expected.to contain_file('/opt/sonatype/sonatype-work/nexus3/orient').with(permission)
+          is_expected.to contain_file('/opt/sonatype/sonatype-work/nexus3/tmp').with(permission)
         end
 
         it 'does not have a user or group if nexus_manage_user is false' do

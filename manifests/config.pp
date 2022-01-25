@@ -1,7 +1,10 @@
-# @summary Configure nexus repository manager
+# @summary
+#   Configure nexus repository manager
 #
 # @api private
+#
 class nexus::config {
+  assert_private()
   # Per the Sonatype documentation the custom nexus properties file is
   # {karaf.data}/etc/nexus.properties where {karaf.data} is the work dir
   $nexus_properties_file = "${nexus::work_dir}/etc/nexus.properties"

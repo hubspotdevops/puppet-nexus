@@ -15,6 +15,10 @@
     {
       "name": "puppet/archive",
       "version_requirement": ">=3.2.1 < 7.0.0"
+    },
+    {
+      "name": "puppet/extlib",
+      "version_requirement": ">=2.1.0 < 6.0.0"
     }
   ],
   "operatingsystem_support": [

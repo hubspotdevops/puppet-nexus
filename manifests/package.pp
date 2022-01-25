@@ -1,12 +1,17 @@
-# === Class: nexus::package
+# @summary
+#   Install the Nexus Repository Manager package
 #
-# Install the Nexus package
+# @api private
 #
 class nexus::package {
+  assert_private()
+
   $nexus_archive   = "nexus-${nexus::version}-unix.tar.gz"
   $download_url    = "${nexus::download_site}/${nexus_archive}"
   $dl_file         = "${nexus::download_folder}/${nexus_archive}"
   $install_dir     = "${nexus::install_root}/nexus-${nexus::version}"
+
+  extlib::mkdir_p($nexus::install_root)
 
   archive { $dl_file:
     source        => $download_url,
@@ -18,6 +23,26 @@ class nexus::package {
     creates       => $install_dir,
     user          => 'root',
     group         => 'root',
+  }
+
+  if $nexus::purge_installations {
+    File <| title == $nexus::install_root |> {
+      ensure  => 'directory',
+      backup  => false,
+      force   => true,
+      purge   => true,
+      recurse => true,
+      ignore  => [
+        "nexus-${nexus::version}",
+        'sonatype-work',
+      ],
+      require => [
+        Archive[$dl_file],
+      ],
+      before  => [
+        Class['nexus::service'],
+      ],
+    }
   }
 
   if $nexus::manage_work_dir {

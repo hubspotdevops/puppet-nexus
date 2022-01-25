@@ -2,5 +2,6 @@ fixtures:
   forge_modules:
     stdlib: 'puppetlabs/stdlib'
     archive: 'puppet/archive'
+    extlib: 'puppet/extlib'
   symlinks:
     nexus: "#{source_dir}"

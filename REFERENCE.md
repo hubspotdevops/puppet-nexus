@@ -44,6 +44,7 @@ The following parameters are available in the `nexus` class:
 * [`manage_user`](#manage_user)
 * [`manage_config`](#manage_config)
 * [`manage_work_dir`](#manage_work_dir)
+* [`purge_installations`](#purge_installations)
 
 ##### <a name="version"></a>`version`
 
@@ -122,4 +123,10 @@ Set if this module should manage the config file of nexus repository manager.
 Data type: `Boolean`
 
 Set if this module should manage the work directory of the nexus repository manager.
+
+##### <a name="purge_installations"></a>`purge_installations`
+
+Data type: `Boolean`
+
+Set this option if you want old installations of nexus repository manager to get automatically deleted.
 

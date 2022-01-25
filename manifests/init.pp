@@ -29,6 +29,8 @@
 #   Set if this module should manage the config file of nexus repository manager.
 # @param manage_work_dir
 #   Set if this module should manage the work directory of the nexus repository manager.
+# @param purge_installations
+#   Set this option if you want old installations of nexus repository manager to get automatically deleted.
 #
 # @example
 #   class{ 'nexus':
@@ -49,6 +51,7 @@ class nexus (
   Boolean $manage_user,
   Boolean $manage_config,
   Boolean $manage_work_dir,
+  Boolean $purge_installations,
 ) {
   include stdlib
 

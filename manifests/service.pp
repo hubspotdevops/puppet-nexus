@@ -1,8 +1,11 @@
-# === Class: nexus::service
+# @summary
+#   Maintains the Nexus service
 #
-# Maintains the Nexus service
+# @api private
 #
 class nexus::service {
+  assert_private()
+
   file { '/lib/systemd/system/nexus.service':
     mode    => '0644',
     owner   => 'root',
