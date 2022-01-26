@@ -1,128 +1,70 @@
-# === Class: nexus
+# @summary
+#   Install and configure Sonatype Nexus Repository Manager 3.
 #
-# Install and configure Sonatype Nexus
+# @see https://help.sonatype.com/repomanager3/product-information/download/download-archives---repository-manager-3
 #
-# === Parameters
+# @param version
+#   The version to download, install and manage.
+# @param download_folder
+#   Destination folder of the downloaded archive.
+# @param download_site
+#   Download uri which will be appended with filename of the archive to download.
+# @param download_proxy
+#   Proxyserver address which will be used to download the archive file.
+# @param install_root
+#   The root filesystem path where the downloaded archive will be extracted to.
+# @param work_dir
+#   The nexus repository manager working directory which contains the embedded database and local blobstores.
+# @param user
+#   The operation system user used to start the nexus repository manager service.
+# @param group
+#   The operation system group used to start the nexus repository manager service.
+# @param host
+#   The bind address where the nexus repository manager service should bind to.
+# @param port
+#   The port which the nexus repository manager service should use.
+# @param manage_user
+#   Set if this module should manage the creation of the operation system user.
+# @param manage_config
+#   Set if this module should manage the config file of nexus repository manager.
+# @param manage_work_dir
+#   Set if this module should manage the work directory of the nexus repository manager.
+# @param purge_installations
+#   Set this option if you want old installations of nexus repository manager to get automatically deleted.
 #
-# [*version*]
-#   The version to download.
-#
-# [*revision*]
-#   The revision of the archive. This is needed for the name of the
-#   directory the archive is extracted to.  The default should suffice.
-#
-# [*nexus_root*]
-#   The root directory where the nexus application will live and tarballs
-#   will be downloaded to.
-#
-# === Examples
-#
-# class{ 'nexus':
-#   var => 'foobar'
-# }
-#
-# === Authors
-#
-# Tom McLaughlin <tmclaughlin@hubspot.com>
-#
-# === Copyright
-#
-# Copyright 2013 Hubspot
+# @example
+#   class{ 'nexus':
+#     version => '3.37.3-02',
+#   }
 #
 class nexus (
-  Pattern[/\d+.\d+.\d+/] $version,
-  String[1] $revision,
-  Boolean $deploy_pro,
-  Stdlib::HTTPUrl $download_site,
-  Stdlib::HTTPUrl $pro_download_site,
-  Optional[Stdlib::HTTPUrl] $download_proxy,
-  Enum['unix', 'win64', 'mac', 'bundle'] $nexus_type,
-  Stdlib::Absolutepath $nexus_root,
-  String[1] $nexus_home_dir,
-  Optional[Stdlib::Absolutepath] $nexus_work_dir,
-  Boolean $nexus_work_dir_manage,
-  String[1] $nexus_user,
-  String[1] $nexus_group,
-  Stdlib::Host $nexus_host,
-  Stdlib::Port $nexus_port,
-  Boolean $nexus_work_recurse,
-  String[1] $nexus_context,
-  Boolean $nexus_manage_user,
-  Boolean $nexus_selinux_ignore_defaults,
-  Optional[Stdlib::Absolutepath] $nexus_data_folder,
+  Pattern[/3.\d+.\d+-\d+/] $version,
   Stdlib::Absolutepath $download_folder,
+  Stdlib::HTTPUrl $download_site,
+  Optional[Stdlib::HTTPUrl] $download_proxy,
+  Stdlib::Absolutepath $install_root,
+  Stdlib::Absolutepath $work_dir,
+  String[1] $user,
+  String[1] $group,
+  Stdlib::Host $host,
+  Stdlib::Port $port,
+  Boolean $manage_user,
   Boolean $manage_config,
+  Boolean $manage_work_dir,
+  Boolean $purge_installations,
 ) {
   include stdlib
 
-  if $nexus_work_dir != undef {
-    $real_nexus_work_dir = $nexus_work_dir
-  } else {
-    if versioncmp($version, '3.1.0') >= 0 {
-      $real_nexus_work_dir = "${nexus_root}/sonatype-work/nexus3"
-    } else {
-      $real_nexus_work_dir = "${nexus_root}/sonatype-work/nexus"
-    }
-  }
-
-  # Determine if Nexus Pro should be deployed instead of OSS
-  if ($deploy_pro) {
-    $real_download_site = $pro_download_site
-  } else {
-    # Deploy OSS version. The default download_site, or whatever is
-    # passed in is the correct location to download from
-    $real_download_site = $download_site
-  }
-
-  if($nexus_manage_user){
-    group { $nexus_group :
-      ensure  => present
-    }
-
-    user { $nexus_user:
-      ensure  => present,
-      comment => 'Nexus User',
-      gid     => $nexus_group,
-      home    => $nexus_root,
-      shell   => '/bin/sh', # required to start application via script.
-      system  => true,
-      require => Group[$nexus_group]
-    }
-  }
-
-  class{ 'nexus::package':
-    version               => $version,
-    revision              => $revision,
-    deploy_pro            => $deploy_pro,
-    download_site         => $real_download_site,
-    nexus_root            => $nexus_root,
-    nexus_home_dir        => $nexus_home_dir,
-    nexus_user            => $nexus_user,
-    nexus_group           => $nexus_group,
-    nexus_work_dir        => $real_nexus_work_dir,
-    nexus_work_dir_manage => $nexus_work_dir_manage,
-    nexus_work_recurse    => $nexus_work_recurse,
-    notify                => Class['nexus::service']
-  }
+  contain nexus::user
+  contain nexus::package
 
   if $manage_config {
-    class{ 'nexus::config':
-      nexus_root        => $nexus_root,
-      nexus_home_dir    => $nexus_home_dir,
-      nexus_host        => $nexus_host,
-      nexus_port        => $nexus_port,
-      nexus_context     => $nexus_context,
-      nexus_work_dir    => $real_nexus_work_dir,
-      nexus_data_folder => $nexus_data_folder,
-      notify            => Class['nexus::service'],
-      require           => Anchor['nexus::setup']
-    }
+    contain nexus::config
+
+    Class['nexus::package'] -> Class['nexus::config'] ~> Class['nexus::service']
   }
 
-  class { 'nexus::service':
-    nexus_home => "${nexus_root}/${nexus_home_dir}",
-    nexus_user => $nexus_user,
-  }
+  contain nexus::service
 
-  anchor{ 'nexus::setup': } -> Class['nexus::package'] -> Class['nexus::config'] -> Class['nexus::Service'] -> anchor { 'nexus::done': }
+  Class['nexus::user'] -> Class['nexus::package'] ~> Class['nexus::service']
 }

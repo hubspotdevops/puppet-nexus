@@ -1,117 +1,64 @@
-# === Class: nexus::package
+# @summary
+#   Install the Nexus Repository Manager package
 #
-# Install the Nexus package
+# @api private
 #
-# === Parameters
-#
-# [*version*]
-#   The version to download.
-#
-# [*revision*]
-#   The revision of the archive. This is needed for the name of the
-#   directory the archive is extracted to.  The default should suffice.
-#
-# [*nexus_root*]
-#   The root directory where the nexus application will live and tarballs
-#   will be downloaded to.
-#
-# === Examples
-#
-# class{ 'nexus::package': }
-#
-# === Authors
-#
-# Tom McLaughlin <tmclaughlin@hubspot.com>
-#
-# === Copyright
-#
-# Copyright 2013 Hubspot
-#
-class nexus::package (
-  Pattern[/\d+.\d+.\d+/] $version = $::nexus::version,
-  String[1] $revision = $::nexus::revision,
-  Boolean $deploy_pro = $::nexus::deploy_pro,
-  Stdlib::HTTPUrl $download_site = $::nexus::download_site,
-  Enum['unix', 'win64', 'mac', 'bundle'] $nexus_type = $::nexus::nexus_type,
-  Stdlib::Absolutepath $nexus_root = $::nexus::nexus_root,
-  String[1] $nexus_home_dir = $::nexus::nexus_home_dir,
-  String[1] $nexus_user = $::nexus::nexus_user,
-  String[1] $nexus_group = $::nexus::nexus_group,
-  Optional[Stdlib::Absolutepath] $nexus_work_dir = $::nexus::nexus_work_dir,
-  Boolean $nexus_work_dir_manage = $::nexus::nexus_work_dir_manage,
-  Boolean $nexus_work_recurse = $::nexus::nexus_work_recurse,
-  Boolean $nexus_selinux_ignore_defaults = $::nexus::nexus_selinux_ignore_defaults,
-  Stdlib::Absolutepath $download_folder = $::nexus::download_folder,
-  Optional[Stdlib::HTTPUrl] $download_proxy = $::nexus::download_proxy,
-) {
-  $nexus_home      = "${nexus_root}/${nexus_home_dir}"
-  $full_version = "${version}-${revision}"
+class nexus::package {
+  assert_private()
 
-  if ($deploy_pro) {
-    $bundle_type = '-professional'
-  } else {
-    $bundle_type = ''
-  }
+  $nexus_archive   = "nexus-${nexus::version}-unix.tar.gz"
+  $download_url    = "${nexus::download_site}/${nexus_archive}"
+  $dl_file         = "${nexus::download_folder}/${nexus_archive}"
+  $install_dir     = "${nexus::install_root}/nexus-${nexus::version}"
 
-  $nexus_archive   = "nexus${bundle_type}-${full_version}-${nexus_type}.tar.gz"
-  $download_url    = "${download_site}/${nexus_archive}"
-  $dl_file         = "${download_folder}/${nexus_archive}"
-  $nexus_home_real = "${nexus_root}/nexus${bundle_type}-${full_version}"
+  extlib::mkdir_p($nexus::install_root)
 
-  # NOTE: When setting version to 'latest' the site redirects to the latest
-  # release. But, nexus-latest-bundle.tar.gz will already exist and
-  # therefore the exec will never be triggered.  In reality 'latest' will
-  # lock you to a version.
   archive { $dl_file:
-    source          => $download_url,
-    extract         => true,
-    extract_command => "tar zxf %s --directory ${nexus_root}",
-    extract_path    => $nexus_root,
-    checksum_url    => "${download_url}.md5",
-    checksum_type   => 'md5',
-    proxy_server    => $download_proxy,
-    creates         => $nexus_home_real,
+    source        => $download_url,
+    extract       => true,
+    extract_path  => $nexus::install_root,
+    checksum_url  => "${download_url}.sha1",
+    checksum_type => 'sha1',
+    proxy_server  => $nexus::download_proxy,
+    creates       => $install_dir,
+    user          => 'root',
+    group         => 'root',
   }
 
-  # NOTE: $nexus_work_dir in later releases was moved to a directory not
-  # under the application.  This is why we do not make recursing optional
-  # for this resource but do for $nexus_work_dir.
-  file{ $nexus_home_real:
-    ensure                  => directory,
-    owner                   => $nexus_user,
-    group                   => $nexus_group,
-    recurse                 => $nexus_work_recurse,
-    selinux_ignore_defaults => $nexus_selinux_ignore_defaults,
-    require                 => Archive[ $dl_file ]
-  }
-
-  # I have an EBS volume for $nexus_work_dir and mounting code in our tree
-  # creates this and results in a duplicate resource. -tmclaughlin
-  if $nexus_work_dir_manage == true {
-    file{ $nexus_work_dir:
-      ensure                  => directory,
-      owner                   => $nexus_user,
-      group                   => $nexus_group,
-      recurse                 => $nexus_work_recurse,
-      selinux_ignore_defaults => $nexus_selinux_ignore_defaults,
-      require                 => Archive[ $dl_file ]
-    }
-
-    # Nexus 3 needs to have a nexus_work_dir/etc for the properties file
-    if $version !~ /\d.*/ or versioncmp($version, '3.1.0') >= 0 {
-      file { "${nexus_work_dir}/etc":
-        ensure                  => directory,
-        owner                   => $nexus_user,
-        group                   => $nexus_group,
-        recurse                 => $nexus_work_recurse,
-        selinux_ignore_defaults => $nexus_selinux_ignore_defaults,
-      }
+  if $nexus::purge_installations {
+    File <| title == $nexus::install_root |> {
+      ensure  => 'directory',
+      backup  => false,
+      force   => true,
+      purge   => true,
+      recurse => true,
+      ignore  => [
+        "nexus-${nexus::version}",
+        'sonatype-work',
+      ],
+      require => [
+        Archive[$dl_file],
+      ],
+      before  => [
+        Class['nexus::service'],
+      ],
     }
   }
 
-  file{ $nexus_home:
-    ensure  => link,
-    target  => $nexus_home_real,
-    require => Archive[ $dl_file ]
+  if $nexus::manage_work_dir {
+    $directories = [
+      $nexus::work_dir,
+      "${nexus::work_dir}/etc",
+      "${nexus::work_dir}/log",
+      "${nexus::work_dir}/orient",
+      "${nexus::work_dir}/tmp",
+    ]
+
+    file{ $directories:
+      ensure  => directory,
+      owner   => $nexus::user,
+      group   => $nexus::group,
+      require => Archive[ $dl_file ]
+    }
   }
 }

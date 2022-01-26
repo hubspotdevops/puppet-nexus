@@ -1,11 +1,61 @@
-# Sonatype Nexus Repository Manager Puppet module
-Install and configure Sonatype Nexus.
+# Sonatype Nexus Repository Manager 3 Puppet module
+Install and configure Sonatype Nexus Repository Manager 3.
 
 This module was forked from [hubspot/nexus](https://forge.puppet.com/hubspot/nexus).
 
 ## Requirements of this module
 * puppet/archive
+* puppet/extlib
 * puppetlabs/stdlib
+
+## Migration from pre 3.x versions of this module
+With version 3.0.0 we changed the default installation path from `/srv` to `/opt/sonatype`.
+
+To migrate your current installation you will have to put something like the following into your `role_nexus_server.pp`:
+
+```puppet
+  # shutdown the currently running service as we have to modify the operation system user
+  exec { 'shutdown-running-service':
+    command => '/usr/bin/systemctl stop nexus.service',
+    onlyif  => [
+      '/usr/bin/test -d /srv/sonatype-work',
+      '/usr/bin/test ! -d /opt/sonatype/sonatype-work'
+    ],
+    before  => [
+      Class['nexus::package'],
+      Class['nexus::user']
+    ],
+  }
+
+  # nexus::package will extract the archive which contains an empty work directory
+  exec { 'remove-empty-work-directory':
+    command => '/usr/bin/rm -rf /opt/sonatype/sonatype-work',
+    onlyif  => [
+      '/usr/bin/test -d /srv/sonatype-work',
+      '/usr/bin/test -d /opt/sonatype/sonatype-work'
+    ],
+    before  => [
+      Exec['move-work-directory-to-new-location']
+    ],
+    require => [
+      Class['nexus::package'],
+    ]
+  }
+
+  # move the old working directory to the new location
+  exec { 'move-work-directory-to-new-location':
+    command => '/usr/bin/mv /srv/sonatype-work /opt/sonatype/',
+    onlyif  => [
+      '/usr/bin/test -d /srv/sonatype-work',
+      '/usr/bin/test ! -d /opt/sonatype/sonatype-work'
+    ],
+    require => [
+      Class['nexus::package'],
+      Exec['remove-empty-work-directory'],
+    ],
+    before  => Class['nexus::service'],
+  }
+```
 
 ## Usage
 The following is a basic role class for building a nexus host. Adjust
@@ -43,7 +93,7 @@ all connections to HTTPS.  Be sure to login after the app is up and head
 to Administration -> Server.  Change the base URL to "https" and check
 "Force Base URL".  The application will be available at:
 
-https://${::fqdn}/nexus/
+https://${::fqdn}/
 
 ```puppet
   class{ '::nginx': }
@@ -65,9 +115,9 @@ https://${::fqdn}/nexus/
 
   nginx::resource::location { 'nexus':
     ensure    => present,
-    location  => '/nexus',
+    location  => '/',
     vhost     => 'nexus',
-    proxy     => "http://${nexus_host}:${nexus_port}/nexus",
+    proxy     => "http://${nexus::host}:${nexus::port}",
     ssl       => true,
   }
 ```
