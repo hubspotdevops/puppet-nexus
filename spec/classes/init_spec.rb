@@ -37,6 +37,7 @@ describe 'nexus', type: :class do
 
       context 'with a version set' do
         it { is_expected.to contain_class('nexus') }
+        it { is_expected.to contain_class('nexus::user') }
 
         it {
           is_expected.to contain_group('nexus').with(
@@ -53,6 +54,21 @@ describe 'nexus', type: :class do
             'shell'   => '/bin/sh',
             'system'  => true,
             'require' => 'Group[nexus]',
+          )
+        }
+
+        it {
+          is_expected.to contain_file('/opt/sonatype/.java').with(
+            'ensure'  => 'directory',
+            'owner'   => 'nexus',
+            'group'   => 'nexus',
+            'mode'    => '0700',
+          )
+          is_expected.to contain_file('/opt/sonatype/.java/.userPrefs').with(
+            'ensure'  => 'directory',
+            'owner'   => 'nexus',
+            'group'   => 'nexus',
+            'mode'    => '0700',
           )
         }
 
