@@ -25,6 +25,14 @@ class nexus::package {
     group         => 'root',
   }
 
+  # Prevent "Couldn't flush user prefs" error - https://issues.sonatype.org/browse/NEXUS-3671
+  file { ["${nexus::install_root}/.java", "${nexus::install_root}/.java/.userPrefs"]:
+    ensure => directory,
+    owner  => $nexus::user,
+    group  => $nexus::group,
+    mode   => '0700',
+  }
+
   if $nexus::purge_installations {
     File <| title == $nexus::install_root |> {
       ensure  => 'directory',
