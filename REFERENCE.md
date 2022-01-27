@@ -6,7 +6,18 @@
 
 ### Classes
 
+#### Public Classes
+
 * [`nexus`](#nexus): Install and configure Sonatype Nexus Repository Manager 3.
+* [`nexus::plugin::composer`](#nexusplugincomposer): Install the composer repository format plugin
+
+#### Private Classes
+
+* `nexus::config`: Configure nexus repository manager
+* `nexus::package`: Install the Nexus Repository Manager package
+* `nexus::plugin`: Base class used by plugin classes
+* `nexus::service`: Maintains the Nexus service
+* `nexus::user`: Manages the operation system user account which is used to start up the service
 
 ## Classes
 
@@ -129,4 +140,33 @@ Set if this module should manage the work directory of the nexus repository mana
 Data type: `Boolean`
 
 Set this option if you want old installations of nexus repository manager to get automatically deleted.
+
+### <a name="nexusplugincomposer"></a>`nexus::plugin::composer`
+
+Install the composer repository format plugin
+
+#### Examples
+
+##### 
+
+```puppet
+class { 'nexus':
+   version => '3.34.3-02',
+}
+class { 'nexus::plugin::composer':
+   version => '0.0.18',
+}
+```
+
+#### Parameters
+
+The following parameters are available in the `nexus::plugin::composer` class:
+
+* [`version`](#version)
+
+##### <a name="version"></a>`version`
+
+Data type: `Pattern[/\d+.\d+.\d+/]`
+
+The composer repository format plugin version.
 
