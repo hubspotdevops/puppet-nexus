@@ -26,6 +26,7 @@ class nexus::plugin::composer (
     creates       => $composer_kar,
     proxy_server  => $nexus::download_proxy,
     source        => $download_url,
+    notify        => Class['nexus::service'],
     require       => Class['nexus::plugin'],
   }
 
