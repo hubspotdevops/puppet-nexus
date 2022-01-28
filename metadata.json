@@ -1,6 +1,6 @@
 {
   "name": "pest-nexus",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "author": "Puppets Epic Show Theatre",
   "summary": "Puppet module for Sonatype Nexus Repository Manager 3",
   "license": "MIT",
