@@ -5,10 +5,12 @@ nexus::download_site: https://download.sonatype.com/nexus/3
 nexus::group: nexus
 nexus::host: 127.0.0.1
 nexus::install_root: /opt/sonatype
+nexus::manage_api_resources: true
 nexus::manage_config: true
 nexus::manage_user: true
 nexus::manage_work_dir: true
 nexus::port: 8081
 nexus::purge_installations: true
+nexus::purge_default_repositories: false
 nexus::user: nexus
 nexus::work_dir: "%{lookup('nexus::install_root')}/sonatype-work/nexus3"

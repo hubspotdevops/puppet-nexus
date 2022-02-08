@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0]
+### Added
+- `nexus::manage_api_resources` to setup configuration to connect to nexus repository manager rest api
+- `nexus::purge_default_repositories` to remove default maven and nuget repositories
+- `nexus::config::email` to configure email settings
+- `nexus::config::anonymous` to configure an anonymous access
+- `nexus::config::admin` to configure administrator account
+- `nexus::resource::blobstore::file` to manage blobstores of type file
+- `nexus::resource::repository::apt::proxy` to manage apt proxy repositories
+- `nexus::resource::repository::npm::group` to manage npm group repositories
+- `nexus::resource::repository::npm::hosted` to manage npm hosted repositories
+- `nexus::resource::repository::npm::proxy` to manage npm proxy repositories
+
+### Changed
+- `nexus::config` moved to `nexus::config::properties`
+- systemd service file adjusted to wait until nexus repository manager finished startup
+
 ## [3.1.0]
 ### Added
 - `nexus::plugin::composer` to install composer (php) repository plugin

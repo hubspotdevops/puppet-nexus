@@ -2,6 +2,9 @@ fixtures:
   forge_modules:
     stdlib: 'puppetlabs/stdlib'
     archive: 'puppet/archive'
+    concat: 'puppetlabs/concat'
+    cron_core: 'puppetlabs/cron_core'
+    device_manager: 'puppetlabs/device_manager'
     extlib: 'puppet/extlib'
   symlinks:
     nexus: "#{source_dir}"

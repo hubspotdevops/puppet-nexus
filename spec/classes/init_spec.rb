@@ -7,12 +7,6 @@ describe 'nexus', type: :class do
         facts
       end
 
-      let(:params) do
-        {
-          'version' => '3.37.3-02',
-        }
-      end
-
       context 'no params set' do
         let(:params) { {} }
 
@@ -35,7 +29,43 @@ describe 'nexus', type: :class do
         end
       end
 
+      context 'with version and api resources' do
+        let(:facts) do
+          facts[:puppet_settings_deviceconfig] = '/etc/puppetlabs/puppet/device.conf'
+          facts[:puppet_settings_confdir]      = '/etc/puppetlabs'
+
+          facts
+        end
+
+        let(:params) do
+          {
+            'version' => '3.37.3-02',
+            'purge_default_repositories' => true,
+          }
+        end
+
+        it { is_expected.to compile }
+        it { is_expected.to contain_class('nexus') }
+        it { is_expected.to contain_class('nexus::user') }
+        it { is_expected.to contain_class('nexus::package') }
+        it { is_expected.to contain_class('nexus::config') }
+        it { is_expected.to contain_class('nexus::config::properties') }
+        it { is_expected.to contain_class('nexus::service') }
+        it { is_expected.to contain_class('nexus::config::admin') }
+        it { is_expected.to contain_class('nexus::config::anonymous') }
+        it { is_expected.to contain_class('nexus::config::default_repositories') }
+        it { is_expected.to contain_class('nexus::config::device') }
+        it { is_expected.to contain_class('nexus::config::email') }
+      end
+
       context 'with a version set' do
+        let(:params) do
+          {
+            'version' => '3.37.3-02',
+            'manage_api_resources' => false,
+          }
+        end
+
         it { is_expected.to contain_class('nexus') }
         it { is_expected.to contain_class('nexus::user') }
 
@@ -79,7 +109,7 @@ describe 'nexus', type: :class do
         }
 
         it 'manages the nexus config' do
-          is_expected.to contain_class('nexus::config').that_requires(
+          is_expected.to contain_class('nexus::config::properties').that_requires(
             'Class[nexus::package]',
           ).that_notifies('Class[nexus::service]')
 
@@ -98,7 +128,7 @@ describe 'nexus', type: :class do
 
         it {
           is_expected.to contain_class('nexus::service').that_subscribes_to(
-            'Class[nexus::config]',
+            'Class[nexus::config::properties]',
           )
         }
 

@@ -3,7 +3,7 @@
 require 'spec_helper'
 
 describe 'nexus::plugin::composer' do
-  let(:pre_condition) { "class { 'nexus': version => '3.37.3-02'}" }
+  let(:pre_condition) { "class { 'nexus': version => '3.37.3-02', manage_api_resources => false }" }
 
   context 'no params set' do
     let(:params) { {} }

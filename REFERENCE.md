@@ -9,6 +9,12 @@
 #### Public Classes
 
 * [`nexus`](#nexus): Install and configure Sonatype Nexus Repository Manager 3.
+* [`nexus::config::admin`](#nexusconfigadmin): Manage the nexus repository manager administrator account
+* [`nexus::config::anonymous`](#nexusconfiganonymous): Manage if anonymous user have access to nexus repository manager
+* [`nexus::config::default_repositories`](#nexusconfigdefault_repositories): Removes the default repositories for maven and nuget
+* [`nexus::config::device`](#nexusconfigdevice): Create puppet device config used to connect to the rest api
+* [`nexus::config::email`](#nexusconfigemail): Manage the nexus repository manager email settings
+* [`nexus::config::properties`](#nexusconfigproperties): A short summary of the purpose of this class
 * [`nexus::plugin::composer`](#nexusplugincomposer): Install the composer repository format plugin
 
 #### Private Classes
@@ -18,6 +24,21 @@
 * `nexus::plugin`: Base class used by plugin classes
 * `nexus::service`: Maintains the Nexus service
 * `nexus::user`: Manages the operation system user account which is used to start up the service
+
+### Defined types
+
+* [`nexus::resource::blobstore::file`](#nexusresourceblobstorefile): Resource to manage (local) file blobstore
+* [`nexus::resource::repository::apt::proxy`](#nexusresourcerepositoryaptproxy): Resource to manage apt proxy repository
+* [`nexus::resource::repository::npm::group`](#nexusresourcerepositorynpmgroup): Resource to manage npm group repository
+* [`nexus::resource::repository::npm::hosted`](#nexusresourcerepositorynpmhosted): Resource to manage npm hosted repository
+* [`nexus::resource::repository::npm::proxy`](#nexusresourcerepositorynpmproxy): Resource to manage npm proxy repository
+
+### Resource types
+
+* [`nexus_blobstore`](#nexus_blobstore): Raw provider to configure blobstore over the nexus repository manager rest api.  Please use the defined types instead of this one directly.
+* [`nexus_repository`](#nexus_repository): Raw provider to configure repository over the nexus repository manager rest api.  Please use the defined types instead of this one directly.
+* [`nexus_setting`](#nexus_setting): Raw provider to set settings over the nexus repository manager rest api.  Please use nexus::config::* classes instead of this one directly.
+* [`nexus_user`](#nexus_user): Manage nexus repository users
 
 ## Classes
 
@@ -52,10 +73,12 @@ The following parameters are available in the `nexus` class:
 * [`group`](#group)
 * [`host`](#host)
 * [`port`](#port)
-* [`manage_user`](#manage_user)
+* [`manage_api_resources`](#manage_api_resources)
 * [`manage_config`](#manage_config)
+* [`manage_user`](#manage_user)
 * [`manage_work_dir`](#manage_work_dir)
 * [`purge_installations`](#purge_installations)
+* [`purge_default_repositories`](#purge_default_repositories)
 
 ##### <a name="version"></a>`version`
 
@@ -117,17 +140,23 @@ Data type: `Stdlib::Port`
 
 The port which the nexus repository manager service should use.
 
-##### <a name="manage_user"></a>`manage_user`
+##### <a name="manage_api_resources"></a>`manage_api_resources`
 
 Data type: `Boolean`
 
-Set if this module should manage the creation of the operation system user.
+Set if this module should manage resources which require to be set over the nexus repository manager rest api.
 
 ##### <a name="manage_config"></a>`manage_config`
 
 Data type: `Boolean`
 
 Set if this module should manage the config file of nexus repository manager.
+
+##### <a name="manage_user"></a>`manage_user`
+
+Data type: `Boolean`
+
+Set if this module should manage the creation of the operation system user.
 
 ##### <a name="manage_work_dir"></a>`manage_work_dir`
 
@@ -140,6 +169,280 @@ Set if this module should manage the work directory of the nexus repository mana
 Data type: `Boolean`
 
 Set this option if you want old installations of nexus repository manager to get automatically deleted.
+
+##### <a name="purge_default_repositories"></a>`purge_default_repositories`
+
+Data type: `Boolean`
+
+Set this option if you want to remove the default created maven and nuget repositories.
+
+### <a name="nexusconfigadmin"></a>`nexus::config::admin`
+
+Manage the nexus repository manager administrator account
+
+#### Examples
+
+##### 
+
+```puppet
+include nexus::config::admin
+```
+
+#### Parameters
+
+The following parameters are available in the `nexus::config::admin` class:
+
+* [`username`](#username)
+* [`first_name`](#first_name)
+* [`last_name`](#last_name)
+* [`email_address`](#email_address)
+* [`roles`](#roles)
+* [`password`](#password)
+
+##### <a name="username"></a>`username`
+
+Data type: `String[1]`
+
+The username of the administrator.
+
+Default value: `'admin'`
+
+##### <a name="first_name"></a>`first_name`
+
+Data type: `String[1]`
+
+The first name of the administrator.
+
+Default value: `'Administrator'`
+
+##### <a name="last_name"></a>`last_name`
+
+Data type: `String[1]`
+
+The last name of the administrator.
+
+Default value: `'User'`
+
+##### <a name="email_address"></a>`email_address`
+
+Data type: `String[1]`
+
+The email address of the administrator.
+
+Default value: `'admin@example.org'`
+
+##### <a name="roles"></a>`roles`
+
+Data type: `Array[String[1]]`
+
+The assigned roles of the administrator. It should include 'nx-admin'.
+
+Default value: `['nx-admin']`
+
+##### <a name="password"></a>`password`
+
+Data type: `Optional[Sensitive[String[1]]]`
+
+The password of the administrator. If not given there will be generated a random password.
+
+Default value: ``undef``
+
+### <a name="nexusconfiganonymous"></a>`nexus::config::anonymous`
+
+Manage if anonymous user have access to nexus repository manager
+
+#### Examples
+
+##### 
+
+```puppet
+include nexus::config::anonymous
+```
+
+#### Parameters
+
+The following parameters are available in the `nexus::config::anonymous` class:
+
+* [`enabled`](#enabled)
+* [`user_id`](#user_id)
+* [`realm_name`](#realm_name)
+
+##### <a name="enabled"></a>`enabled`
+
+Data type: `Boolean`
+
+Enable if anonymous/not logged in user have access to nexus repository manager.
+
+Default value: ``false``
+
+##### <a name="user_id"></a>`user_id`
+
+Data type: `String[1]`
+
+The nexus repository manager user id/name used to determine access.
+
+Default value: `'anonymous'`
+
+##### <a name="realm_name"></a>`realm_name`
+
+Data type: `String[1]`
+
+Realm name used for anonymous user.
+
+Default value: `'NexusAuthorizingRealm'`
+
+### <a name="nexusconfigdefault_repositories"></a>`nexus::config::default_repositories`
+
+Removes the default repositories for maven and nuget
+
+#### Examples
+
+##### 
+
+```puppet
+include nexus::config::default_repositories
+```
+
+### <a name="nexusconfigdevice"></a>`nexus::config::device`
+
+Create puppet device config used to connect to the rest api
+
+### <a name="nexusconfigemail"></a>`nexus::config::email`
+
+Manage the nexus repository manager email settings
+
+#### Examples
+
+##### 
+
+```puppet
+include nexus::config::email
+```
+
+#### Parameters
+
+The following parameters are available in the `nexus::config::email` class:
+
+* [`enabled`](#enabled)
+* [`host`](#host)
+* [`port`](#port)
+* [`username`](#username)
+* [`password`](#password)
+* [`from_address`](#from_address)
+* [`subject_prefix`](#subject_prefix)
+* [`start_tls_enabled`](#start_tls_enabled)
+* [`start_tls_required`](#start_tls_required)
+* [`ssl_on_connect_enabled`](#ssl_on_connect_enabled)
+* [`ssl_server_identity_check_enabled`](#ssl_server_identity_check_enabled)
+* [`nexus_trust_store_enabled`](#nexus_trust_store_enabled)
+
+##### <a name="enabled"></a>`enabled`
+
+Data type: `Boolean`
+
+Enable to let nexus repository manager send emails.
+
+Default value: ``false``
+
+##### <a name="host"></a>`host`
+
+Data type: `Stdlib::Host`
+
+The smtp host to connect to.
+
+Default value: `'localhost'`
+
+##### <a name="port"></a>`port`
+
+Data type: `Stdlib::Port`
+
+The port to connect to send emails.
+
+Default value: `25`
+
+##### <a name="username"></a>`username`
+
+Data type: `String`
+
+The username to connect to the smtp server.
+
+Default value: `''`
+
+##### <a name="password"></a>`password`
+
+Data type: `Optional[String]`
+
+The password to connect to the smtp server.
+
+Default value: ``undef``
+
+##### <a name="from_address"></a>`from_address`
+
+Data type: `String[1]`
+
+The email address used to set as From-Header.
+
+Default value: `'nexus@example.org'`
+
+##### <a name="subject_prefix"></a>`subject_prefix`
+
+Data type: `String`
+
+Prefix which will be added to all emails.
+
+Default value: `''`
+
+##### <a name="start_tls_enabled"></a>`start_tls_enabled`
+
+Data type: `Boolean`
+
+Enable STARTTLS support for insecure connections.
+
+Default value: ``false``
+
+##### <a name="start_tls_required"></a>`start_tls_required`
+
+Data type: `Boolean`
+
+Require STARTTLS support.
+
+Default value: ``false``
+
+##### <a name="ssl_on_connect_enabled"></a>`ssl_on_connect_enabled`
+
+Data type: `Boolean`
+
+Enable SSL/TLS encryption upon connection.
+
+Default value: ``false``
+
+##### <a name="ssl_server_identity_check_enabled"></a>`ssl_server_identity_check_enabled`
+
+Data type: `Boolean`
+
+Enable server identity check.
+
+Default value: ``false``
+
+##### <a name="nexus_trust_store_enabled"></a>`nexus_trust_store_enabled`
+
+Data type: `Boolean`
+
+Use certificates stored in the Nexus truststore to connect to external systems.
+
+Default value: ``false``
+
+### <a name="nexusconfigproperties"></a>`nexus::config::properties`
+
+A description of what this class does
+
+#### Examples
+
+##### 
+
+```puppet
+include nexus::config::properties
+```
 
 ### <a name="nexusplugincomposer"></a>`nexus::plugin::composer`
 
@@ -169,4 +472,704 @@ The following parameters are available in the `nexus::plugin::composer` class:
 Data type: `Pattern[/\d+.\d+.\d+/]`
 
 The composer repository format plugin version.
+
+## Defined types
+
+### <a name="nexusresourceblobstorefile"></a>`nexus::resource::blobstore::file`
+
+Resource to manage (local) file blobstore
+
+#### Examples
+
+##### 
+
+```puppet
+nexus::blobstore::file { 'apt-hosted': }
+```
+
+#### Parameters
+
+The following parameters are available in the `nexus::resource::blobstore::file` defined type:
+
+* [`ensure`](#ensure)
+* [`path`](#path)
+
+##### <a name="ensure"></a>`ensure`
+
+Data type: `Enum['present', 'absent']`
+
+Define if the resource should be created/present or deleted/absent
+
+Default value: `'present'`
+
+##### <a name="path"></a>`path`
+
+Data type: `Variant[Stdlib::Absolutepath, String[1]]`
+
+The (local) path of the disk where the content of the blobstore should be stored. Non absolute paths will use the
+working directory as base path. The nexus (service) user needs write access to this path.
+
+Default value: `$title`
+
+### <a name="nexusresourcerepositoryaptproxy"></a>`nexus::resource::repository::apt::proxy`
+
+Resource to manage apt proxy repository
+
+#### Examples
+
+##### 
+
+```puppet
+nexus::repository::apt::proxy { 'apt-debian':
+   apt_distribution => $facts['os']['distro']['codename'],
+   proxy_remote_url => 'https://deb.debian.org/debian/',
+}
+```
+
+#### Parameters
+
+The following parameters are available in the `nexus::resource::repository::apt::proxy` defined type:
+
+* [`apt_distribution`](#apt_distribution)
+* [`proxy_remote_url`](#proxy_remote_url)
+* [`apt_flat`](#apt_flat)
+* [`ensure`](#ensure)
+* [`http_client_auto_block`](#http_client_auto_block)
+* [`http_client_blocked`](#http_client_blocked)
+* [`negative_cache_enabled`](#negative_cache_enabled)
+* [`negative_cache_time_to_live`](#negative_cache_time_to_live)
+* [`online`](#online)
+* [`proxy_content_max_age`](#proxy_content_max_age)
+* [`proxy_metadata_max_age`](#proxy_metadata_max_age)
+* [`storage_blob_store_name`](#storage_blob_store_name)
+* [`storage_strict_content_type_validation`](#storage_strict_content_type_validation)
+* [`storage_write_policy`](#storage_write_policy)
+
+##### <a name="apt_distribution"></a>`apt_distribution`
+
+Data type: `String[1]`
+
+APT distribution like buster, bullseye used by nexus repository manager to query the upstream repository.
+
+##### <a name="proxy_remote_url"></a>`proxy_remote_url`
+
+Data type: `Stdlib::HTTPSUrl`
+
+APT repository url like https://deb.debian.org/debian/.
+
+##### <a name="apt_flat"></a>`apt_flat`
+
+Data type: `Boolean`
+
+Is the upstream repository flat format?
+
+Default value: ``false``
+
+##### <a name="ensure"></a>`ensure`
+
+Data type: `Enum['present', 'absent']`
+
+Define if the resource should be created/present or deleted/absent.
+
+Default value: `'present'`
+
+##### <a name="http_client_auto_block"></a>`http_client_auto_block`
+
+Data type: `Boolean`
+
+Auto-block outbound connections on the repository if remote peer is detected as unreachable/unresponsive.
+
+Default value: ``true``
+
+##### <a name="http_client_blocked"></a>`http_client_blocked`
+
+Data type: `Boolean`
+
+Block outbound connections on the repository.
+
+Default value: ``false``
+
+##### <a name="negative_cache_enabled"></a>`negative_cache_enabled`
+
+Data type: `Boolean`
+
+Cache responses for content not present in the proxied repository.
+
+Default value: ``true``
+
+##### <a name="negative_cache_time_to_live"></a>`negative_cache_time_to_live`
+
+Data type: `Integer`
+
+How long to cache the fact that a file was not found in the repository (in minutes).
+
+Default value: `1440`
+
+##### <a name="online"></a>`online`
+
+Data type: `Boolean`
+
+Enable this repository in nexus repository manager that it can be used.
+
+Default value: ``true``
+
+##### <a name="proxy_content_max_age"></a>`proxy_content_max_age`
+
+Data type: `Integer`
+
+Max age of content (packages)
+
+Default value: `1440`
+
+##### <a name="proxy_metadata_max_age"></a>`proxy_metadata_max_age`
+
+Data type: `Integer`
+
+Max age of the repository metadata
+
+Default value: `1440`
+
+##### <a name="storage_blob_store_name"></a>`storage_blob_store_name`
+
+Data type: `String[1]`
+
+The name of the blobstore inside of nexus repository manager to be used. We suggest to use a own blobstore for each
+defined repository.
+
+Default value: `$title`
+
+##### <a name="storage_strict_content_type_validation"></a>`storage_strict_content_type_validation`
+
+Data type: `Boolean`
+
+Validate that all content uploaded to this repository is of a MIME type appropriate for the repository format.
+
+Default value: ``true``
+
+##### <a name="storage_write_policy"></a>`storage_write_policy`
+
+Data type: `Enum['ALLOW']`
+
+Controls if deployments of and updates to artifacts are allowed.
+
+Default value: `'ALLOW'`
+
+### <a name="nexusresourcerepositorynpmgroup"></a>`nexus::resource::repository::npm::group`
+
+Resource to manage npm group repository
+
+#### Examples
+
+##### 
+
+```puppet
+nexus::repository::npm::group { 'npm-group':
+   group_member_names => [
+      'npm-hosted',
+      'npm-npmjs.org',
+   ],
+}
+```
+
+#### Parameters
+
+The following parameters are available in the `nexus::resource::repository::npm::group` defined type:
+
+* [`ensure`](#ensure)
+* [`online`](#online)
+* [`storage_blob_store_name`](#storage_blob_store_name)
+* [`storage_strict_content_type_validation`](#storage_strict_content_type_validation)
+* [`group_member_names`](#group_member_names)
+
+##### <a name="ensure"></a>`ensure`
+
+Data type: `Enum['present', 'absent']`
+
+Define if the resource should be created/present or deleted/absent.
+
+Default value: `'present'`
+
+##### <a name="online"></a>`online`
+
+Data type: `Boolean`
+
+Enable this repository in nexus repository manager that it can be used.
+
+Default value: ``true``
+
+##### <a name="storage_blob_store_name"></a>`storage_blob_store_name`
+
+Data type: `String[1]`
+
+The name of the blobstore inside of nexus repository manager to be used. We suggest to use a own blobstore for each
+defined repository.
+
+Default value: `$title`
+
+##### <a name="storage_strict_content_type_validation"></a>`storage_strict_content_type_validation`
+
+Data type: `Boolean`
+
+Validate that all content uploaded to this repository is of a MIME type appropriate for the repository format.
+
+Default value: ``true``
+
+##### <a name="group_member_names"></a>`group_member_names`
+
+Data type: `Array[String[1]]`
+
+Ordered array of the (npm) member to be grouped into this repository.
+
+Default value: `[]`
+
+### <a name="nexusresourcerepositorynpmhosted"></a>`nexus::resource::repository::npm::hosted`
+
+Resource to manage npm hosted repository
+
+#### Examples
+
+##### 
+
+```puppet
+nexus::repository::npm::hosted { 'npm-hosted': }
+```
+
+#### Parameters
+
+The following parameters are available in the `nexus::resource::repository::npm::hosted` defined type:
+
+* [`ensure`](#ensure)
+* [`online`](#online)
+* [`storage_blob_store_name`](#storage_blob_store_name)
+* [`storage_strict_content_type_validation`](#storage_strict_content_type_validation)
+* [`storage_write_policy`](#storage_write_policy)
+* [`component_proprietary_components`](#component_proprietary_components)
+
+##### <a name="ensure"></a>`ensure`
+
+Data type: `Enum['present', 'absent']`
+
+Define if the resource should be created/present or deleted/absent.
+
+Default value: `'present'`
+
+##### <a name="online"></a>`online`
+
+Data type: `Boolean`
+
+Enable this repository in nexus repository manager that it can be used.
+
+Default value: ``true``
+
+##### <a name="storage_blob_store_name"></a>`storage_blob_store_name`
+
+Data type: `String[1]`
+
+The name of the blobstore inside of nexus repository manager to be used. We suggest to use a own blobstore for each
+defined repository.
+
+Default value: `$title`
+
+##### <a name="storage_strict_content_type_validation"></a>`storage_strict_content_type_validation`
+
+Data type: `Boolean`
+
+Validate that all content uploaded to this repository is of a MIME type appropriate for the repository format.
+
+Default value: ``true``
+
+##### <a name="storage_write_policy"></a>`storage_write_policy`
+
+Data type: `Enum['allow_once']`
+
+Controls if deployments of and updates to artifacts are allowed.
+
+Default value: `'allow_once'`
+
+##### <a name="component_proprietary_components"></a>`component_proprietary_components`
+
+Data type: `Boolean`
+
+Components in this repository count as proprietary for namespace conflict attacks (requires Sonatype Nexus Firewall).
+
+Default value: ``true``
+
+### <a name="nexusresourcerepositorynpmproxy"></a>`nexus::resource::repository::npm::proxy`
+
+Resource to manage npm proxy repository
+
+#### Examples
+
+##### 
+
+```puppet
+nexus::repository::npm::proxy { 'npm-npmjs.org':
+   proxy_remote_url => 'https://registry.npmjs.org',
+}
+```
+
+#### Parameters
+
+The following parameters are available in the `nexus::resource::repository::npm::proxy` defined type:
+
+* [`proxy_remote_url`](#proxy_remote_url)
+* [`ensure`](#ensure)
+* [`npm_remove_non_cataloged`](#npm_remove_non_cataloged)
+* [`npm_remove_quarantined`](#npm_remove_quarantined)
+* [`http_client_auto_block`](#http_client_auto_block)
+* [`http_client_blocked`](#http_client_blocked)
+* [`negative_cache_enabled`](#negative_cache_enabled)
+* [`negative_cache_time_to_live`](#negative_cache_time_to_live)
+* [`online`](#online)
+* [`proxy_content_max_age`](#proxy_content_max_age)
+* [`proxy_metadata_max_age`](#proxy_metadata_max_age)
+* [`storage_blob_store_name`](#storage_blob_store_name)
+* [`storage_strict_content_type_validation`](#storage_strict_content_type_validation)
+* [`storage_write_policy`](#storage_write_policy)
+
+##### <a name="proxy_remote_url"></a>`proxy_remote_url`
+
+Data type: `Stdlib::HTTPSUrl`
+
+NPM repository url like https://registry.npmjs.org.
+
+##### <a name="ensure"></a>`ensure`
+
+Data type: `Enum['present', 'absent']`
+
+Define if the resource should be created/present or deleted/absent.
+
+Default value: `'present'`
+
+##### <a name="npm_remove_non_cataloged"></a>`npm_remove_non_cataloged`
+
+Data type: `Boolean`
+
+Remove non-cataloged versions from the npm package metadata. (Requires IQ: Audit and Quarantine)
+
+Default value: ``false``
+
+##### <a name="npm_remove_quarantined"></a>`npm_remove_quarantined`
+
+Data type: `Boolean`
+
+Remove quarantined versions from the npm package metadata. (Requires IQ: Audit and Quarantine)
+
+Default value: ``false``
+
+##### <a name="http_client_auto_block"></a>`http_client_auto_block`
+
+Data type: `Boolean`
+
+Auto-block outbound connections on the repository if remote peer is detected as unreachable/unresponsive.
+
+Default value: ``true``
+
+##### <a name="http_client_blocked"></a>`http_client_blocked`
+
+Data type: `Boolean`
+
+Block outbound connections on the repository.
+
+Default value: ``false``
+
+##### <a name="negative_cache_enabled"></a>`negative_cache_enabled`
+
+Data type: `Boolean`
+
+Cache responses for content not present in the proxied repository.
+
+Default value: ``true``
+
+##### <a name="negative_cache_time_to_live"></a>`negative_cache_time_to_live`
+
+Data type: `Integer`
+
+How long to cache the fact that a file was not found in the repository (in minutes).
+
+Default value: `1440`
+
+##### <a name="online"></a>`online`
+
+Data type: `Boolean`
+
+Enable this repository in nexus repository manager that it can be used.
+
+Default value: ``true``
+
+##### <a name="proxy_content_max_age"></a>`proxy_content_max_age`
+
+Data type: `Integer`
+
+Max age of content (packages).
+
+Default value: `1440`
+
+##### <a name="proxy_metadata_max_age"></a>`proxy_metadata_max_age`
+
+Data type: `Integer`
+
+Max age of the repository metadata.
+
+Default value: `1440`
+
+##### <a name="storage_blob_store_name"></a>`storage_blob_store_name`
+
+Data type: `String[1]`
+
+The name of the blobstore inside of nexus repository manager to be used. We suggest to use a own blobstore for each
+defined repository.
+
+Default value: `$title`
+
+##### <a name="storage_strict_content_type_validation"></a>`storage_strict_content_type_validation`
+
+Data type: `Boolean`
+
+Validate that all content uploaded to this repository is of a MIME type appropriate for the repository format.
+
+Default value: ``true``
+
+##### <a name="storage_write_policy"></a>`storage_write_policy`
+
+Data type: `Enum['ALLOW','ALLOW_ONCE','DENY']`
+
+Controls if deployments of and updates to artifacts are allowed.
+
+Default value: `'ALLOW'`
+
+## Resource types
+
+### <a name="nexus_blobstore"></a>`nexus_blobstore`
+
+Raw provider to configure blobstore over the nexus repository manager rest api.
+
+Please use the defined types instead of this one directly.
+
+#### Properties
+
+The following properties are available in the `nexus_blobstore` type.
+
+##### `attributes`
+
+Data type: `Hash`
+
+The config settings of this blobstore definition.
+
+##### `ensure`
+
+Data type: `Enum[present, absent]`
+
+Whether this resource should be present or absent on the target system.
+
+Default value: `present`
+
+##### `type`
+
+Data type: `Enum[azure, file, s3]`
+
+Blobstore type.
+
+#### Parameters
+
+The following parameters are available in the `nexus_blobstore` type.
+
+* [`name`](#name)
+
+##### <a name="name"></a>`name`
+
+namevar
+
+Data type: `String`
+
+The name of the resource you want to manage.
+
+### <a name="nexus_repository"></a>`nexus_repository`
+
+Raw provider to configure repository over the nexus repository manager rest api.
+
+Please use the defined types instead of this one directly.
+
+#### Properties
+
+The following properties are available in the `nexus_repository` type.
+
+##### `attributes`
+
+Data type: `Hash`
+
+The config settings of this repository definition.
+
+##### `ensure`
+
+Data type: `Enum[present, absent]`
+
+Whether this resource should be present or absent on the target system.
+
+Default value: `present`
+
+##### `format`
+
+Data type: `String`
+
+The format of the resource you want to manage
+
+##### `type`
+
+Data type: `Enum[group, hosted, proxy]`
+
+Repository type.
+
+#### Parameters
+
+The following parameters are available in the `nexus_repository` type.
+
+* [`name`](#name)
+
+##### <a name="name"></a>`name`
+
+namevar
+
+Data type: `String`
+
+The name of the resource you want to manage.
+
+### <a name="nexus_setting"></a>`nexus_setting`
+
+Raw provider to set settings over the nexus repository manager rest api.
+
+Please use nexus::config::* classes instead of this one directly.
+
+#### Properties
+
+The following properties are available in the `nexus_setting` type.
+
+##### `attributes`
+
+Data type: `Hash`
+
+The config settings returned from the given api endpoint.
+
+##### `ensure`
+
+Data type: `Enum[present, absent]`
+
+Whether this resource should be present or absent on the target system.
+
+Default value: `present`
+
+#### Parameters
+
+The following parameters are available in the `nexus_setting` type.
+
+* [`name`](#name)
+
+##### <a name="name"></a>`name`
+
+namevar
+
+Data type: `String`
+
+The api endpoint of simple nexus config settings.
+
+### <a name="nexus_user"></a>`nexus_user`
+
+```puppet
+nexus_user { 'user.name':
+  ensure        => 'present',
+  user_id       => 'user.name',
+  password      => 'hunter2',
+  first_name    => 'Foo',
+  last_name     => 'Bar',
+  email_address => 'foo.bar@example.org',
+  status        => 'active',
+  roles         => ['nx-admin'],
+}
+```
+
+#### Properties
+
+The following properties are available in the `nexus_user` type.
+
+##### `email_address`
+
+Data type: `String`
+
+The email address of the user.
+
+##### `ensure`
+
+Data type: `Enum[present, absent]`
+
+Whether this resource should be present or absent on the target system.
+
+Default value: `present`
+
+##### `external_roles`
+
+Data type: `Optional[Array[String]]`
+
+The external assigned roles to the user.
+
+##### `first_name`
+
+Data type: `String`
+
+The first name of the user.
+
+##### `last_name`
+
+Data type: `String`
+
+The last name of the user.
+
+##### `password`
+
+Data type: `Optional[String]`
+
+The password of the user.
+
+##### `read_only`
+
+Data type: `Boolean`
+
+The status of the user if it is read only.
+
+##### `roles`
+
+Data type: `Array[String]`
+
+The roles assigned to the user.
+
+Default value: `["nx-anonymous"]`
+
+##### `source`
+
+Data type: `String`
+
+The datasource of the user. e.g. local or ldap source name.
+
+Default value: `default`
+
+##### `status`
+
+Data type: `Enum[active,disabled,changepassword]`
+
+The user status.
+
+Default value: `active`
+
+#### Parameters
+
+The following parameters are available in the `nexus_user` type.
+
+* [`user_id`](#user_id)
+
+##### <a name="user_id"></a>`user_id`
+
+namevar
+
+Data type: `String`
+
+The login name of the user.
 
