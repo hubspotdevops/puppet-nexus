@@ -5,6 +5,7 @@ After=network.target
 [Service]
 Type=forking
 LimitNOFILE=65536
+ExecStartPost=/bin/bash -c 'while ! ss --no-header --tcp --listening --numeric sport = :<%= scope.lookupvar('nexus::port') %> | grep -q "^LISTEN.*:<%= scope.lookupvar('nexus::port') %>"; do sleep 1; done'
 ExecStart=<%= scope.lookupvar('nexus::package::install_dir') %>/bin/nexus start
 ExecStop=<%= scope.lookupvar('nexus::package::install_dir') %>/bin/nexus stop
 User=<%= scope.lookupvar('nexus::user') %>

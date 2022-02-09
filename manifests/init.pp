@@ -23,14 +23,18 @@
 #   The bind address where the nexus repository manager service should bind to.
 # @param port
 #   The port which the nexus repository manager service should use.
-# @param manage_user
-#   Set if this module should manage the creation of the operation system user.
+# @param manage_api_resources
+#   Set if this module should manage resources which require to be set over the nexus repository manager rest api.
 # @param manage_config
 #   Set if this module should manage the config file of nexus repository manager.
+# @param manage_user
+#   Set if this module should manage the creation of the operation system user.
 # @param manage_work_dir
 #   Set if this module should manage the work directory of the nexus repository manager.
 # @param purge_installations
 #   Set this option if you want old installations of nexus repository manager to get automatically deleted.
+# @param purge_default_repositories
+#   Set this option if you want to remove the default created maven and nuget repositories.
 #
 # @example
 #   class{ 'nexus':
@@ -48,10 +52,12 @@ class nexus (
   String[1] $group,
   Stdlib::Host $host,
   Stdlib::Port $port,
-  Boolean $manage_user,
+  Boolean $manage_api_resources,
   Boolean $manage_config,
+  Boolean $manage_user,
   Boolean $manage_work_dir,
   Boolean $purge_installations,
+  Boolean $purge_default_repositories,
 ) {
   include stdlib
 
@@ -61,10 +67,17 @@ class nexus (
   if $manage_config {
     contain nexus::config
 
-    Class['nexus::package'] -> Class['nexus::config'] ~> Class['nexus::service']
+    Class['nexus::package'] -> Class['nexus::config::properties'] ~> Class['nexus::service']
   }
 
   contain nexus::service
 
   Class['nexus::user'] -> Class['nexus::package'] ~> Class['nexus::service']
+
+  Class['nexus::service']
+  -> Nexus_user <| |>
+  -> Nexus_setting <| |>
+  -> Nexus_blobstore <| ensure == 'present' |>
+  -> Nexus_repository <| |>
+  -> Nexus_blobstore <| ensure == 'absent' |>
 }
