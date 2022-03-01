@@ -66,6 +66,16 @@ class Puppet::Provider::NexusRepository::NexusRepository < Puppet::ResourceApi::
     attributes[:name] = name
     res = context.transport.put_request(context, "repositories/#{should[:format]}/#{should[:type]}/#{name}", attributes)
 
+    case should[:type]
+    when 'group'
+      context.transport.post_request(context, "repositories/#{name}/invalidate-cache", '')
+    when 'hosted'
+      context.transport.post_request(context, "repositories/#{name}/rebuild-index", '')
+    when 'proxy'
+      context.transport.post_request(context, "repositories/#{name}/invalidate-cache", '')
+      context.transport.post_request(context, "repositories/#{name}/rebuild-index", '')
+    end
+
     context.err(res.body) unless res.success?
   end
 
