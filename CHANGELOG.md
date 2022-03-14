@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Invalidate cache on changes of repository types `group` and `proxy`
 - Rebuild index on changes of repository types `hosted` and `proxy`
+- `nexus::resource::repository::docker::group` to manage docker group repositories
+- `nexus::resource::repository::docker::hosted` to manage docker hosted repositories
+- `nexus::resource::repository::docker::proxy` to manage docker proxy repositories
 
 ## [3.2.0]
 ### Added
