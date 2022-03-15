@@ -123,7 +123,7 @@ https://${::fqdn}/
 ```
 
 ## Docker
-To use nexus repository for docker you need to read the documentation for some additional config settings. 
+To use nexus repository for docker you need to read the documentation for some additional config settings.
 [Docker Repository Reverse Proxy Strategies](https://help.sonatype.com/repomanager3/nexus-repository-administration/formats/docker-registry/docker-repository-reverse-proxy-strategies)
 
 ```puppet
@@ -133,7 +133,7 @@ To use nexus repository for docker you need to read the documentation for some a
     locations => {
       'docker-v2' => {
         location => '/v2/',
-        proxy    => "http://${nexus::host}:${nexus::port}/repository/docker-group/v2/",
+        proxy    => "http://${nexus::host}:${nexus::port}/repository/docker-hosted/v2/",
       }
     },
     vhost     => 'nexus',
@@ -141,6 +141,7 @@ To use nexus repository for docker you need to read the documentation for some a
     ssl       => true,
   }
 ```
+Keep in mind that pushing to docker group repository is a pro feature of nexus repository manager.
 
 ## TODO
 * Find a way to not require a version to be passed to Class['nexus']

@@ -11,8 +11,6 @@
 #   Validate that all content uploaded to this repository is of a MIME type appropriate for the repository format.
 # @param group_member_names
 #   Ordered array of the (docker) member to be grouped into this repository.
-# @param storage_write_policy
-#   Controls if deployments of and updates to artifacts are allowed.
 # @param docker_v1_enabled
 #   Allow clients to use the V1 API to interact with this repository.
 # @param docker_force_basic_auth
