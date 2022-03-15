@@ -29,6 +29,9 @@
 
 * [`nexus::resource::blobstore::file`](#nexusresourceblobstorefile): Resource to manage (local) file blobstore
 * [`nexus::resource::repository::apt::proxy`](#nexusresourcerepositoryaptproxy): Resource to manage apt proxy repository
+* [`nexus::resource::repository::docker::group`](#nexusresourcerepositorydockergroup): Resource to manage docker group repository
+* [`nexus::resource::repository::docker::hosted`](#nexusresourcerepositorydockerhosted): Resource to manage docker hosted repository
+* [`nexus::resource::repository::docker::proxy`](#nexusresourcerepositorydockerproxy): Resource to manage docker proxy repository
 * [`nexus::resource::repository::npm::group`](#nexusresourcerepositorynpmgroup): Resource to manage npm group repository
 * [`nexus::resource::repository::npm::hosted`](#nexusresourcerepositorynpmhosted): Resource to manage npm hosted repository
 * [`nexus::resource::repository::npm::proxy`](#nexusresourcerepositorynpmproxy): Resource to manage npm proxy repository
@@ -653,6 +656,417 @@ Data type: `Enum['ALLOW']`
 Controls if deployments of and updates to artifacts are allowed.
 
 Default value: `'ALLOW'`
+
+### <a name="nexusresourcerepositorydockergroup"></a>`nexus::resource::repository::docker::group`
+
+Resource to manage docker group repository
+
+#### Examples
+
+##### 
+
+```puppet
+nexus::repository::docker::group { 'docker-group':
+   group_member_names => [
+      'docker-hosted',
+      'docker-docker.io',
+   ],
+}
+```
+
+#### Parameters
+
+The following parameters are available in the `nexus::resource::repository::docker::group` defined type:
+
+* [`ensure`](#ensure)
+* [`online`](#online)
+* [`storage_blob_store_name`](#storage_blob_store_name)
+* [`storage_strict_content_type_validation`](#storage_strict_content_type_validation)
+* [`group_member_names`](#group_member_names)
+* [`docker_v1_enabled`](#docker_v1_enabled)
+* [`docker_force_basic_auth`](#docker_force_basic_auth)
+* [`docker_http_port`](#docker_http_port)
+* [`docker_https_port`](#docker_https_port)
+
+##### <a name="ensure"></a>`ensure`
+
+Data type: `Enum['present', 'absent']`
+
+Define if the resource should be created/present or deleted/absent.
+
+Default value: `'present'`
+
+##### <a name="online"></a>`online`
+
+Data type: `Boolean`
+
+Allow incoming requests to this repository.
+
+Default value: ``true``
+
+##### <a name="storage_blob_store_name"></a>`storage_blob_store_name`
+
+Data type: `String[1]`
+
+The name of the blobstore inside of nexus repository manager to be used. We suggest to use a own blobstore for each
+defined repository.
+
+Default value: `$title`
+
+##### <a name="storage_strict_content_type_validation"></a>`storage_strict_content_type_validation`
+
+Data type: `Boolean`
+
+Validate that all content uploaded to this repository is of a MIME type appropriate for the repository format.
+
+Default value: ``true``
+
+##### <a name="group_member_names"></a>`group_member_names`
+
+Data type: `Array[String[1]]`
+
+Ordered array of the (docker) member to be grouped into this repository.
+
+Default value: `[]`
+
+##### <a name="docker_v1_enabled"></a>`docker_v1_enabled`
+
+Data type: `Boolean`
+
+Allow clients to use the V1 API to interact with this repository.
+
+Default value: ``false``
+
+##### <a name="docker_force_basic_auth"></a>`docker_force_basic_auth`
+
+Data type: `Boolean`
+
+Allow anonymous docker pull ( Docker Bearer Token Realm required ).
+
+Default value: ``true``
+
+##### <a name="docker_http_port"></a>`docker_http_port`
+
+Data type: `Optional[Stdlib::Port]`
+
+Create an HTTP connector at specified port. Normally used if the server is behind a secure proxy.
+
+Default value: ``undef``
+
+##### <a name="docker_https_port"></a>`docker_https_port`
+
+Data type: `Optional[Stdlib::Port]`
+
+Create an HTTPS connector at specified port. Normally used if the server is configured for https.
+
+Default value: ``undef``
+
+### <a name="nexusresourcerepositorydockerhosted"></a>`nexus::resource::repository::docker::hosted`
+
+Resource to manage docker hosted repository
+
+#### Examples
+
+##### 
+
+```puppet
+nexus::repository::docker::hosted { 'docker-hosted':
+}
+```
+
+#### Parameters
+
+The following parameters are available in the `nexus::resource::repository::docker::hosted` defined type:
+
+* [`ensure`](#ensure)
+* [`online`](#online)
+* [`storage_blob_store_name`](#storage_blob_store_name)
+* [`storage_strict_content_type_validation`](#storage_strict_content_type_validation)
+* [`storage_write_policy`](#storage_write_policy)
+* [`docker_v1_enabled`](#docker_v1_enabled)
+* [`docker_force_basic_auth`](#docker_force_basic_auth)
+* [`docker_http_port`](#docker_http_port)
+* [`docker_https_port`](#docker_https_port)
+* [`component_proprietary_components`](#component_proprietary_components)
+
+##### <a name="ensure"></a>`ensure`
+
+Data type: `Enum['present', 'absent']`
+
+Define if the resource should be created/present or deleted/absent.
+
+Default value: `'present'`
+
+##### <a name="online"></a>`online`
+
+Data type: `Boolean`
+
+Allow incoming requests to this repository.
+
+Default value: ``true``
+
+##### <a name="storage_blob_store_name"></a>`storage_blob_store_name`
+
+Data type: `String[1]`
+
+The name of the blobstore inside of nexus repository manager to be used. We suggest to use a own blobstore for each
+defined repository.
+
+Default value: `$title`
+
+##### <a name="storage_strict_content_type_validation"></a>`storage_strict_content_type_validation`
+
+Data type: `Boolean`
+
+Validate that all content uploaded to this repository is of a MIME type appropriate for the repository format.
+
+Default value: ``true``
+
+##### <a name="storage_write_policy"></a>`storage_write_policy`
+
+Data type: `Enum['ALLOW','ALLOW_ONCE','DENY']`
+
+Controls if deployments of and updates to artifacts are allowed.
+
+Default value: `'ALLOW_ONCE'`
+
+##### <a name="docker_v1_enabled"></a>`docker_v1_enabled`
+
+Data type: `Boolean`
+
+Allow clients to use the V1 API to interact with this repository.
+
+Default value: ``false``
+
+##### <a name="docker_force_basic_auth"></a>`docker_force_basic_auth`
+
+Data type: `Boolean`
+
+Allow anonymous docker pull ( Docker Bearer Token Realm required ).
+
+Default value: ``true``
+
+##### <a name="docker_http_port"></a>`docker_http_port`
+
+Data type: `Optional[Stdlib::Port]`
+
+Create an HTTP connector at specified port. Normally used if the server is behind a secure proxy.
+
+Default value: ``undef``
+
+##### <a name="docker_https_port"></a>`docker_https_port`
+
+Data type: `Optional[Stdlib::Port]`
+
+Create an HTTPS connector at specified port. Normally used if the server is configured for https.
+
+Default value: ``undef``
+
+##### <a name="component_proprietary_components"></a>`component_proprietary_components`
+
+Data type: `Boolean`
+
+
+
+Default value: ``true``
+
+### <a name="nexusresourcerepositorydockerproxy"></a>`nexus::resource::repository::docker::proxy`
+
+Resource to manage docker proxy repository
+
+#### Examples
+
+##### 
+
+```puppet
+nexus::repository::docker::proxy { 'docker-docker.io':
+   proxy_remote_url => 'https://registry-1.docker.io',
+}
+```
+
+#### Parameters
+
+The following parameters are available in the `nexus::resource::repository::docker::proxy` defined type:
+
+* [`proxy_remote_url`](#proxy_remote_url)
+* [`ensure`](#ensure)
+* [`http_client_auto_block`](#http_client_auto_block)
+* [`http_client_blocked`](#http_client_blocked)
+* [`negative_cache_enabled`](#negative_cache_enabled)
+* [`negative_cache_time_to_live`](#negative_cache_time_to_live)
+* [`online`](#online)
+* [`proxy_content_max_age`](#proxy_content_max_age)
+* [`proxy_metadata_max_age`](#proxy_metadata_max_age)
+* [`storage_blob_store_name`](#storage_blob_store_name)
+* [`storage_strict_content_type_validation`](#storage_strict_content_type_validation)
+* [`storage_write_policy`](#storage_write_policy)
+* [`docker_v1_enabled`](#docker_v1_enabled)
+* [`docker_force_basic_auth`](#docker_force_basic_auth)
+* [`docker_http_port`](#docker_http_port)
+* [`docker_https_port`](#docker_https_port)
+* [`docker_proxy_index_type`](#docker_proxy_index_type)
+* [`docker_proxy_index_url`](#docker_proxy_index_url)
+* [`npm_remove_non_cataloged`](#npm_remove_non_cataloged)
+* [`npm_remove_quarantined`](#npm_remove_quarantined)
+
+##### <a name="proxy_remote_url"></a>`proxy_remote_url`
+
+Data type: `Stdlib::HTTPSUrl`
+
+Docker repository url like https://registry-1.docker.io.
+
+##### <a name="ensure"></a>`ensure`
+
+Data type: `Enum['present', 'absent']`
+
+Define if the resource should be created/present or deleted/absent.
+
+Default value: `'present'`
+
+##### <a name="http_client_auto_block"></a>`http_client_auto_block`
+
+Data type: `Boolean`
+
+Auto-block outbound connections on the repository if remote peer is detected as unreachable/unresponsive.
+
+Default value: ``true``
+
+##### <a name="http_client_blocked"></a>`http_client_blocked`
+
+Data type: `Boolean`
+
+Block outbound connections on the repository.
+
+Default value: ``false``
+
+##### <a name="negative_cache_enabled"></a>`negative_cache_enabled`
+
+Data type: `Boolean`
+
+Cache responses for content not present in the proxied repository.
+
+Default value: ``true``
+
+##### <a name="negative_cache_time_to_live"></a>`negative_cache_time_to_live`
+
+Data type: `Integer`
+
+How long to cache the fact that a file was not found in the repository (in minutes).
+
+Default value: `1440`
+
+##### <a name="online"></a>`online`
+
+Data type: `Boolean`
+
+Enable this repository in nexus repository manager that it can be used.
+
+Default value: ``true``
+
+##### <a name="proxy_content_max_age"></a>`proxy_content_max_age`
+
+Data type: `Integer`
+
+Max age of content (packages).
+
+Default value: `1440`
+
+##### <a name="proxy_metadata_max_age"></a>`proxy_metadata_max_age`
+
+Data type: `Integer`
+
+Max age of the repository metadata.
+
+Default value: `1440`
+
+##### <a name="storage_blob_store_name"></a>`storage_blob_store_name`
+
+Data type: `String[1]`
+
+The name of the blobstore inside of nexus repository manager to be used. We suggest to use a own blobstore for each
+defined repository.
+
+Default value: `$title`
+
+##### <a name="storage_strict_content_type_validation"></a>`storage_strict_content_type_validation`
+
+Data type: `Boolean`
+
+Validate that all content uploaded to this repository is of a MIME type appropriate for the repository format.
+
+Default value: ``true``
+
+##### <a name="storage_write_policy"></a>`storage_write_policy`
+
+Data type: `Enum['ALLOW','ALLOW_ONCE','DENY']`
+
+Controls if deployments of and updates to artifacts are allowed.
+
+Default value: `'ALLOW'`
+
+##### <a name="docker_v1_enabled"></a>`docker_v1_enabled`
+
+Data type: `Boolean`
+
+Allow clients to use the V1 API to interact with this repository.
+
+Default value: ``false``
+
+##### <a name="docker_force_basic_auth"></a>`docker_force_basic_auth`
+
+Data type: `Boolean`
+
+Allow anonymous docker pull ( Docker Bearer Token Realm required ).
+
+Default value: ``true``
+
+##### <a name="docker_http_port"></a>`docker_http_port`
+
+Data type: `Optional[Stdlib::Port]`
+
+Create an HTTP connector at specified port. Normally used if the server is behind a secure proxy.
+
+Default value: ``undef``
+
+##### <a name="docker_https_port"></a>`docker_https_port`
+
+Data type: `Optional[Stdlib::Port]`
+
+Create an HTTPS connector at specified port. Normally used if the server is configured for https.
+
+Default value: ``undef``
+
+##### <a name="docker_proxy_index_type"></a>`docker_proxy_index_type`
+
+Data type: `Enum['REGISTRY','HUB','CUSTOM']`
+
+Docker index type. See https://help.sonatype.com/repomanager3/nexus-repository-administration/formats/docker-registry/proxy-repository-for-docker#ProxyRepositoryforDocker-ConfiguringaCorrectRemoteStorageandDockerIndexURLPair
+
+Default value: `'HUB'`
+
+##### <a name="docker_proxy_index_url"></a>`docker_proxy_index_url`
+
+Data type: `Optional[Stdlib::HTTPSUrl]`
+
+If docker_proxy_index_type is CUSTOM you have to set the uri of the index api.
+
+Default value: ``undef``
+
+##### <a name="npm_remove_non_cataloged"></a>`npm_remove_non_cataloged`
+
+Data type: `Boolean`
+
+
+
+Default value: ``false``
+
+##### <a name="npm_remove_quarantined"></a>`npm_remove_quarantined`
+
+Data type: `Boolean`
+
+
+
+Default value: ``false``
 
 ### <a name="nexusresourcerepositorynpmgroup"></a>`nexus::resource::repository::npm::group`
 
