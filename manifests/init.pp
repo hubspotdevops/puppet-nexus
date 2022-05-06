@@ -126,6 +126,8 @@ class nexus (
       nexus_context     => $nexus_context,
       nexus_work_dir    => $real_nexus_work_dir,
       nexus_data_folder => $nexus_data_folder,
+      nexus_user        => $nexus_user,
+      nexus_group       => $nexus_group,
       notify            => Class['nexus::service'],
       require           => Anchor['nexus::setup']
     }

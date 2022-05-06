@@ -26,6 +26,8 @@ class nexus::config(
   $nexus_context = $::nexus::nexus_context,
   $nexus_work_dir = $::nexus::nexus_work_dir,
   $nexus_data_folder = $::nexus::nexus_data_folder,
+  $nexus_user = $::nexus::nexus_user,
+  $nexus_group = $::nexus::nexus_group,
   $version = $::nexus::version,
 ) {
 
@@ -47,6 +49,8 @@ class nexus::config(
   # Nexus >=3.x do no necesarily have a properties file in place to
   # modify. Make sure that there is at least a minmal file there
   file { $nexus_properties_file:
+    owner  => $nexus_user,
+    group  => $nexus_group,
     ensure =>  present,
   }
 
