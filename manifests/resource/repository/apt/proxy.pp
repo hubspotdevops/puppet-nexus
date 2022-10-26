@@ -38,7 +38,7 @@
 #
 define nexus::resource::repository::apt::proxy (
   String[1] $apt_distribution,
-  Stdlib::HTTPSUrl $proxy_remote_url,
+  Stdlib::HTTPUrl $proxy_remote_url,
   Boolean $apt_flat = false,
   Enum['present', 'absent'] $ensure = 'present',
   Boolean $http_client_auto_block = true,

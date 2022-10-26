@@ -556,7 +556,7 @@ APT distribution like buster, bullseye used by nexus repository manager to query
 
 ##### <a name="proxy_remote_url"></a>`proxy_remote_url`
 
-Data type: `Stdlib::HTTPSUrl`
+Data type: `Stdlib::HTTPUrl`
 
 APT repository url like https://deb.debian.org/debian/.
 
