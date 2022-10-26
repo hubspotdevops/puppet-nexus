@@ -22,7 +22,7 @@ class nexus::config::admin (
   String[1] $last_name = 'User',
   String[1] $email_address = 'admin@example.org',
   Array[String[1]] $roles = ['nx-admin'],
-  Optional[String[1]] $password = undef,
+  Optional[Variant[String[1], Sensitive[String[1]]]] $password = undef,
 ) {
   if $password {
     $real_password = $password

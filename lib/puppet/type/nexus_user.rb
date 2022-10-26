@@ -32,7 +32,7 @@ Puppet::ResourceApi.register_type(
       behaviour: :namevar
     },
     password: {
-      type: 'Optional[String]',
+      type: 'Variant[String[1], Sensitive[String[1]]]',
       desc: 'The password of the user.'
     },
     first_name: {

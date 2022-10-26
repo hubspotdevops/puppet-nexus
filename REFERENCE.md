@@ -244,7 +244,7 @@ Default value: `['nx-admin']`
 
 ##### <a name="password"></a>`password`
 
-Data type: `Optional[Sensitive[String[1]]]`
+Data type: `Optional[Variant[String[1], Sensitive[String[1]]]]`
 
 The password of the administrator. If not given there will be generated a random password.
 
@@ -1539,7 +1539,7 @@ The last name of the user.
 
 ##### `password`
 
-Data type: `Optional[String]`
+Data type: `Variant[String[1], Sensitive[String[1]]]`
 
 The password of the user.
 
