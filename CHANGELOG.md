@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.0]
+### Added
+- `nexus::resource::repository::yum::hosted` to manage yum hosted repositories
+- `nexus::resource::repository::yum::proxy` to manage yum proxy repositories
+
+### Changed
+- Updated module dependencies
+- `nexus::config::admin::password` changed to allow `Sensitive` datatype
+- `nexus::resource::repository::apt::proxy` to allow http urls
+
 ## [3.3.0]
 ### Added
 - Invalidate cache on changes of repository types `group` and `proxy`
