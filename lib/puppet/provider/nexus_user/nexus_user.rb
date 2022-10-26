@@ -18,19 +18,25 @@ class Puppet::Provider::NexusUser::NexusUser < Puppet::ResourceApi::SimpleProvid
     context.debug("Checking whether #{property_name} is out of sync")
     case property_name
     when :password
+      if should_hash[property_name].respond_to?(:unwrap)
+        context.debug("Unwrapping #{property_name}")
+        password_unwrapped = should_hash[property_name].unwrap
+      else
+        password_unwrapped = should_hash[property_name]
+      end
+
       res = Puppet.runtime[:http].get(
         context.transport.build_uri('status'),
         options: {
           basic_auth: {
             user: name,
-            password: should_hash[property_name]
+            password: password_unwrapped
           }
         },
       )
 
       unless res.success?
-        res = context.transport.put_request_text(context, "security/users/#{name}/change-password",
-                                                 should_hash[property_name])
+        res = context.transport.put_request_text(context, "security/users/#{name}/change-password", password_unwrapped)
       end
 
       res.success?
