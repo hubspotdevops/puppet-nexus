@@ -35,6 +35,8 @@
 * [`nexus::resource::repository::npm::group`](#nexusresourcerepositorynpmgroup): Resource to manage npm group repository
 * [`nexus::resource::repository::npm::hosted`](#nexusresourcerepositorynpmhosted): Resource to manage npm hosted repository
 * [`nexus::resource::repository::npm::proxy`](#nexusresourcerepositorynpmproxy): Resource to manage npm proxy repository
+* [`nexus::resource::repository::yum::hosted`](#nexusresourcerepositoryyumhosted): Resource to manage yum hosted repository
+* [`nexus::resource::repository::yum::proxy`](#nexusresourcerepositoryyumproxy): Resource to manage yum proxy repository
 
 ### Resource types
 
@@ -1347,6 +1349,224 @@ Default value: ``true``
 ##### <a name="storage_write_policy"></a>`storage_write_policy`
 
 Data type: `Enum['ALLOW','ALLOW_ONCE','DENY']`
+
+Controls if deployments of and updates to artifacts are allowed.
+
+Default value: `'ALLOW'`
+
+### <a name="nexusresourcerepositoryyumhosted"></a>`nexus::resource::repository::yum::hosted`
+
+Resource to manage yum hosted repository
+
+#### Examples
+
+##### 
+
+```puppet
+nexus::resource::repository::yum::hosted { 'yum-hosted':
+  repodata_depth => 5,
+}
+```
+
+#### Parameters
+
+The following parameters are available in the `nexus::resource::repository::yum::hosted` defined type:
+
+* [`ensure`](#ensure)
+* [`online`](#online)
+* [`storage_blob_store_name`](#storage_blob_store_name)
+* [`storage_strict_content_type_validation`](#storage_strict_content_type_validation)
+* [`storage_write_policy`](#storage_write_policy)
+* [`component_proprietary_components`](#component_proprietary_components)
+* [`repodata_depth`](#repodata_depth)
+* [`deploy_policy`](#deploy_policy)
+
+##### <a name="ensure"></a>`ensure`
+
+Data type: `Enum['present', 'absent']`
+
+Define if the resource should be created/present or deleted/absent.
+
+Default value: `'present'`
+
+##### <a name="online"></a>`online`
+
+Data type: `Boolean`
+
+Allow incoming requests to this repository.
+
+Default value: ``true``
+
+##### <a name="storage_blob_store_name"></a>`storage_blob_store_name`
+
+Data type: `String[1]`
+
+The name of the blobstore inside of nexus repository manager to be used. We suggest to use a own blobstore for each
+defined repository.
+
+Default value: `$title`
+
+##### <a name="storage_strict_content_type_validation"></a>`storage_strict_content_type_validation`
+
+Data type: `Boolean`
+
+Validate that all content uploaded to this repository is of a MIME type appropriate for the repository format.
+
+Default value: ``true``
+
+##### <a name="storage_write_policy"></a>`storage_write_policy`
+
+Data type: `Enum['ALLOW','ALLOW_ONCE','DENY']`
+
+Controls if deployments of and updates to artifacts are allowed.
+
+Default value: `'ALLOW_ONCE'`
+
+##### <a name="component_proprietary_components"></a>`component_proprietary_components`
+
+Data type: `Boolean`
+
+Components in this repository count as proprietary for namespace conflict attacks (requires Sonatype Nexus Firewall).
+
+Default value: ``true``
+
+##### <a name="repodata_depth"></a>`repodata_depth`
+
+Data type: `Integer`
+
+Set the depth of the directory in which the repodata/repomd.xml will be generated.
+
+Default value: `0`
+
+##### <a name="deploy_policy"></a>`deploy_policy`
+
+Data type: `Enum['STRICT','PERMISSIVE']`
+
+Set the deploy policy, whether or not a redeploy of rpm's is allowed.
+
+Default value: `'STRICT'`
+
+### <a name="nexusresourcerepositoryyumproxy"></a>`nexus::resource::repository::yum::proxy`
+
+Resource to manage yum proxy repository
+
+#### Examples
+
+##### 
+
+```puppet
+nexus::resource::repository::yum::proxy { 'yum-oracle-latest':
+   proxy_remote_url => 'https://yum.oracle.com/repo/OracleLinux/OL7/latest/x86_64/',
+}
+```
+
+#### Parameters
+
+The following parameters are available in the `nexus::resource::repository::yum::proxy` defined type:
+
+* [`proxy_remote_url`](#proxy_remote_url)
+* [`ensure`](#ensure)
+* [`http_client_auto_block`](#http_client_auto_block)
+* [`http_client_blocked`](#http_client_blocked)
+* [`negative_cache_enabled`](#negative_cache_enabled)
+* [`negative_cache_time_to_live`](#negative_cache_time_to_live)
+* [`online`](#online)
+* [`proxy_content_max_age`](#proxy_content_max_age)
+* [`proxy_metadata_max_age`](#proxy_metadata_max_age)
+* [`storage_blob_store_name`](#storage_blob_store_name)
+* [`storage_strict_content_type_validation`](#storage_strict_content_type_validation)
+* [`storage_write_policy`](#storage_write_policy)
+
+##### <a name="proxy_remote_url"></a>`proxy_remote_url`
+
+Data type: `Stdlib::HTTPSUrl`
+
+yum repository url like https://yum.oracle.com/repo/OracleLinux/OL7/latest/x86_64/.
+
+##### <a name="ensure"></a>`ensure`
+
+Data type: `Enum['present', 'absent']`
+
+Define if the resource should be created/present or deleted/absent.
+
+Default value: `'present'`
+
+##### <a name="http_client_auto_block"></a>`http_client_auto_block`
+
+Data type: `Boolean`
+
+Auto-block outbound connections on the repository if remote peer is detected as unreachable/unresponsive.
+
+Default value: ``true``
+
+##### <a name="http_client_blocked"></a>`http_client_blocked`
+
+Data type: `Boolean`
+
+Block outbound connections on the repository.
+
+Default value: ``false``
+
+##### <a name="negative_cache_enabled"></a>`negative_cache_enabled`
+
+Data type: `Boolean`
+
+Cache responses for content not present in the proxied repository.
+
+Default value: ``true``
+
+##### <a name="negative_cache_time_to_live"></a>`negative_cache_time_to_live`
+
+Data type: `Integer`
+
+How long to cache the fact that a file was not found in the repository (in minutes).
+
+Default value: `1440`
+
+##### <a name="online"></a>`online`
+
+Data type: `Boolean`
+
+Enable this repository in nexus repository manager that it can be used.
+
+Default value: ``true``
+
+##### <a name="proxy_content_max_age"></a>`proxy_content_max_age`
+
+Data type: `Integer`
+
+Max age of content (packages)
+
+Default value: `1440`
+
+##### <a name="proxy_metadata_max_age"></a>`proxy_metadata_max_age`
+
+Data type: `Integer`
+
+Max age of the repository metadata
+
+Default value: `1440`
+
+##### <a name="storage_blob_store_name"></a>`storage_blob_store_name`
+
+Data type: `String[1]`
+
+The name of the blobstore inside of nexus repository manager to be used. We suggest to use a own blobstore for each
+defined repository.
+
+Default value: `$title`
+
+##### <a name="storage_strict_content_type_validation"></a>`storage_strict_content_type_validation`
+
+Data type: `Boolean`
+
+Validate that all content uploaded to this repository is of a MIME type appropriate for the repository format.
+
+Default value: ``true``
+
+##### <a name="storage_write_policy"></a>`storage_write_policy`
+
+Data type: `Enum['ALLOW']`
 
 Controls if deployments of and updates to artifacts are allowed.
 

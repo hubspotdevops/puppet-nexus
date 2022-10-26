@@ -11,15 +11,17 @@
 #   Validate that all content uploaded to this repository is of a MIME type appropriate for the repository format.
 # @param storage_write_policy
 #   Controls if deployments of and updates to artifacts are allowed.
+# @param component_proprietary_components
+#   Components in this repository count as proprietary for namespace conflict attacks (requires Sonatype Nexus Firewall).
 # @param repodata_depth
 #   Set the depth of the directory in which the repodata/repomd.xml will be generated.
 # @param deploy_policy
 #   Set the deploy policy, whether or not a redeploy of rpm's is allowed.
 #
 # @example
-# nexus::resource::repository::yum::hosted { 'yum-hosted':
-#   repodata_depth => 5,
-# }
+#   nexus::resource::repository::yum::hosted { 'yum-hosted':
+#     repodata_depth => 5,
+#   }
 #
 define nexus::resource::repository::yum::hosted (
   Enum['present', 'absent'] $ensure = 'present',
